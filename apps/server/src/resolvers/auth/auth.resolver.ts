@@ -105,7 +105,7 @@ class AuthResolver {
                     }
                 })
             }
-            throw new CustomError("User is not verified", HTTPStatusCode.BAD_REQUEST);
+            throw new CustomError("User is not verified", HTTPStatusCode.UNAUTHORIZED);
         }
         //TODO: do not allowed to organizer to login more than five days when it is in PENDING status
 

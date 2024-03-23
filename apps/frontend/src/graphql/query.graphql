@@ -1,0 +1,10 @@
+query GetCurrentUser {
+  getCurrentUser {
+    fullName
+    email
+    phone
+    role
+    isVerified
+    authType
+  }
+}

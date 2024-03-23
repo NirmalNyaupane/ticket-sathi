@@ -1,21 +1,18 @@
 "use client";
-import { EmailVerificationEnum } from "@/constants/enum";
+import { useVerifyOtpMutation } from "@/__generated__/graphql";
+import { OtpType } from "@/constants/enum";
+import useCustomToast from "@/hooks/useToast";
 import { otpValidation } from "@/lib/formvalidation/authvalidation";
-import { otpVerificationApi, resendOtpApi } from "@/services/auth.service";
-import { ApiFailureError } from "@/types/generics/ApiGenericsType";
 import CountDown from "@/utils/CountDown";
-import { showError } from "@/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { z } from "zod";
-import { Button } from "../ui/button";
-import { useToast } from "../ui/use-toast";
 import { InputField } from "./InputField";
 import LoadingButton from "./LoadingButton";
+import { showError } from "@/utils/helper";
 
 type otptype = z.infer<typeof otpValidation>;
 
@@ -24,14 +21,15 @@ const EmailVerification = ({
   purpose,
 }: {
   email: string;
-  purpose: EmailVerificationEnum;
+  purpose: OtpType;
 }) => {
   /***************** State ********************************/
   const [otp, setOtp] = useState("");
   const [isResentInCounting, setIsResentInCounting] = useState(true);
 
   /** Hooks */
-  const { toast } = useToast();
+  const toast = useCustomToast();
+  const router = useRouter();
 
   const {
     setValue,
@@ -46,60 +44,28 @@ const EmailVerification = ({
   }, [otp]);
 
   /*************** mutation for new password ******************************************/
-  const newRegisterOtpVerification = useMutation({
-    mutationFn: async () => {
-      return await otpVerificationApi(email, otp);
+  const [newRegister, { loading }] = useVerifyOtpMutation({
+    onCompleted(data, clientOptions) {
+      toast.sucess("Email is verified, now you can login");
+      router.push("/");
     },
-    onSuccess: (data) => {
-      if (data.status === 200 || data.status === 201) {
-        toast({
-          variant: "default",
-          className: "bg-green-600 text-white font-bold",
-          description: "Email verify sucessfully",
-          duration: 1000,
-        });
-      }
-    },
-    onError: (error: AxiosError<ApiFailureError<any>>) => {
-      toast({
-        variant: "destructive",
-        description: showError(error),
-        className: "font-bold",
-        duration: 1000,
-      });
-    },
-  });
+  })
 
-  //resend otp mutation
-  const resendEmailMutation = useMutation({
-    mutationFn: () => {
-      return resendOtpApi(email);
-    },
-    onSuccess: (data) => {
-      if (data.status === 200 || data.status === 201) {
-        toast({
-          variant: "default",
-          className: "bg-green-600 text-white font-bold",
-          description: "OTP send sucessfully",
-          duration: 1000,
-        });
-        setIsResentInCounting(true);
-      }
-    },
-    onError: (error: AxiosError<ApiFailureError<any>>) => {
-      toast({
-        variant: "destructive",
-        description: showError(error),
-        className: "font-bold",
-        duration: 1000,
-      });
-    },
-  });
+
 
   //hadle api call after countinue botton is called based on the purpose
   const handleCountinue = handleSubmit((data) => {
-    if (purpose === EmailVerificationEnum.NewRegister) {
-      newRegisterOtpVerification.mutate();
+    if (purpose === OtpType.NewRegister) {
+      newRegister({
+        variables: {
+          data: {
+            email,
+            otp
+          }
+        }
+      }).catch((e) => {
+        toast.error(showError(e))
+      });
     }
   });
 
@@ -114,7 +80,7 @@ const EmailVerification = ({
         <OtpInput
           value={otp}
           onChange={setOtp}
-          numInputs={5}
+          numInputs={6}
           renderSeparator={<span className="min-w-3 md:min-w-5"></span>}
           renderInput={(props) => (
             <InputField
@@ -133,7 +99,7 @@ const EmailVerification = ({
         <LoadingButton
           className="block w-full"
           type="submit"
-          isLoading={resendEmailMutation.isPending}
+          isLoading={loading}
         >
           Countinue
         </LoadingButton>
@@ -150,9 +116,9 @@ const EmailVerification = ({
         ) : (
           <p
             className=" text-red-500 text-right cursor-pointer"
-            onClick={() => {
-              resendEmailMutation.mutate();
-            }}
+          // onClick={() => {
+          //   resendEmailMutation.mutate();
+          // }}
           >
             Resend Otp
           </p>

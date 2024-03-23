@@ -1,4 +1,4 @@
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole} from "@/constants/enum";
 import { createSlice } from "@reduxjs/toolkit";
 import { authLoginReducer, authLogoutReducer } from "../reducers/authReducer";
 
@@ -7,14 +7,14 @@ export interface AuthState {
   isUserLogin: boolean;
   isVerified: boolean;
   isRegisterOrganizer:boolean,
-  role: UserRoleEnum;
+  role: UserRole;
 }
 
 const initialState:AuthState = {
   isUserLogin: false,
   isVerified: false,
   isRegisterOrganizer:false,
-  role: UserRoleEnum.VISITORS,
+  role: UserRole.USER,
 };
 
 const authSlice = createSlice({

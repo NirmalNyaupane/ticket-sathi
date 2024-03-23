@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole } from "@/constants/enum";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { firstCharacterOfFullName } from "@/utils/helper";
@@ -100,7 +100,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 }
                 dialogTitle={"Login"}
               >
-                <Login user={UserRoleEnum.USER} />
+                <Login user={UserRole.USER} />
               </GlobalDialog>
 
               <GlobalDialog
@@ -111,7 +111,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 }
                 dialogTitle={"Register"}
               >
-                <Register role={UserRoleEnum.USER} />
+                <Register role={UserRole.USER} />
               </GlobalDialog>
             </>
             :

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "@/types/user/userType";
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole } from "@/constants/enum";
 
 const initialState: User = {
   id: "",
@@ -8,7 +8,7 @@ const initialState: User = {
   email: "",
   phone_number: "",
   avatar: "",
-  role: UserRoleEnum.VISITORS,
+  role: UserRole.USER,
   address: "",
   is_verified: false,
   createdAt: "",

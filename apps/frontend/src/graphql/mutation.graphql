@@ -1,0 +1,21 @@
+mutation RegisterUser($data: RegisterUserSchema!) {
+  registerUser(data: $data) {
+    message
+  }
+}
+
+mutation VerifyOtp($data: OtpVerifyValidator!) {
+  verifyOtp(data: $data) {
+    message
+  }
+}
+
+mutation Login($data: LoginValidator!) {
+  login(data: $data) {
+    id
+    accessToken
+    refreshToken
+    role
+    isVerified
+  }
+}

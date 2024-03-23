@@ -1,13 +1,12 @@
-enum UserRoleEnum{
-    ADMIN="ADMIN",
-    ORGANIZER="ORGANIZER",
-    USER="USER",
-    VISITORS="VISITORS"
+enum UserRole {
+    USER = "USER",
+    ORGANIZER = "ORGANIZER",
+    ADMIN = "ADMIN"
 }
 
-enum EmailVerificationEnum{
-    NewRegister = "newregister", 
+enum OtpType {
+    NewRegister = "newregister",
     ForgetPassword = "forgetpassword"
 }
 
-export {UserRoleEnum, EmailVerificationEnum};
+export { UserRole, OtpType };

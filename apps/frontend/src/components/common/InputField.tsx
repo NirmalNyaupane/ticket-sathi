@@ -36,8 +36,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {label && <Label>{label}</Label>}
           <Input
             className={cn(
-              `ring-gray-50 ring-1 focus-within:ring-gray-50 focus:ring-offset-0 w-full block ${
-                errorMessage && "border-red-500"
+              `ring-gray-50 ring-1 focus-within:ring-gray-50 focus:ring-offset-0 w-full block ${errorMessage && "border-red-500"
               }`,
               className
             )}
@@ -83,8 +82,7 @@ const InputFieldWithRightIcon = React.forwardRef<
         <div className="relative">
           <Input
             className={cn(
-              `ring-gray-50 ring-1 focus-within:ring-gray-50 focus:ring-offset-0 w-full block ${
-                errorMessage && "border-red-500"
+              `ring-gray-50 ring-1 focus-within:ring-gray-50 focus:ring-offset-0 w-full block ${errorMessage && "border-red-500"
               }`,
               className
             )}
@@ -115,7 +113,7 @@ const InputFieldWithRightIcon = React.forwardRef<
 InputFieldWithRightIcon.displayName = "InputFieldWithRightIcon";
 
 interface PhoneNumberInputFieldProps extends Omit<InputFieldProps, "type"> {
-  getCountryCode:(code:string)=>void;
+  getCountryCode: (code: string) => void;
 }
 const PhoneNumberInputField = React.forwardRef<
   HTMLInputElement,
@@ -124,9 +122,9 @@ const PhoneNumberInputField = React.forwardRef<
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("+977");
 
-  useEffect(()=>{
+  useEffect(() => {
     getCountryCode(value)
-  },[getCountryCode, value])
+  }, [getCountryCode, value])
 
   return (
     <>
@@ -139,9 +137,8 @@ const PhoneNumberInputField = React.forwardRef<
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className={`w-[70px] justify-between ${
-                  errorMessage && "border-red-500"
-                }`}
+                className={`w-[70px] justify-between ${errorMessage && "border-red-500"
+                  }`}
               >
                 {value ? (
                   <Image
@@ -199,6 +196,7 @@ const PhoneNumberInputField = React.forwardRef<
           <InputField
             type="number"
             className={cn(`${errorMessage && "border-red-500"}`, className)}
+            ref={ref}
             {...formReturn}
             {...restProps}
           />

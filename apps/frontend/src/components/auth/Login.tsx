@@ -1,5 +1,5 @@
 "use client";
-import { EmailVerificationEnum, UserRoleEnum } from "@/constants/enum";
+import { OtpType, UserRole } from "@/constants/enum";
 import { loginFormValidation } from "@/lib/formvalidation/authvalidation";
 import { loginReducer } from "@/redux/slices/auth.slice";
 import { loginApi } from "@/services/auth.service";
@@ -18,18 +18,20 @@ import { InputField, InputFieldWithRightIcon } from "../common/InputField";
 import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { toast } from "../ui/use-toast";
+import { toast, useToast } from "../ui/use-toast";
+import { useLoginMutation } from "@/__generated__/graphql";
+import useCustomToast from "@/hooks/useToast";
 
 type formData = z.infer<typeof loginFormValidation>;
 
-const Login = ({ user }: { user: UserRoleEnum }) => {
+const Login = ({ user }: { user: UserRole }) => {
   /******************* state **************************/
   const [isPasswordShow, setPasswordShow] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState<boolean>(false);
 
   /********************** Hooks  *******************************/
   const router = useRouter();
-
+  const toast = useCustomToast();
   /************************ Methods *************************/
   const dispatch = useDispatch();
   /******* React hook form for form handling *****************/
@@ -44,47 +46,35 @@ const Login = ({ user }: { user: UserRoleEnum }) => {
   });
 
   /******************** React query mutation  ****************/
-  const loginMutation = useMutation({
-    mutationFn: (data: formData) => {
-      return loginApi(data);
-    },
-    onSuccess: (data) => {
-      if (data.status === 200 || data.status === 201) {
-        const jwt = data.data.access_token;
+  const [loginMutation, { loading }] = useLoginMutation({
+    onCompleted: (data) => {
 
-        if (!jwt) {
-          toast({
-            description: "Something went wrong",
-            duration: 1000,
-            variant: "destructive",
-          });
+      const jwt = data.login.accessToken;
 
-          return null;
-        }
-        dispatch(loginReducer(data.data));
-        reset();
+      if (!jwt) {
+        toast.error("Something went wrong");
+        return null;
       }
-    },
-    onError: (error: AxiosError<any, any>) => {
-      toast({
-        description: showError(error),
-        duration: 1000,
-        variant: "destructive",
-      });
-
-      if (error.response?.data?.is_verified === false) {
-        router.push(
-          `/email-verify?email=${getValues("email")}&action=${
-            EmailVerificationEnum.NewRegister
-          }`
-        );
-      }
-    },
+      // dispatch(loginReducer(data.data));
+      reset();
+      toast.sucess("Login sucessfully");
+      router.push("/");
+      router.refresh();
+    }
   });
 
   /*** Handle the form after submission ***/
   const handleFormSubmit = handleSubmit((data) => {
-    loginMutation.mutate(data);
+    loginMutation({
+      variables: {
+        data
+      }
+    }).catch((e) => {
+      toast.error(showError(e));
+      if (e.networkError.statusCode === 401) {
+        router.push(`/otp/?email=${getValues("email")}&action=${OtpType.NewRegister}`)
+      }
+    });
   });
 
   return (
@@ -131,11 +121,11 @@ const Login = ({ user }: { user: UserRoleEnum }) => {
         <div className="ml-auto font-medium text-red-500">Forget Password?</div>
       </div>
 
-      <LoadingButton type="submit" isLoading={loginMutation.isPending}>
+      <LoadingButton type="submit" isLoading={loading}>
         Login
       </LoadingButton>
 
-      {user === UserRoleEnum.USER && (
+      {user === UserRole.USER && (
         <>
           <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
             OR SIGN UP USING

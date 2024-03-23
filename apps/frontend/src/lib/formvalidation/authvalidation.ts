@@ -3,7 +3,7 @@ import { z } from "zod";
 /************* Register form validation **********************/
 const registerValidation = z
   .object({
-    full_name: z
+    fullName: z
       .string({
         required_error: "Full Name is required",
       })
@@ -20,17 +20,12 @@ const registerValidation = z
         invalid_type_error: "Email must be an email",
       })
       .email("Email must be an email"),
-    phone_number: z
+    phone: z
       .string({
         required_error: "Phone number is required",
       })
       .max(10, "Please enter valid phone number")
       .min(10, "Please enter valid phone number"),
-
-    address: z
-      .string({ required_error: "Address is required" })
-      .max(20, "Adress must be contains maximum 20 characters")
-      .min(5, "Address must be minimum 5 characters"),
 
     password: z
       .string({ required_error: "Password is required" })

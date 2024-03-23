@@ -1,13 +1,10 @@
-import { EmailVerificationEnum, UserRoleEnum } from "@/constants/enum";
+import { useRegisterUserMutation } from "@/__generated__/graphql";
+import { OtpType, UserRole } from "@/constants/enum";
+import useCustomToast from "@/hooks/useToast";
 import { registerValidation } from "@/lib/formvalidation/authvalidation";
 import { cn } from "@/lib/utils";
-import { userRegisterApi } from "@/services/auth.service";
-import { UserRegisterPayload } from "@/types/auth/AuthType";
-import { ApiFailureError } from "@/types/generics/ApiGenericsType";
 import { showError } from "@/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, memo, useState } from "react";
@@ -22,11 +19,10 @@ import {
 import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
 import { FormField } from "../ui/form";
-import { useToast } from "../ui/use-toast";
 type formData = z.infer<typeof registerValidation>;
 
 interface props {
-  role: UserRoleEnum;
+  role: UserRole;
   className?: string;
 }
 
@@ -37,7 +33,8 @@ const Register: FC<props> = ({ role, className }: props) => {
   const [countryCode, setCountryCode] = useState<string>("");
 
   /******************* Hooks *******************/
-  const { toast } = useToast();
+  const customToast = useCustomToast();
+
   const router = useRouter();
   /*************** Methods ***************************/
   const getCountryCode = (code: string) => {
@@ -48,52 +45,38 @@ const Register: FC<props> = ({ role, className }: props) => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
     control,
-    getValues,
-    reset,
   } = useForm<formData>({
     resolver: zodResolver(registerValidation),
   });
 
-  /**************** Mutation query using react-query ******************/
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data: UserRegisterPayload) => {
-      return userRegisterApi(data);
-    },
-    onSuccess: (data) => {
-      if (data.status === 200 || data.status === 201) {
-        toast({
-          variant: "default",
-          className: "bg-green-600 text-white font-bold",
-          description: "User registered sucessfully",
-          duration: 1000,
-        });
-        router.push(
-          `/email-verify?email=${getValues("email")}&action=${
-            EmailVerificationEnum.NewRegister
-          }`
-        );
-        reset();
-      }
-    },
-    onError: (error: AxiosError<ApiFailureError<any>>) => {
-      toast({
-        variant: "destructive",
-        description: showError(error),
-        className: "font-bold",
-        duration: 1000,
-      });
+  //mutation using generated registeruser mutation 
+  const [mutation, { loading, error, data }] = useRegisterUserMutation({
+    onCompleted(data, clientOptions) {
+      customToast.sucess(data.registerUser.message);
+      router.push(`/otp?email=${getValues("email")}&action=${OtpType.NewRegister}`)
     },
   });
-
   const formSubmit: SubmitHandler<formData> = async (e) => {
-    const { confirmPassword, phone_number, ...restData } = e;
-    const newPhoneNumber = countryCode.concat(getValues("phone_number"));
-    const sendData = { ...restData, role: role, phone_number: phone_number };
+    const { confirmPassword, phone, ...data } = e;
+    console.log(e.phone)
+    mutation({
+      variables: {
+        data: {
+          ...data,
+          phone: countryCode + phone,
+          //@ts-ignore
+          role
+        }
+      }
+    }).catch((e) => {
+      customToast.error(showError(e))
+    })
 
-    mutate(sendData);
   };
+
 
   return (
     <>
@@ -102,16 +85,16 @@ const Register: FC<props> = ({ role, className }: props) => {
         onSubmit={handleSubmit(formSubmit)}
       >
         <FormField
-          name="full_name"
+          name="fullName"
           control={control}
           render={({ field }) => {
             return (
               <InputField
                 type="text"
                 label="Full Name"
-                formReturn={register("full_name")}
+                formReturn={register("fullName")}
                 {...field}
-                errorMessage={errors.full_name?.message}
+                errorMessage={errors.fullName?.message}
               />
             );
           }}
@@ -134,16 +117,9 @@ const Register: FC<props> = ({ role, className }: props) => {
 
         <PhoneNumberInputField
           label="Phone number"
-          formReturn={register("phone_number")}
-          errorMessage={errors.phone_number?.message}
+          formReturn={register("phone")}
+          errorMessage={errors.phone?.message}
           getCountryCode={getCountryCode}
-        />
-
-        <InputField
-          type="text"
-          label="Address"
-          {...register("address")}
-          errorMessage={errors.address?.message}
         />
 
         <InputFieldWithRightIcon
@@ -179,9 +155,9 @@ const Register: FC<props> = ({ role, className }: props) => {
           }}
         />
 
-        <LoadingButton isLoading={isPending}>Register</LoadingButton>
+        <LoadingButton isLoading={loading}>Register</LoadingButton>
 
-        {role === UserRoleEnum.USER && (
+        {role === UserRole.USER && (
           <>
             <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
               OR SIGN UP USING

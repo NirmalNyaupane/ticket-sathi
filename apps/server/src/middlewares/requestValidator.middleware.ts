@@ -34,7 +34,8 @@ export class RequestValidator {
             // for non-nested.
             rawErrors.push(...Object.values(errorItem.constraints ?? ""));
           }
-          throw new CustomError("Invalid data", 400, rawErrors)
+          throw new CustomError(rawErrors[0], 400)
+          // throw new Error(rawErrors[0])
         }
       });
 

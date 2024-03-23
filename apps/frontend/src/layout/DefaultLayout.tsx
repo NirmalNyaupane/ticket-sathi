@@ -1,7 +1,8 @@
 "use client";
+import client from "@/apolloClient";
 import { ORGANIZER_ROUTE_PATTERN } from "@/constants";
 import { AUTH_COOKIE_NAME } from "@/constants/config";
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole } from "@/constants/enum";
 import { loginReducer } from "@/redux/slices/auth.slice";
 import { addUser } from '@/redux/slices/user.slice';
 import { RootState } from "@/redux/store";
@@ -12,7 +13,7 @@ import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import NextTopLoader from 'nextjs-toploader';
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const [jwt, setJwt] = useState(getCookie(AUTH_COOKIE_NAME as string) ?? "");
   //selector
@@ -52,10 +53,10 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
 
       //cheking route
       if (ORGANIZER_ROUTE_PATTERN.test(pathName)) {
-        if (auth.role === UserRoleEnum.ORGANIZER) {
-          if(auth.isRegisterOrganizer){
+        if (auth.role === UserRole.ORGANIZER) {
+          if (auth.isRegisterOrganizer) {
             router.push("/organizer/dashboard")
-          }else{
+          } else {
             router.push("/organizer/auth/register")
           }
         }
@@ -69,7 +70,14 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
     fetchUser();
   }, [auth]);
 
-  return <main>{children}</main>;
+  return (
+    <main>
+      <NextTopLoader
+        color="rgba(241,0,0,0.5)"
+      />
+      {children}
+    </main >
+  );
 };
 
 export default DefaultLayout;
