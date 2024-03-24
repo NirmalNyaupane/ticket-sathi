@@ -6,14 +6,12 @@ import { authLoginReducer, authLogoutReducer } from "../reducers/authReducer";
 export interface AuthState {
   isUserLogin: boolean;
   isVerified: boolean;
-  isRegisterOrganizer:boolean,
   role: UserRole;
 }
 
 const initialState:AuthState = {
   isUserLogin: false,
   isVerified: false,
-  isRegisterOrganizer:false,
   role: UserRole.USER,
 };
 

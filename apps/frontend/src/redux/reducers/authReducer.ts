@@ -1,26 +1,24 @@
+import { AUTH_COOKIE_NAME } from "@/constants/config";
 import { LoginSucessResponse } from "@/types/auth/AuthType";
+import { deleteCookie, setCookie } from "@/utils/cookie";
 import { Draft, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState } from "../slices/auth.slice";
-import { deleteCookie, setCookie } from "@/utils/cookie";
-import { AUTH_COOKIE_NAME } from "@/constants/config";
-import { UserRoleEnum } from "@/constants/enum";
 
 const authLoginReducer = (
   state: Draft<AuthState>,
   action: PayloadAction<LoginSucessResponse>
 ) => {
-  const { access_token, is_organizer_registered, is_verified, role } =
+  const { accessToken, isVerified, role } =
     action.payload;
 
   setCookie({
     cookieName: AUTH_COOKIE_NAME as string,
-    cookieValue: access_token,
+    cookieValue: accessToken,
   });
 
-  state.isRegisterOrganizer = is_organizer_registered;
-  state.isVerified = is_verified;
+  state.isVerified = isVerified;
   state.role = role;
-  if (is_verified) {
+  if (isVerified) {
     state.isUserLogin = true;
   } else {
     state.isUserLogin = false;
@@ -28,12 +26,11 @@ const authLoginReducer = (
 };
 
 
-const authLogoutReducer = (state:Draft<AuthState>)=>{
+const authLogoutReducer = (state: Draft<AuthState>) => {
   deleteCookie(AUTH_COOKIE_NAME as string);
-  state.isRegisterOrganizer = false;
   state.isUserLogin = false;
   state.isVerified = false;
-  state.role = UserRoleEnum.VISITORS;
 }
 
 export { authLoginReducer, authLogoutReducer };
+

@@ -2,12 +2,11 @@
 import OrganizerAdminNavbar from "@/components/organizer/layout/OrganizerAdminNavbar";
 import SideBar from "@/components/organizer/layout/SideBar";
 import { useToast } from "@/components/ui/use-toast";
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole } from "@/constants/enum";
 import useOrganizerDataFetch from "@/hooks/useOrganizerDataFetch";
 import { addOrganizer } from "@/redux/slices/organizer.slice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -18,11 +17,11 @@ export const OrganizerProviderLayout = ({ children }: { children: React.ReactNod
     const dispatch = useDispatch();
 
     const { data, isLoading, isSuccess } = useOrganizerDataFetch({
-        enabled: state.role === UserRoleEnum.ORGANIZER,
+        enabled: state.role === UserRole.ORGANIZER,
     });
 
     const checkRole = () => {
-        if (state.role !== UserRoleEnum.ORGANIZER) {
+        if (state.role !== UserRole.ORGANIZER) {
             toast({
                 description: "You are not authorized",
                 duration: 1000,

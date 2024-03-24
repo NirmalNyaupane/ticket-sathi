@@ -266,7 +266,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Lo
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', fullName: string, email: string, phone: string, role: UserRole, isVerified: boolean, authType: AuthType } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', role: UserRole, phone: string, isVerified: boolean, fullName: string, email: string, authType: AuthType, profile?: { __typename?: 'Media', name?: string | null } | null, organizerDetails?: { __typename?: 'OrganizerDetails', abnAcn: string, address: string, bio?: string | null, isGstRegister: boolean, organizerName: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, OrganizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, logo: { __typename?: 'Media', name?: string | null }, documents: Array<{ __typename?: 'Media', id: string }> } | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -375,12 +375,39 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
+    role
+    profile {
+      name
+    }
+    phone
+    organizerDetails {
+      abnAcn
+      address
+      bio
+      isGstRegister
+      isGstRegister
+      organizerName
+      socialLinks {
+        facebook
+        instagram
+        twitter
+        threads
+      }
+    }
+    isVerified
+    fullName
     fullName
     email
-    phone
-    role
-    isVerified
     authType
+    OrganizerDocuments {
+      id
+      logo {
+        name
+      }
+      documents {
+        id
+      }
+    }
   }
 }
     `;

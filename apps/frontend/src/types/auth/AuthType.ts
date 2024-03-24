@@ -4,7 +4,7 @@ import {
   ApiSucessResponse,
 } from "../generics/ApiGenericsType";
 import { z } from "zod";
-import { UserRoleEnum } from "@/constants/enum";
+import { UserRole } from "@/constants/enum";
 import organizerRegisterFormValidation from "@/lib/formvalidation/organizerRegister";
 
 export interface UserResponse {
@@ -32,10 +32,9 @@ export type AuthRegisterErrorResponse = ApiFailureError<string>;
 
 export interface LoginSucessResponse {
   id: string;
-  access_token: string;
-  role: UserRoleEnum;
-  is_verified: boolean;
-  is_organizer_registered: boolean;
+  accessToken: string;
+  role: UserRole;
+  isVerified: boolean;
 }
 
 export type LoginFailure = ApiFailureError<[]>;

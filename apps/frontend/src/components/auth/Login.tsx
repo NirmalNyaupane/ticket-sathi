@@ -1,12 +1,11 @@
 "use client";
+import { useLoginMutation } from "@/__generated__/graphql";
 import { OtpType, UserRole } from "@/constants/enum";
+import useCustomToast from "@/hooks/useToast";
 import { loginFormValidation } from "@/lib/formvalidation/authvalidation";
 import { loginReducer } from "@/redux/slices/auth.slice";
-import { loginApi } from "@/services/auth.service";
 import { showError } from "@/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,9 +17,6 @@ import { InputField, InputFieldWithRightIcon } from "../common/InputField";
 import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { toast, useToast } from "../ui/use-toast";
-import { useLoginMutation } from "@/__generated__/graphql";
-import useCustomToast from "@/hooks/useToast";
 
 type formData = z.infer<typeof loginFormValidation>;
 
@@ -55,11 +51,17 @@ const Login = ({ user }: { user: UserRole }) => {
         toast.error("Something went wrong");
         return null;
       }
-      // dispatch(loginReducer(data.data));
+
       reset();
       toast.sucess("Login sucessfully");
-      router.push("/");
-      router.refresh();
+      dispatch(loginReducer({
+        accessToken: data.login.accessToken,
+        //@ts-ignore
+        role: data.login.role as UserRole,
+        isVerified: data.login.isVerified,
+        id: data.login.id,
+
+      }))
     }
   });
 

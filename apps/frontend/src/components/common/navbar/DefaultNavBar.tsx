@@ -31,7 +31,7 @@ interface props {
 const DefaultNavBar = ({ linkItems, className, style }: props) => {
   const [isFoucs, setFocus] = useState(false);
   const isLoggin = useSelector((state: RootState) => state.auth.isUserLogin!);
-  const user = useSelector((state:RootState)=>state.user!);
+  const user = useSelector((state: RootState) => state.user!);
   const path = usePathname()
 
   return (
@@ -118,8 +118,8 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
             <GlobalDropDown
               display={
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback>{firstCharacterOfFullName(user.full_name)}</AvatarFallback>
+                  <AvatarImage src={user.profile?.name} />
+                  <AvatarFallback>{firstCharacterOfFullName(user.fullName)}</AvatarFallback>
                 </Avatar>
               }
               isBlack={path === "/"}

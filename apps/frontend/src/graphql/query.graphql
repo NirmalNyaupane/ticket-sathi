@@ -1,10 +1,37 @@
 query GetCurrentUser {
   getCurrentUser {
+    role
+    profile {
+      name
+    }
+    phone
+    organizerDetails {
+      abnAcn
+      address
+      bio
+      isGstRegister
+      isGstRegister
+      organizerName
+      socialLinks {
+        facebook
+        instagram
+        twitter
+        threads
+      }
+    }
+    isVerified
+    fullName
     fullName
     email
-    phone
-    role
-    isVerified
     authType
+    OrganizerDocuments {
+      id
+      logo {
+        name
+      }
+      documents {
+        id
+      }
+    }
   }
 }

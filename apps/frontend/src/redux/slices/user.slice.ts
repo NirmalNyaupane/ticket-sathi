@@ -3,17 +3,12 @@ import { User } from "@/types/user/userType";
 import { UserRole } from "@/constants/enum";
 
 const initialState: User = {
-  id: "",
-  full_name: "",
-  email: "",
-  phone_number: "",
-  avatar: "",
   role: UserRole.USER,
-  address: "",
-  is_verified: false,
-  createdAt: "",
-  updatedAt: "",
-  is_organizer_registered: false,
+  phone: "",
+  isVerified: false,
+  fullName: "",
+  email: "",
+  authType: ""
 };
 
 const userSlice = createSlice({
@@ -28,6 +23,6 @@ const userSlice = createSlice({
 
 
 //exporting action 
-export const {addUser} = userSlice.actions;
+export const { addUser } = userSlice.actions;
 //exporting slice
 export default userSlice.reducer;
