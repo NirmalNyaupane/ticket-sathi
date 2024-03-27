@@ -1,17 +1,23 @@
 query GetCurrentUser {
   getCurrentUser {
-    role
-    profile {
-      name
-    }
+    id
+    createdAt
+    fullName
+    email
     phone
+    role
+    authType
+    isVerified
     organizerDetails {
-      abnAcn
+      id
+      createdAt
+      organizerName
       address
       bio
+      website
+      status
       isGstRegister
-      isGstRegister
-      organizerName
+      abnAcn
       socialLinks {
         facebook
         instagram
@@ -19,19 +25,17 @@ query GetCurrentUser {
         threads
       }
     }
-    isVerified
-    fullName
-    fullName
-    email
-    authType
-    OrganizerDocuments {
+    organizerDocuments {
       id
+      documents {
+        name
+      }
       logo {
         name
       }
-      documents {
-        id
-      }
+    }
+    profile {
+      name
     }
   }
 }

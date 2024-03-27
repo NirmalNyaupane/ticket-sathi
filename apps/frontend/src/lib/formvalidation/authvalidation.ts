@@ -66,4 +66,9 @@ const otpValidation = z.object({
   otp: z.string().min(1, "Otp is required").min(5, "Otp must be 5 digit long"),
 });
 
-export { registerValidation, otpValidation, loginFormValidation };
+//email validation schema
+const emailValidation = z.object({
+  email: z.string().min(1, "Email is required").email()
+});
+
+export { registerValidation, otpValidation, loginFormValidation, emailValidation };

@@ -21,7 +21,6 @@ export class User extends CommonEntity {
     @Column({ nullable: false })
     phone: string;
 
-    @Field(() => String)
     @Column({ nullable: false, select: false })
     password: string;
 
@@ -47,7 +46,7 @@ export class User extends CommonEntity {
     @JoinColumn()
     organizerDocuments?: OrganizerDocuments
 
-    @Field(() => Media)
+    @Field(() => Media, { nullable: true })
     @OneToOne(() => Media, { cascade: true })
     @JoinColumn()
     profile: Media

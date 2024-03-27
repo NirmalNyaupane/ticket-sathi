@@ -19,3 +19,9 @@ mutation Login($data: LoginValidator!) {
     isVerified
   }
 }
+
+mutation ForgotPasswordRequest($data: ForgotPasswordRequestValidator!) {
+  forgotPasswordRequest(data: $data) {
+    message
+  }
+}

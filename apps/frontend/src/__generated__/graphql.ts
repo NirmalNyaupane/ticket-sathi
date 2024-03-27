@@ -225,12 +225,14 @@ export type User = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
-  OrganizerDocuments?: Maybe<OrganizerDocuments>;
   authType: AuthType;
+  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   fullName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
   isVerified: Scalars['Boolean']['output'];
   organizerDetails?: Maybe<OrganizerDetails>;
+  organizerDocuments?: Maybe<OrganizerDocuments>;
   phone: Scalars['String']['output'];
   profile?: Maybe<Media>;
   role: UserRole;
@@ -263,10 +265,17 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginUserResponse', id: string, accessToken: string, refreshToken: string, role: UserRole, isVerified: boolean } };
 
+export type ForgotPasswordRequestMutationVariables = Exact<{
+  data: ForgotPasswordRequestValidator;
+}>;
+
+
+export type ForgotPasswordRequestMutation = { __typename?: 'Mutation', forgotPasswordRequest: { __typename?: 'CommonResponse', message: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', role: UserRole, phone: string, isVerified: boolean, fullName: string, email: string, authType: AuthType, profile?: { __typename?: 'Media', name?: string | null } | null, organizerDetails?: { __typename?: 'OrganizerDetails', abnAcn: string, address: string, bio?: string | null, isGstRegister: boolean, organizerName: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, OrganizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, logo: { __typename?: 'Media', name?: string | null }, documents: Array<{ __typename?: 'Media', id: string }> } | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents: Array<{ __typename?: 'Media', name?: string | null }>, logo: { __typename?: 'Media', name?: string | null } } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -372,21 +381,60 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const ForgotPasswordRequestDocument = gql`
+    mutation ForgotPasswordRequest($data: ForgotPasswordRequestValidator!) {
+  forgotPasswordRequest(data: $data) {
+    message
+  }
+}
+    `;
+export type ForgotPasswordRequestMutationFn = Apollo.MutationFunction<ForgotPasswordRequestMutation, ForgotPasswordRequestMutationVariables>;
+
+/**
+ * __useForgotPasswordRequestMutation__
+ *
+ * To run a mutation, you first call `useForgotPasswordRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgotPasswordRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgotPasswordRequestMutation, { data, loading, error }] = useForgotPasswordRequestMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useForgotPasswordRequestMutation(baseOptions?: Apollo.MutationHookOptions<ForgotPasswordRequestMutation, ForgotPasswordRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ForgotPasswordRequestMutation, ForgotPasswordRequestMutationVariables>(ForgotPasswordRequestDocument, options);
+      }
+export type ForgotPasswordRequestMutationHookResult = ReturnType<typeof useForgotPasswordRequestMutation>;
+export type ForgotPasswordRequestMutationResult = Apollo.MutationResult<ForgotPasswordRequestMutation>;
+export type ForgotPasswordRequestMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordRequestMutation, ForgotPasswordRequestMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
-    role
-    profile {
-      name
-    }
+    id
+    createdAt
+    fullName
+    email
     phone
+    role
+    authType
+    isVerified
     organizerDetails {
-      abnAcn
+      id
+      createdAt
+      organizerName
       address
       bio
+      website
+      status
       isGstRegister
-      isGstRegister
-      organizerName
+      abnAcn
       socialLinks {
         facebook
         instagram
@@ -394,19 +442,17 @@ export const GetCurrentUserDocument = gql`
         threads
       }
     }
-    isVerified
-    fullName
-    fullName
-    email
-    authType
-    OrganizerDocuments {
+    organizerDocuments {
       id
+      documents {
+        name
+      }
       logo {
         name
       }
-      documents {
-        id
-      }
+    }
+    profile {
+      name
     }
   }
 }

@@ -57,10 +57,9 @@ const Login = ({ user }: { user: UserRole }) => {
       dispatch(loginReducer({
         accessToken: data.login.accessToken,
         //@ts-ignore
-        role: data.login.role as UserRole,
+        role: data.login.role,
         isVerified: data.login.isVerified,
         id: data.login.id,
-
       }))
     }
   });

@@ -1,6 +1,6 @@
-import { UserRole} from "@/constants/enum";
 import { createSlice } from "@reduxjs/toolkit";
 import { authLoginReducer, authLogoutReducer } from "../reducers/authReducer";
+import { UserRole } from "@/__generated__/graphql";
 
 //initial state for auth slicer
 export interface AuthState {
@@ -9,10 +9,10 @@ export interface AuthState {
   role: UserRole;
 }
 
-const initialState:AuthState = {
+const initialState: AuthState = {
   isUserLogin: false,
   isVerified: false,
-  role: UserRole.USER,
+  role: UserRole.User,
 };
 
 const authSlice = createSlice({
@@ -25,6 +25,6 @@ const authSlice = createSlice({
 });
 
 //exporting action for each slice
-export const { loginReducer, logoutReducer} = authSlice.actions;
+export const { loginReducer, logoutReducer } = authSlice.actions;
 //exporting reducer
 export default authSlice.reducer;

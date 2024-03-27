@@ -1,37 +1,42 @@
-import { UserRole } from "@/constants/enum";
 import { ApiSucessResponse } from "../generics/ApiGenericsType";
+import { AuthType, OrganizerStatus, UserRole } from "@/__generated__/graphql";
 
-interface Media {
-  name: string;
-}
+type User = {
+  id: string,
+  createdAt: string,
+  fullName: string,
+  email: string,
+  phone: string,
+  role: UserRole,
+  authType: AuthType,
+  isVerified: boolean,
+  organizerDetails?: {
+    __typename?: 'OrganizerDetails',
+    id: string,
+    createdAt: string,
+    organizerName: string,
+    address: string,
+    bio?: string | null,
+    website?: string | null,
+    status: OrganizerStatus,
+    isGstRegister: boolean,
+    abnAcn: string,
+    socialLinks?: {
+      __typename?: 'SocialLinksResponse',
+      facebook?: string | null,
+      instagram?: string | null,
 
-interface SocialLinks {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  threads?: string;
-}
-interface OrganizerDetails {
-  abnAcn: string
-  address: string
-  bio: string
-  isGstRegister: boolean
-  organizerName: string
-  socialLinks: SocialLinks
-}
-interface User {
-  role: UserRole
-  profile?: Media
-  phone: string
-  organizerDetails?: OrganizerDetails
-  isVerified: boolean
-  fullName: string
-  email: string
-  authType: string
-  OrganizerDocuments?: {
-    logo: Media
-    documents: Media
-  }
+      twitter?: string | null,
+      threads?: string | null
+    } | null
+  } | null,
+  organizerDocuments?: {
+    __typename?: 'OrganizerDocuments',
+    id: string,
+    documents: Array<{ __typename?: 'Media', name?: string | null }>,
+    logo: { __typename?: 'Media', name?: string | null }
+  } | null,
+  profile: { __typename?: 'Media', name?: string | null }
 }
 type UserResponse = ApiSucessResponse<User>;
 

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { User } from "@/types/user/userType";
 import { UserRole } from "@/constants/enum";
+import { AuthType, GetCurrentUserQuery } from "@/__generated__/graphql";
 
 const initialState: User = {
   role: UserRole.USER,
@@ -8,7 +9,13 @@ const initialState: User = {
   isVerified: false,
   fullName: "",
   email: "",
-  authType: ""
+  authType: AuthType.Traditional,
+  id: "",
+  createdAt: "",
+  profile: {
+    __typename: undefined,
+    name: undefined
+  }
 };
 
 const userSlice = createSlice({
