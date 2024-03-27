@@ -17,6 +17,7 @@ import { InputField, InputFieldWithRightIcon } from "../common/InputField";
 import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
+import Link from "next/link";
 
 type formData = z.infer<typeof loginFormValidation>;
 
@@ -119,7 +120,11 @@ const Login = ({ user }: { user: UserRole }) => {
             Keep me logged in
           </label>
         </div>
-        <div className="ml-auto font-medium text-red-500">Forget Password?</div>
+        <div className="ml-auto font-medium text-red-500">
+          <Link href={"/forgot-password"}>
+            Forget Password?
+          </Link>
+        </div>
       </div>
 
       <LoadingButton type="submit" isLoading={loading}>

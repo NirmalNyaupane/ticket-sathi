@@ -71,4 +71,20 @@ const emailValidation = z.object({
   email: z.string().min(1, "Email is required").email()
 });
 
-export { registerValidation, otpValidation, loginFormValidation, emailValidation };
+const passwordValidation = z.object({
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(8, "Password must be minimum 8 characters")
+    .regex(/[a-z]/, "At least one lowercase is required")
+    .regex(/[A-Z]/, "At least one Uppercase is required")
+    .regex(/\d/, "At least one digit is requried")
+    .regex(/[^a-zA-Z0-9 ]/, "At least one special character is required"),
+})
+
+export {
+  registerValidation,
+  otpValidation,
+  loginFormValidation,
+  emailValidation,
+  passwordValidation
+};

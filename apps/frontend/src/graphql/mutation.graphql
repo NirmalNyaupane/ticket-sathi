@@ -25,3 +25,9 @@ mutation ForgotPasswordRequest($data: ForgotPasswordRequestValidator!) {
     message
   }
 }
+
+mutation ResetForgotPassword($data: ResetForgotPasswordValidator!) {
+  resetForgotPassword(data: $data) {
+    message
+  }
+}

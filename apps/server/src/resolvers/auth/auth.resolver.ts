@@ -136,7 +136,7 @@ class AuthResolver {
         const forgotPasswordToken = jwtUtil.generateForgotPasswordToken(user.id);
         const hashedForgotPasswordToken = await bcrypt.hash(forgotPasswordToken, 10);
         const updateResponse = await userService.updateUserById(user.id, { forgotPasswordToken: hashedForgotPasswordToken });
-        const passwordResetLink = `${EnvConfiguration.FRONTEND_URL}/forgot-password?token=${forgotPasswordToken}`;
+        const passwordResetLink = `${EnvConfiguration.FRONTEND_URL}/forgot-password/reset?token=${forgotPasswordToken}`;
         if (updateResponse.affected === 1) {
             QueueUtil.addEmailJob({
                 to: userData.email,
