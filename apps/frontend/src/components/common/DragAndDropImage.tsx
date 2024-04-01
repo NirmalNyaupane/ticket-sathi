@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { Label } from "../ui/label";
 import { validateImageFileType } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
@@ -145,4 +145,4 @@ const DragAndDropImage = React.forwardRef<HTMLInputElement, InputProps>(
 );
 
 DragAndDropImage.displayName = "DragAndDropImageUpload";
-export default DragAndDropImage;
+export default memo(DragAndDropImage);

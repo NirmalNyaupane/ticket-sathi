@@ -11,6 +11,7 @@ import { FC, memo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
 import { z } from "zod";
+import DragAndDropPdf from "../common/DragAndDropPdf";
 import {
   InputField,
   InputFieldWithRightIcon,
@@ -18,6 +19,7 @@ import {
 } from "../common/InputField";
 import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import { FormField } from "../ui/form";
 type formData = z.infer<typeof registerValidation>;
 
@@ -51,6 +53,10 @@ const Register: FC<props> = ({ role, className }: props) => {
   } = useForm<formData>({
     resolver: zodResolver(registerValidation),
   });
+
+  const handleFileChange = (files: File[]) => {
+    console.log(files)
+  }
 
   //mutation using generated registeruser mutation 
   const [mutation, { loading, error, data }] = useRegisterUserMutation({
@@ -122,6 +128,33 @@ const Register: FC<props> = ({ role, className }: props) => {
           getCountryCode={getCountryCode}
         />
 
+        {/* only for organizer */}
+        {
+          role === UserRole.ORGANIZER && (
+            <>
+              <InputField label="Organizer name" />
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  checked={true}
+                // onCheckedChange={() => setKeepMeLoggedIn(!keepMeLoggedIn)}
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed
+             peer-disabled:opacity-70"
+                >
+                  Gst register
+                </label>
+              </div>
+              <InputField label="ABN ACN number" />
+
+              <p>documents</p>
+              <DragAndDropPdf onChange={handleFileChange} />
+            </>
+          )
+        }
+
         <InputFieldWithRightIcon
           label="Password"
           type={!isPasswordShow ? "password" : "text"}
@@ -154,7 +187,7 @@ const Register: FC<props> = ({ role, className }: props) => {
             setConfirmPasswordShow(!isConfirmPasswordShow);
           }}
         />
-
+        
         <LoadingButton isLoading={loading}>Register</LoadingButton>
 
         {role === UserRole.USER && (

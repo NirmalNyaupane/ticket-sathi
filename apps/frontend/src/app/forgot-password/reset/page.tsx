@@ -8,16 +8,19 @@ import useCustomToast from '@/hooks/useToast'
 import { passwordValidation } from '@/lib/formvalidation/authvalidation'
 import { showError } from '@/utils/helper'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { z } from 'zod';
+
 type passwordValidation = z.infer<typeof passwordValidation>
 
 const ResetForgotPassword = () => {
     const toast = useCustomToast();
-    const [mutation, { error, data }] = useResetForgotPasswordMutation({
-        onCompleted(data, clientOptions) {
+    const router = useRouter();
+    const [mutation, { error, loading }] = useResetForgotPasswordMutation({
+        onCompleted() {
             toast.sucess("Password reset sucessfully");
+            router.push("/");
         },
     });
 
@@ -54,7 +57,7 @@ const ResetForgotPassword = () => {
                     </p>
                     <form onSubmit={formSubmit} className='space-y-2'>
                         <InputField type="text" label="Password"{...register("password")} />
-                        <LoadingButton type="submit" isLoading={false}>Reset</LoadingButton>
+                        <LoadingButton type="submit" isLoading={loading}>Reset</LoadingButton>
                     </form>
                 </div>
             </div>

@@ -118,7 +118,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
             <GlobalDropDown
               display={
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.profile?.name} />
+                  <AvatarImage src={user?.profile?.name ?? ""} />
                   <AvatarFallback>{firstCharacterOfFullName(user.fullName)}</AvatarFallback>
                 </Avatar>
               }
