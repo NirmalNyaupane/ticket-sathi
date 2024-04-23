@@ -1,10 +1,9 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { AuthType, UserRole } from "@/__generated__/graphql";
 import { User } from "@/types/user/userType";
-import { UserRole } from "@/constants/enum";
-import { AuthType, GetCurrentUserQuery } from "@/__generated__/graphql";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: User = {
-  role: UserRole.USER,
+  role: UserRole.User,
   phone: "",
   isVerified: false,
   fullName: "",

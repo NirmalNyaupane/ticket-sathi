@@ -14,7 +14,7 @@ const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButton>(
   ({ children, isLoading, clasName, LoadingIcon, ...props }, ref) => {
     return (
       <Button
-        className={cn(`w-full my-2 flex justify-center`)}
+        className={cn(`w-full my-2 flex justify-center`, clasName)}
         ref={ref}
         disabled={isLoading}
         {...props}

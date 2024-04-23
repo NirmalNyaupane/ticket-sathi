@@ -7,7 +7,7 @@ import useCustomToast from "@/hooks/useToast";
 
 interface InputProps
     extends Omit<React.InputHTMLAttributes<HTMLElement>, "type" | "onChange"> {
-    onChange: (file: File[] | undefined) => void;
+    onChange: (file: File[]) => void;
     pdfUrl?: string;
     errorMessage?: string;
 }

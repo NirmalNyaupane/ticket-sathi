@@ -1,5 +1,5 @@
-import { useRegisterUserMutation } from "@/__generated__/graphql";
-import { OtpType, UserRole } from "@/constants/enum";
+import { useRegisterUserMutation, UserRole } from "@/__generated__/graphql";
+import { OtpType } from "@/constants/enum";
 import useCustomToast from "@/hooks/useToast";
 import { registerValidation } from "@/lib/formvalidation/authvalidation";
 import { cn } from "@/lib/utils";
@@ -60,7 +60,7 @@ const Register: FC<props> = ({ role, className }: props) => {
 
   //mutation using generated registeruser mutation 
   const [mutation, { loading, error, data }] = useRegisterUserMutation({
-    onCompleted(data, clientOptions) {
+    onCompleted(data) {
       customToast.sucess(data.registerUser.message);
       router.push(`/otp?email=${getValues("email")}&action=${OtpType.NewRegister}`)
     },
@@ -73,7 +73,6 @@ const Register: FC<props> = ({ role, className }: props) => {
         data: {
           ...data,
           phone: countryCode + phone,
-          //@ts-ignore
           role
         }
       }
@@ -130,7 +129,7 @@ const Register: FC<props> = ({ role, className }: props) => {
 
         {/* only for organizer */}
         {
-          role === UserRole.ORGANIZER && (
+          role === UserRole.Organizer && (
             <>
               <InputField label="Organizer name" />
               <div className="flex items-center space-x-2">
@@ -149,7 +148,7 @@ const Register: FC<props> = ({ role, className }: props) => {
               </div>
               <InputField label="ABN ACN number" />
 
-              <p>documents</p>
+              <p>Documents</p>
               <DragAndDropPdf onChange={handleFileChange} />
             </>
           )
@@ -190,7 +189,7 @@ const Register: FC<props> = ({ role, className }: props) => {
         
         <LoadingButton isLoading={loading}>Register</LoadingButton>
 
-        {role === UserRole.USER && (
+        {role === UserRole.User && (
           <>
             <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
               OR SIGN UP USING

@@ -1,6 +1,6 @@
 "use client";
-import { useLoginMutation } from "@/__generated__/graphql";
-import { OtpType, UserRole } from "@/constants/enum";
+import { useLoginMutation, UserRole } from "@/__generated__/graphql";
+import { OtpType } from "@/constants/enum";
 import useCustomToast from "@/hooks/useToast";
 import { loginFormValidation } from "@/lib/formvalidation/authvalidation";
 import { loginReducer } from "@/redux/slices/auth.slice";
@@ -18,6 +18,7 @@ import LoadingButton from "../common/LoadingButton";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
+import ConditionallyRender from "../common/ConditionallyRender";
 
 type formData = z.infer<typeof loginFormValidation>;
 
@@ -131,18 +132,22 @@ const Login = ({ user }: { user: UserRole }) => {
         Login
       </LoadingButton>
 
-      {user === UserRole.USER && (
-        <>
-          <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
-            OR SIGN UP USING
-          </p>
-          <div className="text-center my-3">
-            <Button className="bg-white text-black border-black border-2 hover:text-white">
-              <FaGoogle />
-            </Button>
-          </div>
-        </>
-      )}
+
+      <ConditionallyRender
+        condition={user === UserRole.User}
+        show={
+          <>
+            <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
+              OR SIGN UP USING
+            </p>
+            <div className="text-center my-3">
+              <Button className="bg-white text-black border-black border-2 hover:text-white" type="button">
+                <FaGoogle />
+              </Button>
+            </div>
+          </>
+        }
+      />
     </form>
   );
 };

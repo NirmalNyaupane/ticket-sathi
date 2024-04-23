@@ -17,7 +17,7 @@ const socialMedias = [
     {
         id:"ddaaa68d-4f6b-4062-aff3-9c70621ef72f",
         name:"Threads",
-        link:"https://www.threads.net/login"
+        link:"https://www.threads.net"
     }
 ];
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@types/cors": "^2.8.17",
+    "apollo-upload-client": "^18.0.1",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.1.9",
     "class-transformer": "^0.5.1",

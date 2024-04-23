@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { UserRole } from "@/constants/enum";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { firstCharacterOfFullName } from "@/utils/helper";
@@ -17,6 +16,7 @@ import { CSSProperties, useState } from "react";
 import { useSelector } from "react-redux";
 import GlobalDialog from "../Dialog/GlobalDialog";
 import GlobalDropDown from "../GlobalDropDownMenu";
+import { UserRole } from "@/__generated__/graphql";
 type LinkItems = {
   label: string;
   url: string;
@@ -100,7 +100,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 }
                 dialogTitle={"Login"}
               >
-                <Login user={UserRole.USER} />
+                <Login user={UserRole.User} />
               </GlobalDialog>
 
               <GlobalDialog
@@ -111,7 +111,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 }
                 dialogTitle={"Register"}
               >
-                <Register role={UserRole.USER} />
+                <Register role={UserRole.User} />
               </GlobalDialog>
             </>
             :
