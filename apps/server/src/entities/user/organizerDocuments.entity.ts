@@ -5,12 +5,12 @@ import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne } from "typeorm";
 @ObjectType()
 @Entity()
 export class OrganizerDocuments extends CommonEntity {
-    @Field(() => Media)
+    @Field(() => Media, { nullable: true })
     @OneToOne(() => Media, { cascade: true })
     @JoinColumn()
     logo: Media;
 
-    @Field(() => [Media])
+    @Field(() => [Media], { nullable: true })
     @ManyToMany(() => Media, { cascade: true })
     @JoinTable()
     documents: Media[];

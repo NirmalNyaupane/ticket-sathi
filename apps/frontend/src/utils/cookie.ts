@@ -68,5 +68,6 @@ export const deleteCookie = (cookieName: string) => {
     cookieName,
     cookieValue: undefined,
     path: "/",
+    expirationDate: new Date().toDateString()
   });
 };

@@ -23,6 +23,7 @@ import ConditionallyRender from "../common/ConditionallyRender";
 type formData = z.infer<typeof loginFormValidation>;
 
 const Login = ({ user }: { user: UserRole }) => {
+
   /******************* state **************************/
   const [isPasswordShow, setPasswordShow] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState<boolean>(false);
@@ -58,7 +59,6 @@ const Login = ({ user }: { user: UserRole }) => {
       toast.sucess("Login sucessfully");
       dispatch(loginReducer({
         accessToken: data.login.accessToken,
-        //@ts-ignore
         role: data.login.role,
         isVerified: data.login.isVerified,
         id: data.login.id,

@@ -1,50 +1,27 @@
 'use client'
+import { UserRole } from "@/__generated__/graphql";
 import OrganizerAdminNavbar from "@/components/organizer/layout/OrganizerAdminNavbar";
 import SideBar from "@/components/organizer/layout/SideBar";
-import { useToast } from "@/components/ui/use-toast";
-import { UserRole } from "@/constants/enum";
-import useOrganizerDataFetch from "@/hooks/useOrganizerDataFetch";
-import { addOrganizer } from "@/redux/slices/organizer.slice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 
 export const OrganizerProviderLayout = ({ children }: { children: React.ReactNode }) => {
     const state = useSelector((state: RootState) => state.auth!);
-    const { toast } = useToast();
     const router = useRouter();
-    const dispatch = useDispatch();
-
-    const { data, isLoading, isSuccess } = useOrganizerDataFetch({
-        enabled: state.role === UserRole.ORGANIZER,
-    });
 
     const checkRole = () => {
-        if (state.role !== UserRole.ORGANIZER) {
-            toast({
-                description: "You are not authorized",
-                duration: 1000,
-                variant: "destructive"
-            })
-            router.push("/organizer/auth/login")
+        return state.role === UserRole.Organizer;
+    }
+
+    useEffect(() => {
+        if (!checkRole()) {
+            router.push("/organizer/auth/login");
         }
-    }
-    // useEffect(() => {
-    //     checkRole();
-    // }, [state]);
+    }, [state]);
 
-    if (isLoading) {
-        return <p>Loading.....................</p>
-    }
-
-    if (isSuccess) {
-        console.log("sucess");
-    }
-
-    if (isSuccess) {
-        dispatch(addOrganizer(data.data.data));
-    }
 
     return (
         <div className='relative w-full'>
