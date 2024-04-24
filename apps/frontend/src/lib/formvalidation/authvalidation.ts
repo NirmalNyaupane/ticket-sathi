@@ -46,6 +46,8 @@ const registerValidation = z
     path: ["confirmPassword"],
   });
 
+  
+  
 /************************ login form validation ********************************/
 const loginFormValidation = z.object({
   email: z

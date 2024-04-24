@@ -154,9 +154,9 @@ export type OrganizerDetails = {
 export type OrganizerDocuments = {
   __typename?: 'OrganizerDocuments';
   createdAt: Scalars['String']['output'];
-  documents: Array<Media>;
+  documents?: Maybe<Array<Media>>;
   id: Scalars['String']['output'];
-  logo: Media;
+  logo?: Maybe<Media>;
 };
 
 export enum OrganizerStatus {
@@ -279,10 +279,18 @@ export type ResetForgotPasswordMutationVariables = Exact<{
 
 export type ResetForgotPasswordMutation = { __typename?: 'Mutation', resetForgotPassword: { __typename?: 'CommonResponse', message: string } };
 
+export type UploadMediaMutationVariables = Exact<{
+  mediaType: MediaType;
+  file: Scalars['Upload']['input'];
+}>;
+
+
+export type UploadMediaMutation = { __typename?: 'Mutation', uploadMedia: { __typename?: 'MediaSchema', id?: string | null, name?: string | null, mimeType?: string | null, mediaType?: MediaType | null } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents: Array<{ __typename?: 'Media', name?: string | null }>, logo: { __typename?: 'Media', name?: string | null } } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -454,6 +462,43 @@ export function useResetForgotPasswordMutation(baseOptions?: Apollo.MutationHook
 export type ResetForgotPasswordMutationHookResult = ReturnType<typeof useResetForgotPasswordMutation>;
 export type ResetForgotPasswordMutationResult = Apollo.MutationResult<ResetForgotPasswordMutation>;
 export type ResetForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ResetForgotPasswordMutation, ResetForgotPasswordMutationVariables>;
+export const UploadMediaDocument = gql`
+    mutation UploadMedia($mediaType: MediaType!, $file: Upload!) {
+  uploadMedia(mediaType: $mediaType, file: $file) {
+    id
+    name
+    mimeType
+    mediaType
+  }
+}
+    `;
+export type UploadMediaMutationFn = Apollo.MutationFunction<UploadMediaMutation, UploadMediaMutationVariables>;
+
+/**
+ * __useUploadMediaMutation__
+ *
+ * To run a mutation, you first call `useUploadMediaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadMediaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadMediaMutation, { data, loading, error }] = useUploadMediaMutation({
+ *   variables: {
+ *      mediaType: // value for 'mediaType'
+ *      file: // value for 'file'
+ *   },
+ * });
+ */
+export function useUploadMediaMutation(baseOptions?: Apollo.MutationHookOptions<UploadMediaMutation, UploadMediaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadMediaMutation, UploadMediaMutationVariables>(UploadMediaDocument, options);
+      }
+export type UploadMediaMutationHookResult = ReturnType<typeof useUploadMediaMutation>;
+export type UploadMediaMutationResult = Apollo.MutationResult<UploadMediaMutation>;
+export type UploadMediaMutationOptions = Apollo.BaseMutationOptions<UploadMediaMutation, UploadMediaMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {

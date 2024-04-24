@@ -31,3 +31,12 @@ mutation ResetForgotPassword($data: ResetForgotPasswordValidator!) {
     message
   }
 }
+
+mutation UploadMedia($mediaType: MediaType!, $file: Upload!) {
+  uploadMedia(mediaType: $mediaType, file: $file) {
+    id
+    name
+    mimeType
+    mediaType
+  }
+}

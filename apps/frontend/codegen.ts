@@ -1,10 +1,10 @@
 
-import { BACKEND_URL } from '@/constants/config';
+// import { BACKEND_URL } from '@/constants/config';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: BACKEND_URL,
+  schema: "http://localhost:4000",
   documents: ["src/**/*.tsx", "src/**/*.graphql"],
   generates: {
     "./src/__generated__/graphql.ts": {

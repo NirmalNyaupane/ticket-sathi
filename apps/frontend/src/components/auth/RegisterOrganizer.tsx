@@ -1,129 +1,184 @@
-"use client";
-import organizerRegisterFormValidation from "@/lib/formvalidation/organizerRegister";
+import { useRegisterUserMutation, UserRole } from "@/__generated__/graphql";
+import { OtpType } from "@/constants/enum";
+import useCustomToast from "@/hooks/useToast";
+import { registerValidation } from "@/lib/formvalidation/authvalidation";
 import { cn } from "@/lib/utils";
-import { registerOrganizerApi } from "@/services/organizer.service";
-import { OrganizerRegisterFormData } from "@/types/auth/AuthType";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import CustomTextArea from "../common/CustomTextArea";
-import DragAndDropImage from "../common/DragAndDropImage";
-import { InputField } from "../common/InputField";
-import LoadingButton from "../common/LoadingButton";
-import SocialMedia from "../common/SocialMedia";
-import { FormField } from "../ui/form";
-import { Label } from "../ui/label";
-import { useToast } from "../ui/use-toast";
 import { showError } from "@/utils/helper";
-import { AxiosError } from 'axios';
-import { Dispatch, SetStateAction } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FC, memo, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import DragAndDropPdf from "../common/DragAndDropPdf";
+import {
+  InputField,
+  InputFieldWithRightIcon,
+  PhoneNumberInputField,
+} from "../common/InputField";
+import LoadingButton from "../common/LoadingButton";
+import { Checkbox } from "../ui/checkbox";
+import { FormField } from "../ui/form";
+type formData = z.infer<typeof registerValidation>;
 
 interface props {
   className?: string;
-  setNextPage:Dispatch<SetStateAction<number>>;
 }
 
-const RegisterOrganizer = ({ className, setNextPage}: props) => {
+const RegisterOrganizer: FC<props> = ({ className }: props) => {
+  /********************** state *********************************/
+  const [isPasswordShow, setPasswordShow] = useState(false);
+  const [isConfirmPasswordShow, setConfirmPasswordShow] = useState(false);
+  const [countryCode, setCountryCode] = useState<string>("");
+
+  /******************* Hooks *******************/
+  const customToast = useCustomToast();
+
+  const router = useRouter();
+  /*************** Methods ***************************/
+  const getCountryCode = (code: string) => {
+    setCountryCode(code);
+  };
+
+  /** Form handling using react-hook-form ****************/
   const {
     register,
-    formState: { errors },
     handleSubmit,
-    control
-  } = useForm<OrganizerRegisterFormData>({
-    resolver: zodResolver(organizerRegisterFormValidation),
-    defaultValues: {
-      social_links: [{ name: "", url: "" }]
-    }
+    getValues,
+    formState: { errors },
+    control,
+  } = useForm<formData>({
+    resolver: zodResolver(registerValidation),
   });
 
-  const { toast } = useToast();
+  const handleFileChange = (files: File[]) => {
+    console.log(files)
+  }
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data: OrganizerRegisterFormData) => {
-      return registerOrganizerApi(data);
+  //mutation using generated registeruser mutation 
+  const [mutation, { loading, error, data }] = useRegisterUserMutation({
+    onCompleted(data) {
+      customToast.sucess(data.registerUser.message);
+      router.push(`/otp?email=${getValues("email")}&action=${OtpType.NewRegister}`)
     },
-    onSuccess: () => {
-      toast({
-        variant: "default",
-        className: "bg-green-600 text-white font-bold",
-        description: "Organizer registered sucessfully",
-        duration: 1000,
-      });
-      setNextPage(3);
-    },
-    onError(error: AxiosError<any, any>) {
-      toast({
-        variant: "default",
-        description: showError(error),
-        duration: 1000
-      })
-    },
-  })
-
-  const formSubmit = handleSubmit((data) => {
-    mutate(data);
   });
+  const formSubmit: SubmitHandler<formData> = async (e) => {
+    const { confirmPassword, phone, ...data } = e;
+    console.log(e.phone)
+    mutation({
+      variables: {
+        data: {
+          ...data,
+          phone: countryCode + phone,
+          role: UserRole.Organizer
+        }
+      }
+    }).catch((e) => {
+      customToast.error(showError(e))
+    })
+  };
+
 
   return (
-    <form
-      className={cn(`flex flex-col gap-2 ${className}`)}
-      onSubmit={formSubmit}
-    >
-      <InputField
-        type="text"
-        label="Organizer Name"
-        {...register("organizer_name")}
-        errorMessage={errors.organizer_name?.message}
-      />
-
-      <InputField
-        type="text"
-        label="Address"
-        {...register("address")}
-        errorMessage={errors.address?.message}
-      />
-
-      <div className="space-y-1">
-        <Label>Social Links</Label>
-        <SocialMedia control={control} error={errors.social_links} />
-      </div>
-
-      <div className="space-y-1">
-        <Label>Logo</Label>
-
+    <>
+      <form
+        className={cn(`flex flex-col gap-2 ${className}`)}
+        onSubmit={handleSubmit(formSubmit)}
+      >
         <FormField
-          name="logo"
+          name="fullName"
           control={control}
           render={({ field }) => {
             return (
-              <DragAndDropImage
-                className="h-[200px]"
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                errorMessage={errors.logo?.message as string}
+              <InputField
+                type="text"
+                label="Full Name"
+                formReturn={register("fullName")}
+                {...field}
+                errorMessage={errors.fullName?.message}
               />
             );
           }}
         />
-      </div>
 
-      <CustomTextArea
-        label="Description"
-        {...register("description")}
-        errorMessage={errors.description?.message}
-      />
+        <FormField
+          control={control}
+          name="email"
+          render={({ field }) => {
+            return (
+              <InputField
+                type="email"
+                label="Email"
+                errorMessage={errors.email?.message}
+                {...field}
+              />
+            );
+          }}
+        />
 
-      <InputField
-        type="url"
-        label="Website"
-        {...register("website")}
-        errorMessage={errors.website?.message}
-      />
-      <LoadingButton type="submit" isLoading={isPending}>
-        Submit
-      </LoadingButton>
-    </form>
+        <PhoneNumberInputField
+          label="Phone number"
+          formReturn={register("phone")}
+          errorMessage={errors.phone?.message}
+          getCountryCode={getCountryCode}
+        />
+
+        <InputField label="Organizer name" />
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="terms"
+            checked={true}
+          // onCheckedChange={() => setKeepMeLoggedIn(!keepMeLoggedIn)}
+          />
+          <label
+            htmlFor="terms"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed
+             peer-disabled:opacity-70"
+          >
+            Gst register
+          </label>
+        </div>
+        <InputField label="ABN ACN number" />
+
+        <p>Documents</p>
+        <DragAndDropPdf onChange={handleFileChange} />
+
+        <InputFieldWithRightIcon
+          label="Password"
+          type={!isPasswordShow ? "password" : "text"}
+          rightIcon={
+            !isPasswordShow ? (
+              <Eye className="cursor-pointer" />
+            ) : (
+              <EyeOff className=" cursor-pointer" />
+            )
+          }
+          {...register("password")}
+          errorMessage={errors.password?.message}
+          onRightIconClicked={() => {
+            setPasswordShow(!isPasswordShow);
+          }}
+        />
+        <InputFieldWithRightIcon
+          label="Confirm Password"
+          type={!isConfirmPasswordShow ? "password" : "text"}
+          rightIcon={
+            !isConfirmPasswordShow ? (
+              <Eye className="cursor-pointer" />
+            ) : (
+              <EyeOff className=" cursor-pointer" />
+            )
+          }
+          {...register("confirmPassword")}
+          errorMessage={errors.confirmPassword?.message}
+          onRightIconClicked={() => {
+            setConfirmPasswordShow(!isConfirmPasswordShow);
+          }}
+        />
+
+        <LoadingButton isLoading={loading}>Register</LoadingButton>
+      </form>
+    </>
   );
 };
 

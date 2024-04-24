@@ -19,7 +19,6 @@ class MediaService {
         if (!fs.existsSync(PathUtil.TEMP_FOLDER_PATH)) {
             fs.mkdirSync(PathUtil.TEMP_FOLDER_PATH, { recursive: true });
         }
-        console.log("File from service", file);
 
         const updatedFileName = `${fileId}-${path.extname(file.filename)}`;
         // Save the file to the temp directory

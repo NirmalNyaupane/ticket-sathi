@@ -68,6 +68,9 @@ importers:
       type-graphql:
         specifier: 2.0.0-beta.6
         version: 2.0.0-beta.6(class-validator@0.14.1)(graphql-scalars@1.22.4(graphql@16.8.1))(graphql@16.8.1)
+      typedi:
+        specifier: ^0.10.0
+        version: 0.10.0
       typeorm:
         specifier: ^0.3.17
         version: 0.3.20(ioredis@5.3.2)(pg@8.11.3)(ts-node@10.9.2(@types/node@20.11.16)(typescript@5.3.3))
@@ -1582,6 +1585,9 @@ packages:
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
+
+  typedi@0.10.0:
+    resolution: {integrity: sha512-v3UJF8xm68BBj6AF4oQML3ikrfK2c9EmZUyLOfShpJuItAqVBHWP/KtpGinkSsIiP6EZyyb6Z3NXyW9dgS9X1w==}
 
   typeorm-naming-strategies@4.1.0:
     resolution: {integrity: sha512-vPekJXzZOTZrdDvTl1YoM+w+sUIfQHG4kZTpbFYoTsufyv9NIBRe4Q+PdzhEAFA2std3D9LZHEb1EjE9zhRpiQ==}
@@ -3291,6 +3297,8 @@ snapshots:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
+
+  typedi@0.10.0: {}
 
   typeorm-naming-strategies@4.1.0(typeorm@0.3.20(ioredis@5.3.2)(pg@8.11.3)(ts-node@10.9.2(@types/node@20.11.16)(typescript@5.3.3))):
     dependencies:

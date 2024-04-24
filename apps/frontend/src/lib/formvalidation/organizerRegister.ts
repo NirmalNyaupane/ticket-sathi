@@ -25,5 +25,4 @@ const organizerRegisterFormValidation = z.object({
     .min(1, "Website is required")
     .url("Website must be an url"),
 });
-
 export default organizerRegisterFormValidation;

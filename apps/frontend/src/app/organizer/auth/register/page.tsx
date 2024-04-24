@@ -1,6 +1,5 @@
 "use client";
-import { UserRole } from "@/__generated__/graphql";
-import Register from "@/components/auth/Register";
+import RegisterOrganizer from "@/components/auth/RegisterOrganizer";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,7 +22,7 @@ const OrganizerRegister = () => {
           Setup your account
         </h2>
         <hr />
-        <Register role={UserRole.Organizer} />
+        <RegisterOrganizer />
         <div className="text-bold font-medium text-center -mt-5">
           Already have an account?{" "}
           <Link href={`/organizer/auth/login`} className="text-red-500">
