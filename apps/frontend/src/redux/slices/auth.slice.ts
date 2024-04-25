@@ -7,12 +7,16 @@ export interface AuthState {
   isUserLogin: boolean;
   isVerified: boolean;
   role: UserRole;
+  accessToken: string;
+  id: string;
 }
 
 const initialState: AuthState = {
   isUserLogin: false,
   isVerified: false,
   role: UserRole.User,
+  accessToken: "",
+  id: "",
 };
 
 const authSlice = createSlice({
@@ -20,7 +24,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginReducer: authLoginReducer,
-    logoutReducer: authLogoutReducer
+    logoutReducer: authLogoutReducer,
   },
 });
 

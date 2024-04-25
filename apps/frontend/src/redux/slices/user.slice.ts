@@ -12,6 +12,7 @@ const initialState: User= {
   authType: AuthType.Traditional,
   id: "",
   createdAt: "",
+  address:"",
   profile: {
     __typename: undefined,
     name: undefined

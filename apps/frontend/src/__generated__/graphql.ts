@@ -226,6 +226,7 @@ export type User = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
+  address?: Maybe<Scalars['String']['output']>;
   authType: AuthType;
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
@@ -298,7 +299,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __type
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -552,6 +553,7 @@ export const GetCurrentUserDocument = gql`
     role
     authType
     isVerified
+    address
     organizerDetails {
       id
       createdAt

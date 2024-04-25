@@ -32,13 +32,10 @@ class UserResolver {
     @Arg("data") userData: UpdateUserValidation,
     @Ctx() context: Context
   ): Promise<CommonResponse> {
-    const updateData = {} as Omit<
-      UpdateUserValidation,
-      "oldPassword" | "newPassword"
-    > & { password: string };
+    let { oldPassword, newPassword, ...restData } = userData;
     // const updatedResponse = await userService.
-    if (userData.oldPassword) {
-      if (userData.oldPassword === userData.newPassword) {
+    if (oldPassword) {
+      if (oldPassword === newPassword) {
         throw new CustomError(
           "Old password and new password cannot same",
           HTTPStatusCode.BAD_REQUEST
@@ -56,13 +53,13 @@ class UserResolver {
           HTTPStatusCode.BAD_REQUEST
         );
       }
-      const hashedPassword = await bcrypt.hash(userData.newPassword, 10);
-      updateData.password = hashedPassword;
+
+      newPassword = await bcrypt.hash(userData.newPassword, 10);
     }
 
     const updatedResponse = await userService.updateUserById(
       context.user?.id as string,
-      updateData
+      { ...restData, password: newPassword }
     );
     if (updatedResponse.affected === 1) {
       return { message: "User updated sucessfully", status: "success" };

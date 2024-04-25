@@ -11,12 +11,13 @@ import { firstCharacterOfFullName } from "@/utils/helper";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import { CSSProperties, useState } from "react";
 import { useSelector } from "react-redux";
 import GlobalDialog from "../Dialog/GlobalDialog";
 import GlobalDropDown from "../GlobalDropDownMenu";
 import { UserRole } from "@/__generated__/graphql";
+import { useRouter } from "next/navigation";
 type LinkItems = {
   label: string;
   url: string;
@@ -32,7 +33,8 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
   const [isFoucs, setFocus] = useState(false);
   const isLoggin = useSelector((state: RootState) => state.auth.isUserLogin!);
   const user = useSelector((state: RootState) => state.user!);
-  const path = usePathname()
+  const path = usePathname();
+  const router = useRouter();
 
   return (
     <header
@@ -53,11 +55,15 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
           </Link>
 
           <div
-            className={cn(`flex items-center rounded-2xl px-3 bg-slate-600 shadow-xl border-white border`, { "bg-white": isFoucs })}
+            className={cn(
+              `flex items-center rounded-2xl px-3 bg-slate-600 shadow-xl border-white border`,
+              { "bg-white": isFoucs }
+            )}
           >
             <Search
-              className={`mr-2 h-4 w-4 shrink-0 ${isFoucs ? "text-orange-400" : "text-white"
-                }`}
+              className={`mr-2 h-4 w-4 shrink-0 ${
+                isFoucs ? "text-orange-400" : "text-white"
+              }`}
             />
             <Input
               placeholder="search"
@@ -91,9 +97,8 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
 
         {/* login logout section */}
         <div className="flex items-center gap-2">
-          {!isLoggin ?
+          {!isLoggin ? (
             <>
-
               <GlobalDialog
                 dialogButton={
                   <Button className="text-sm hover:bg-gray-800">Login</Button>
@@ -114,17 +119,22 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 <Register role={UserRole.User} />
               </GlobalDialog>
             </>
-            :
+          ) : (
             <GlobalDropDown
               display={
-                <Avatar className="cursor-pointer">
+                <Avatar
+                  className="cursor-pointer"
+                >
                   <AvatarImage src={user?.profile?.name ?? ""} />
-                  <AvatarFallback>{firstCharacterOfFullName(user.fullName)}</AvatarFallback>
+                  <AvatarFallback>
+                    {firstCharacterOfFullName(user.fullName)}
+                  </AvatarFallback>
                 </Avatar>
               }
               isBlack={path === "/"}
-              dropDownLists={undefined} />
-          }
+              dropDownLists={undefined}
+            />
+          )}
         </div>
       </nav>
     </header>

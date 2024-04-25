@@ -23,7 +23,6 @@ import ConditionallyRender from "../common/ConditionallyRender";
 type formData = z.infer<typeof loginFormValidation>;
 
 const Login = ({ user }: { user: UserRole }) => {
-
   /******************* state **************************/
   const [isPasswordShow, setPasswordShow] = useState(false);
   const [keepMeLoggedIn, setKeepMeLoggedIn] = useState<boolean>(false);
@@ -39,7 +38,7 @@ const Login = ({ user }: { user: UserRole }) => {
     formState: { errors },
     handleSubmit,
     getValues,
-    reset
+    reset,
   } = useForm<formData>({
     resolver: zodResolver(loginFormValidation), //zod validaton
   });
@@ -47,7 +46,6 @@ const Login = ({ user }: { user: UserRole }) => {
   /******************** React query mutation  ****************/
   const [loginMutation, { loading }] = useLoginMutation({
     onCompleted: (data) => {
-
       const jwt = data.login.accessToken;
 
       if (!jwt) {
@@ -57,25 +55,30 @@ const Login = ({ user }: { user: UserRole }) => {
 
       reset();
       toast.sucess("Login sucessfully");
-      dispatch(loginReducer({
-        accessToken: data.login.accessToken,
-        role: data.login.role,
-        isVerified: data.login.isVerified,
-        id: data.login.id,
-      }))
-    }
+      dispatch(
+        loginReducer({
+          accessToken: data.login.accessToken,
+          role: data.login.role,
+          isVerified: data.login.isVerified,
+          id: data.login.id,
+          isUserLogin: true,
+        })
+      );
+    },
   });
 
   /*** Handle the form after submission ***/
   const handleFormSubmit = handleSubmit((data) => {
     loginMutation({
       variables: {
-        data
-      }
+        data,
+      },
     }).catch((e) => {
       toast.error(showError(e));
       if (e.networkError.statusCode === 401) {
-        router.push(`/otp/?email=${getValues("email")}&action=${OtpType.NewRegister}`)
+        router.push(
+          `/otp/?email=${getValues("email")}&action=${OtpType.NewRegister}`
+        );
       }
     });
   });
@@ -122,16 +125,13 @@ const Login = ({ user }: { user: UserRole }) => {
           </label>
         </div>
         <div className="ml-auto font-medium text-red-500">
-          <Link href={"/forgot-password"}>
-            Forget Password?
-          </Link>
+          <Link href={"/forgot-password"}>Forget Password?</Link>
         </div>
       </div>
 
       <LoadingButton type="submit" isLoading={loading}>
         Login
       </LoadingButton>
-
 
       <ConditionallyRender
         condition={user === UserRole.User}
@@ -141,7 +141,10 @@ const Login = ({ user }: { user: UserRole }) => {
               OR SIGN UP USING
             </p>
             <div className="text-center my-3">
-              <Button className="bg-white text-black border-black border-2 hover:text-white" type="button">
+              <Button
+                className="bg-white text-black border-black border-2 hover:text-white"
+                type="button"
+              >
                 <FaGoogle />
               </Button>
             </div>

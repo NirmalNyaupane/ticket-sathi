@@ -8,6 +8,7 @@ query GetCurrentUser {
     role
     authType
     isVerified
+    address
     organizerDetails {
       id
       createdAt

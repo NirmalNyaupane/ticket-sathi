@@ -6,13 +6,12 @@ import { AuthState } from "../slices/auth.slice";
 
 const authLoginReducer = (
   state: Draft<AuthState>,
-  action: PayloadAction<LoginSucessResponse>
+  action: PayloadAction<AuthState>
 ): void => {
-  const { accessToken, isVerified, role } =
-    action.payload;
+  const { accessToken, isVerified, role } = action.payload;
 
   if (getCookie(AUTH_COOKIE_NAME)) {
-    deleteCookie(AUTH_COOKIE_NAME)
+    deleteCookie(AUTH_COOKIE_NAME);
   }
 
   setCookie({
@@ -29,12 +28,10 @@ const authLoginReducer = (
   }
 };
 
-
 const authLogoutReducer = (state: Draft<AuthState>) => {
   deleteCookie(AUTH_COOKIE_NAME as string);
   state.isUserLogin = false;
   state.isVerified = false;
-}
+};
 
 export { authLoginReducer, authLogoutReducer };
-

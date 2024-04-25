@@ -1,12 +1,13 @@
 "use client";
 import { useGetCurrentUserLazyQuery, UserRole } from "@/__generated__/graphql";
+import { Toaster } from "@/components/ui/toaster";
 import { AUTH_COOKIE_NAME } from "@/constants/config";
 import { loginReducer } from "@/redux/slices/auth.slice";
 import { addUser } from "@/redux/slices/user.slice";
 import { RootState } from "@/redux/store";
 import { getCookie } from "@/utils/cookie";
 import { usePathname, useRouter } from "next/navigation";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
@@ -22,15 +23,17 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const [getUser, { loading }] = useGetCurrentUserLazyQuery({
     onCompleted(data) {
       dispatch(addUser(data.getCurrentUser));
-      dispatch(loginReducer({
-        accessToken: jwt,
-        role: data?.getCurrentUser.role,
-        isVerified: data?.getCurrentUser.isVerified as boolean,
-        id: data?.getCurrentUser?.id,
-      }))
-    }
-  }
-  )
+      dispatch(
+        loginReducer({
+          accessToken: jwt,
+          role: data?.getCurrentUser.role,
+          isVerified: data?.getCurrentUser.isVerified as boolean,
+          id: data?.getCurrentUser?.id,
+          isUserLogin: true,
+        })
+      );
+    },
+  });
 
   //fetched user data
   const fetchUser = async () => {
@@ -39,9 +42,8 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
       setJwt(jwt);
       await getUser();
       if (auth.role === UserRole.Organizer) {
-        router.push("/organizer/dashboard")
+        router.push("/organizer/dashboard");
       }
-
     }
   };
 
@@ -50,17 +52,15 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   }, [auth]);
 
   if (loading) {
-    return <p>Loading....</p>
+    return <p>Loading....</p>;
   }
-
 
   return (
     <main>
-      <NextTopLoader
-        color="rgba(241,0,0,0.5)"
-      />
+      <Toaster />
+      <NextTopLoader color="rgba(241,0,0,0.5)" />
       {children}
-    </main >
+    </main>
   );
 };
 
