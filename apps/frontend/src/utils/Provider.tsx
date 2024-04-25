@@ -18,8 +18,8 @@ const Provider = ({ children }: React.PropsWithChildren) => {
     <ApolloProvider client={client}>
       <QueryClientProvider client={queryClient}>
         <ReduxProvider store={store}>
-          <DefaultLayout>{children}</DefaultLayout>
           <Toaster />
+          <DefaultLayout>{children}</DefaultLayout>
           <ReactQueryDevtools />
         </ReduxProvider>
       </QueryClientProvider>

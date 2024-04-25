@@ -30,7 +30,7 @@ const client = new ApolloClient({
   uri: `${BACKEND_URL}/graphql`,
   cache: new InMemoryCache(),
   // link: authLink.concat(httpLink).concat(createUploadLink()).concat(errorLink),
-  link: authLink.concat(uploadLink),
+  link: authLink.concat(uploadLink).concat(errorLink),
 });
 
 export default client;

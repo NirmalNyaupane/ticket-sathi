@@ -15,6 +15,10 @@ class UpdateUserValidation {
 
     @Field(() => String, { nullable: true })
     @IsOptional()
+    address:string;
+
+    @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsStrongPassword()
     oldPassword: string;
 

@@ -40,3 +40,9 @@ mutation UploadMedia($mediaType: MediaType!, $file: Upload!) {
     mediaType
   }
 }
+mutation UpdateUser($data: UpdateUserValidation!) {
+  updateUser(data: $data) {
+    message
+    status
+  }
+}

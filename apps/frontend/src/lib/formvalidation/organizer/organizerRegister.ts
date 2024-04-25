@@ -64,19 +64,19 @@ const organizerRegisterValidation = z
       .refine((data) => data.length !== 0, {
         message: "Documents are required",
       })
-      // .refine(
-      //   (data: File[]) => {
-      //     for (let file of data) {
-      //       if (file.size >= 5 * 1024 * 1024) {
-      //         return false;
-      //       }
-      //     }
-      //     return true;
-      //   },
-      //   {
-      //     message: "file size must be equal of less than 5MB",
-      //   }
-      // ),
+      .refine(
+        (data: File[]) => {
+          for (let file of data) {
+            if (file.size >= 5 * 1024 * 1024) {
+              return false;
+            }
+          }
+          return true;
+        },
+        {
+          message: "file size must be equal of less than 5MB",
+        }
+      ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password doesnot match",
