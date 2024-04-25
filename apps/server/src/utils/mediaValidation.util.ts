@@ -2,20 +2,15 @@ import { MediaType } from "../constants/enums/media.enum";
 import CustomError from "./customError.util";
 import { HTTPStatusCode } from "./helper";
 
-
 class MediaValidation {
-  validate(
-    fileLength: number,
-    fileExtensions: string,
-    mediaType: MediaType
-  ) {
+  validate(fileLength: number, fileExtensions: string, mediaType: MediaType) {
     let acceptedExtensions: string[] = [];
     let acceptedFileSize = 0;
 
     switch (mediaType) {
       case MediaType.ORGANIZER_DOCUMENT:
         acceptedExtensions = [".pdf"];
-        acceptedFileSize = 1024 * 1024 * 1024 * 5; //5mb
+        acceptedFileSize = 1024 * 1024 * 5; //5mb
         break;
 
       case MediaType.USER_PROFILE:
@@ -34,6 +29,7 @@ class MediaValidation {
 
     //file size validation
     if (fileLength > acceptedFileSize) {
+      console.log(fileLength);
       throw new CustomError(
         "File size exceed. Its limit is : " +
           acceptedFileSize / (1024 * 1024) +

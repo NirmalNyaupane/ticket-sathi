@@ -1,13 +1,17 @@
-import { useRegisterUserMutation, UserRole } from "@/__generated__/graphql";
+import {
+  MediaType,
+  useRegisterUserMutation,
+  UserRole,
+  useUploadMediaMutation,
+} from "@/__generated__/graphql";
 import { OtpType } from "@/constants/enum";
 import useCustomToast from "@/hooks/useToast";
-import { registerValidation } from "@/lib/formvalidation/authvalidation";
+import organizerRegisterValidation from "@/lib/formvalidation/organizer/organizerRegister";
 import { cn } from "@/lib/utils";
-import { showError } from "@/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FC, memo, useState } from "react";
+import { FC, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import DragAndDropPdf from "../common/DragAndDropPdf";
@@ -18,8 +22,9 @@ import {
 } from "../common/InputField";
 import LoadingButton from "../common/LoadingButton";
 import { Checkbox } from "../ui/checkbox";
-import { FormField } from "../ui/form";
-type formData = z.infer<typeof registerValidation>;
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { showError } from "@/utils/helper";
+type formData = z.infer<typeof organizerRegisterValidation>;
 
 interface props {
   className?: string;
@@ -30,86 +35,124 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
   const [isPasswordShow, setPasswordShow] = useState(false);
   const [isConfirmPasswordShow, setConfirmPasswordShow] = useState(false);
   const [countryCode, setCountryCode] = useState<string>("");
+  const [mediaIds, setMediaIds] = useState<string[]>([]);
 
   /******************* Hooks *******************/
-  const customToast = useCustomToast();
+  const toast = useCustomToast();
 
   const router = useRouter();
+
   /*************** Methods ***************************/
   const getCountryCode = (code: string) => {
     setCountryCode(code);
   };
 
   /** Form handling using react-hook-form ****************/
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-    control,
-  } = useForm<formData>({
-    resolver: zodResolver(registerValidation),
+  const form = useForm<formData>({
+    resolver: zodResolver(organizerRegisterValidation),
   });
 
   const handleFileChange = (files: File[]) => {
-    console.log(files)
-  }
+    form.setValue("document", files);
+  };
 
-  //mutation using generated registeruser mutation 
+  //mutation for file upload
+  const [
+    fileMutation,
+    { loading: fileuploadLoading, data: fileData, error: fileErrors },
+  ] = useUploadMediaMutation({
+    onCompleted(data) {
+      if (data.uploadMedia) {
+        setMediaIds((prev) => {
+          if (prev) {
+            return [...prev, data.uploadMedia.id];
+          } else {
+            return [data.uploadMedia.id];
+          }
+        });
+      }
+    },
+  });
+
+  //mutation using generated registeruser mutation
   const [mutation, { loading, error, data }] = useRegisterUserMutation({
     onCompleted(data) {
-      customToast.sucess(data.registerUser.message);
-      router.push(`/otp?email=${getValues("email")}&action=${OtpType.NewRegister}`)
+      toast.sucess(data.registerUser.message);
+      router.push(
+        `/otp?email=${form.getValues("email")}&action=${OtpType.NewRegister}`
+      );
     },
   });
   const formSubmit: SubmitHandler<formData> = async (e) => {
-    const { confirmPassword, phone, ...data } = e;
-    console.log(e.phone)
-    mutation({
-      variables: {
-        data: {
-          ...data,
-          phone: countryCode + phone,
-          role: UserRole.Organizer
-        }
+    const { document, confirmPassword, phone, ...restInput } = e;
+
+    //upload all file
+    for (let file of document) {
+      if (!fileErrors) {
+        //handle media upload
+        await fileMutation({
+          variables: {
+            mediaType: MediaType.OrganizerDocument,
+            file: file,
+          },
+        }).catch((error: any) => {
+          toast.error(showError(error));
+        });
+      } else {
+        break;
       }
-    }).catch((e) => {
-      customToast.error(showError(e))
-    })
+    }
+
+    if (fileData?.uploadMedia) {
+      //register user
+      mutation({
+        variables: {
+          data: {
+            ...restInput,
+            role: UserRole.Organizer,
+            phone: countryCode + phone,
+            documents: mediaIds.map((doc) => {
+              return { id: doc };
+            }),
+          },
+        },
+      }).catch((error: any) => {
+        toast.error(showError(error));
+      });
+    }
   };
 
-
   return (
-    <>
+    <Form {...form}>
       <form
         className={cn(`flex flex-col gap-2 ${className}`)}
-        onSubmit={handleSubmit(formSubmit)}
+        onSubmit={form.handleSubmit(formSubmit)}
       >
         <FormField
           name="fullName"
-          control={control}
+          control={form.control}
           render={({ field }) => {
             return (
               <InputField
                 type="text"
                 label="Full Name"
-                formReturn={register("fullName")}
+                formReturn={form.register("fullName")}
                 {...field}
-                errorMessage={errors.fullName?.message}
+                errorMessage={form.formState.errors.fullName?.message}
               />
             );
           }}
         />
 
         <FormField
-          control={control}
+          control={form.control}
           name="email"
           render={({ field }) => {
             return (
               <InputField
                 type="email"
                 label="Email"
-                errorMessage={errors.email?.message}
+                errorMessage={form.formState.errors.email?.message}
                 {...field}
               />
             );
@@ -118,30 +161,52 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
 
         <PhoneNumberInputField
           label="Phone number"
-          formReturn={register("phone")}
-          errorMessage={errors.phone?.message}
+          formReturn={form.register("phone")}
+          errorMessage={form.formState.errors.phone?.message}
           getCountryCode={getCountryCode}
         />
 
-        <InputField label="Organizer name" />
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="terms"
-            checked={true}
-          // onCheckedChange={() => setKeepMeLoggedIn(!keepMeLoggedIn)}
-          />
-          <label
-            htmlFor="terms"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed
-             peer-disabled:opacity-70"
-          >
-            Gst register
-          </label>
-        </div>
-        <InputField label="ABN ACN number" />
+        <InputField
+          label="Organizer name"
+          {...form.register("organizerName")}
+          errorMessage={form.formState.errors.organizerName?.message}
+        />
+
+        <InputField
+          label="Address"
+          {...form.register("address")}
+          errorMessage={form.formState.errors.organizerName?.message}
+        />
+
+        <FormField
+          control={form.control}
+          name="isGstRegister"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Gst register</FormLabel>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <InputField
+          label="ABN ACN number"
+          {...form.register("abnAcn")}
+          errorMessage={form.formState.errors.abnAcn?.message}
+        />
 
         <p>Documents</p>
-        <DragAndDropPdf onChange={handleFileChange} />
+        <DragAndDropPdf
+          onChange={handleFileChange}
+          errorMessage={form.formState.errors.document?.message?.toString()}
+        />
 
         <InputFieldWithRightIcon
           label="Password"
@@ -153,8 +218,8 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
               <EyeOff className=" cursor-pointer" />
             )
           }
-          {...register("password")}
-          errorMessage={errors.password?.message}
+          {...form.register("password")}
+          errorMessage={form.formState.errors.password?.message}
           onRightIconClicked={() => {
             setPasswordShow(!isPasswordShow);
           }}
@@ -169,16 +234,18 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
               <EyeOff className=" cursor-pointer" />
             )
           }
-          {...register("confirmPassword")}
-          errorMessage={errors.confirmPassword?.message}
+          {...form.register("confirmPassword")}
+          errorMessage={form.formState.errors.confirmPassword?.message}
           onRightIconClicked={() => {
             setConfirmPasswordShow(!isConfirmPasswordShow);
           }}
         />
 
-        <LoadingButton isLoading={loading}>Register</LoadingButton>
+        <LoadingButton isLoading={loading || fileuploadLoading}>
+          Register
+        </LoadingButton>
       </form>
-    </>
+    </Form>
   );
 };
 
