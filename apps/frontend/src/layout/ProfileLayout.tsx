@@ -21,7 +21,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
  
   return (
     <main className="max-width flex flex-col gap-5 mt-3 ">
-      <div className="bg-gray-100 rounded-lg pl-4 pt-4 pr-4 pb-1">
+      <div className="border border-gray-300 rounded-lg pl-4 pt-4 pr-4 pb-1">
         <div className="flex items-center gap-3 ">
           {/* profile picture */}
           <div className="w-[100px] h-[100px] rounded-[50%] relative border-2 border-gray-600">

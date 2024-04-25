@@ -8,7 +8,7 @@ import React from "react";
 
 const MyAccountpage = () => {
   return (
-    <div className="bg-gray-100 rounded-lg p-4 md:w-[60%] lg:w-[40%] flex flex-col gap-6">
+    <div className="border border-gray-300 rounded-lg p-4 md:w-[60%] lg:w-[40%] flex flex-col gap-6">
       <div>
         <h2 className="font-semibold">Personal info</h2>
         <p className="text-gray-600">Update your personal information</p>
@@ -24,7 +24,6 @@ const MyAccountpage = () => {
         <InputField label="Address" />
         <LoadingButton clasName="w-[100px]">Save</LoadingButton>
       </form>
-
     </div>
   );
 };

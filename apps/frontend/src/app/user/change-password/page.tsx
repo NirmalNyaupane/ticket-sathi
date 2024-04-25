@@ -46,7 +46,7 @@ const ChangePassword = () => {
   });
 
   return (
-    <div className="bg-gray-100 rounded-lg p-4 md:w-[60%] lg:w-[40%] flex flex-col gap-6">
+    <div className="border border-gray-300 rounded-lg p-4 md:w-[60%] lg:w-[40%] flex flex-col gap-6">
       <div>
         <h2 className="font-semibold">Change Password</h2>
         <p className="text-gray-600">Change your password</p>
