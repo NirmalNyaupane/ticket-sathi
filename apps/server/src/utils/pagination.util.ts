@@ -1,10 +1,12 @@
 import { Pagination, PaginationInput } from "../schemas/common/common.schema";
 
 class PaginationUtil {
-  paginatedResponse = (count: number, PaginatedInput: PaginationInput):Pagination => {
-    const lastPage: number = PaginatedInput.page
-      ? Math.ceil(PaginatedInput.page / (PaginatedInput.pageLimit ?? 1))
-      : 1;
+  paginatedResponse = (
+    count: number,
+    PaginatedInput: PaginationInput
+  ): Pagination => {
+    const lastPage: number = Math.ceil(count / PaginatedInput.pageLimit);
+    console.log(lastPage);
     const prevPage =
       PaginatedInput.page - 1 > 0 ? PaginatedInput.page - 1 : null;
     const nextPage =
