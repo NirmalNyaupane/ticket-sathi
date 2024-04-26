@@ -54,25 +54,27 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
             ></Image>
           </Link>
 
-          <div
-            className={cn(
-              `flex items-center rounded-2xl px-3 bg-slate-600 shadow-xl border-white border`,
-              { "bg-white": isFoucs }
-            )}
-          >
-            <Search
-              className={`mr-2 h-4 w-4 shrink-0 ${
-                isFoucs ? "text-orange-400" : "text-white"
-              }`}
-            />
-            <Input
-              placeholder="search"
-              className="flex w-full rounded-md bg-transparent text-sm outline-none border-none 
+          {path === "/" && (
+            <div
+              className={cn(
+                `flex items-center rounded-2xl px-3 bg-slate-600 shadow-xl border-white border`,
+                { "bg-white": isFoucs }
+              )}
+            >
+              <Search
+                className={`mr-2 h-4 w-4 shrink-0 ${
+                  isFoucs ? "text-orange-400" : "text-white"
+                }`}
+              />
+              <Input
+                placeholder="search"
+                className="flex w-full rounded-md bg-transparent text-sm outline-none border-none 
             focus:outline-none focus:border-none focus-visible:ring-0 placeholder:text-white"
-              onFocus={() => setFocus((prev) => !prev)}
-              onBlur={() => setFocus((prev) => !prev)}
-            />
-          </div>
+                onFocus={() => setFocus((prev) => !prev)}
+                onBlur={() => setFocus((prev) => !prev)}
+              />
+            </div>
+          )}
         </div>
 
         {linkItems && (
@@ -122,9 +124,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
           ) : (
             <GlobalDropDown
               display={
-                <Avatar
-                  className="cursor-pointer"
-                >
+                <Avatar className="cursor-pointer">
                   <AvatarImage src={user?.profile?.name ?? ""} />
                   <AvatarFallback>
                     {firstCharacterOfFullName(user.fullName)}

@@ -5,10 +5,10 @@ import ProfileLayout from "@/layout/ProfileLayout";
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <div className="bg-gray-900">
+      <div>
         <DefaultNavBar linkItems={userNavItems} className="py-5" />
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 bg-muted/40">
         <ProfileLayout>{children}</ProfileLayout>
         <Footer />
       </div>
