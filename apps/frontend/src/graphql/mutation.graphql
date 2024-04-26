@@ -46,6 +46,14 @@ mutation UpdateUser($data: UpdateUserValidation!) {
     status
   }
 }
+mutation UpdateProfilePic($data: UpdateProfilePic!) {
+  updateProfilePic(data: $data) {
+    message
+    message
+    status
+    status
+  }
+}
 
 mutation CreateCategory($data: CreateCategoryValidation!) {
   createCategory(data: $data) {

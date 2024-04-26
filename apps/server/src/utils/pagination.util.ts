@@ -6,11 +6,10 @@ class PaginationUtil {
     PaginatedInput: PaginationInput
   ): Pagination => {
     const lastPage: number = Math.ceil(count / PaginatedInput.pageLimit);
-    console.log(lastPage);
     const prevPage =
       PaginatedInput.page - 1 > 0 ? PaginatedInput.page - 1 : null;
     const nextPage =
-      PaginatedInput.page + 1 < lastPage ? PaginatedInput.page + 1 : null;
+      PaginatedInput.page + 1 <= lastPage ? PaginatedInput.page + 1 : null;
     const currentPage = PaginatedInput.page ?? 1;
     const totalCount = count;
     return { prevPage, nextPage, currentPage, lastPage, totalCount };

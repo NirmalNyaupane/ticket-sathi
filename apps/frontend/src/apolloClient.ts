@@ -4,6 +4,7 @@ import { getCookie } from "./utils/cookie";
 import { AUTH_COOKIE_NAME, BACKEND_URL } from "./constants/config";
 import { setContext } from "@apollo/client/link/context";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
+import { offsetLimitPagination } from "@apollo/client/utilities";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {

@@ -116,6 +116,7 @@ export type Mutation = {
   registerUser: RegisterUserResponse;
   resetForgotPassword: CommonResponse;
   updateCategory: CommonResponse;
+  updateProfilePic: CommonResponse;
   updateUser: CommonResponse;
   uploadMedia: MediaSchema;
   verifyOtp: CommonResponse;
@@ -170,6 +171,11 @@ export type MutationResetForgotPasswordArgs = {
 export type MutationUpdateCategoryArgs = {
   categoryId: Scalars['String']['input'];
   data: UpdateCategoryValidation;
+};
+
+
+export type MutationUpdateProfilePicArgs = {
+  data: UpdateProfilePic;
 };
 
 
@@ -291,6 +297,10 @@ export type UpdateCategoryValidation = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateProfilePic = {
+  mediaId: Scalars['String']['input'];
+};
+
 export type UpdateUserValidation = {
   address?: InputMaybe<Scalars['String']['input']>;
   fullName?: InputMaybe<Scalars['String']['input']>;
@@ -378,6 +388,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'CommonResponse', message: string, status: string } };
+
+export type UpdateProfilePicMutationVariables = Exact<{
+  data: UpdateProfilePic;
+}>;
+
+
+export type UpdateProfilePicMutation = { __typename?: 'Mutation', updateProfilePic: { __typename?: 'CommonResponse', message: string, status: string } };
 
 export type CreateCategoryMutationVariables = Exact<{
   data: CreateCategoryValidation;
@@ -675,6 +692,42 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateProfilePicDocument = gql`
+    mutation UpdateProfilePic($data: UpdateProfilePic!) {
+  updateProfilePic(data: $data) {
+    message
+    message
+    status
+    status
+  }
+}
+    `;
+export type UpdateProfilePicMutationFn = Apollo.MutationFunction<UpdateProfilePicMutation, UpdateProfilePicMutationVariables>;
+
+/**
+ * __useUpdateProfilePicMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfilePicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfilePicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfilePicMutation, { data, loading, error }] = useUpdateProfilePicMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfilePicMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfilePicMutation, UpdateProfilePicMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfilePicMutation, UpdateProfilePicMutationVariables>(UpdateProfilePicDocument, options);
+      }
+export type UpdateProfilePicMutationHookResult = ReturnType<typeof useUpdateProfilePicMutation>;
+export type UpdateProfilePicMutationResult = Apollo.MutationResult<UpdateProfilePicMutation>;
+export type UpdateProfilePicMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePicMutation, UpdateProfilePicMutationVariables>;
 export const CreateCategoryDocument = gql`
     mutation CreateCategory($data: CreateCategoryValidation!) {
   createCategory(data: $data) {

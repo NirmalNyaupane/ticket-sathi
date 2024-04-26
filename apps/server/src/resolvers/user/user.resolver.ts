@@ -11,11 +11,16 @@ import { UserResponse } from "../../schemas/user/user.schema";
 import userService from "../../service/user/user.service";
 import { Context } from "../../types/context.type";
 import { CommonResponse } from "../../schemas";
-import { UpdateUserValidation } from "../../validators/user/updateuser.validation";
+import {
+  UpdateProfilePic,
+  UpdateUserValidation,
+} from "../../validators/user/updateuser.validation";
 import authService from "../../service/auth/auth.service";
 import bcrypt from "bcrypt";
 import CustomError from "../../utils/customError.util";
 import { HTTPStatusCode } from "../../utils/helper";
+import { RequestValidator } from "../../middlewares/requestValidator.middleware";
+import mediaService from "../../service/media/media.service";
 
 @Resolver()
 class UserResolver {
@@ -69,6 +74,26 @@ class UserResolver {
       "Internal server error",
       HTTPStatusCode.INTERNAL_SERVER_ERROR
     );
+  }
+
+  @Mutation(() => CommonResponse)
+  @UseMiddleware(authentication())
+  @UseMiddleware(RequestValidator.validate(UpdateProfilePic))
+  async updateProfilePic(
+    @Arg("data") data: UpdateProfilePic,
+    @Ctx() context: Context
+  ): Promise<CommonResponse> {
+    const media = await mediaService.findMediaById(data.mediaId);
+    const response = await userService.updateProfilePic(context.user!, media);
+
+    if (response) {
+      return { message: "Update user sucessfully", status: "success" };
+    } else {
+      throw new CustomError(
+        "Internal server error",
+        HTTPStatusCode.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }
 export default UserResolver;
