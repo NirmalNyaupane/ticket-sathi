@@ -1,85 +1,83 @@
 "use client";
+import { useCreateCategoryMutation } from "@/__generated__/graphql";
 import CustomTextArea from "@/components/common/CustomTextArea";
 import { InputField } from "@/components/common/InputField";
 import LoadingButton from "@/components/common/LoadingButton";
+import useCustomToast from "@/hooks/useToast";
 import categoryValidation from "@/lib/formvalidation/organizer/categoryValidation";
 import { EventCategoryFormData } from "@/types/organizer/eventCategoryType";
+import { showError } from "@/utils/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { CreateEventCategoryApi } from "@/services/organizer/eventCategory.service";
-import { useToast } from "@/components/ui/use-toast";
-import { AxiosError } from 'axios';
-import { showError } from "@/utils/helper";
 
 interface CategoryData {
-    id: string;
-    category_name: string;
-    description: string;
+  id: string;
+  name: string;
+  description: string;
 }
 
 interface CreateProps {
-    action: "create"
+  action: "create";
 }
 
 interface UpdateProps {
-    action: "update",
-    category: CategoryData
+  action: "update";
+  category: CategoryData;
 }
 
 type props = CreateProps | UpdateProps;
 
 const CategoryModal = (props: props) => {
-    const { register, formState: { errors }, handleSubmit, reset } = useForm<EventCategoryFormData>({
-        resolver: zodResolver(categoryValidation),
-        ...(props.action === "update" ? { defaultValues: { ...props.category } } : {})
-    });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm<EventCategoryFormData>({
+    resolver: zodResolver(categoryValidation),
+    ...(props.action === "update"
+      ? { defaultValues: { ...props.category } }
+      : {}),
+  });
 
-    const { toast } = useToast();
+  const toast = useCustomToast();
 
-    const createEvent = useMutation({
-        mutationFn: (data: EventCategoryFormData) => {
-            return CreateEventCategoryApi(data);
+  const [mutate, { loading }] = useCreateCategoryMutation({
+    onCompleted() {
+      toast.sucess("Category created sucessfully");
+      reset()
+    },
+  });
+
+  const handleForm = handleSubmit((data) => {
+    if (props.action === "create") {
+      mutate({
+        variables: {
+          data,
         },
+      }).catch((error) => {
+        toast.error(showError(error));
+      });
+    }
+  });
 
-        onSuccess: (data) => {
-            if (data.status === 200 || data.status === 201) {
-                toast({
-                    description: "Category Created Sucessfully",
-                    duration: 1000,
-                    variant: "default",
-                    className: "bg-green-600 text-white font-bold",
-                })
-                reset();
-            }
-        },
+  return (
+    <form className="space-y-3" onSubmit={handleForm}>
+      <InputField
+        label="Name"
+        errorMessage={errors.name?.message}
+        {...register("name")}
+      />
+      <CustomTextArea
+        label="Description"
+        errorMessage={errors.description?.message}
+        {...register("description")}
+      />
+      <LoadingButton type="submit" isLoading={loading}>
+        Submit
+      </LoadingButton>
+    </form>
+  );
+};
 
-        onError: (error: AxiosError<any, any>) => {
-            toast({
-                description: showError(error),
-                duration: 1000,
-                variant: "destructive"
-            })
-        },
-    })
-
-    const handleForm = handleSubmit((data) => {
-        if (props.action === "create") {
-            createEvent.mutate(data);
-        }
-    })
-
-    return (
-        <form className="space-y-3" onSubmit={handleForm}>
-            <InputField label="Name" errorMessage={errors.category_name?.message} {...register("category_name")} />
-            <CustomTextArea
-                label="Description"
-                errorMessage={errors.description?.message}
-                {...register("description")}
-            />
-            <LoadingButton type="submit" isLoading={createEvent.isPending}>Submit</LoadingButton>
-        </form>
-    )
-}
-
-export default CategoryModal
+export default CategoryModal;

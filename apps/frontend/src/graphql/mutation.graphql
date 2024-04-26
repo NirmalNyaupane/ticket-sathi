@@ -46,3 +46,36 @@ mutation UpdateUser($data: UpdateUserValidation!) {
     status
   }
 }
+
+mutation CreateCategory($data: CreateCategoryValidation!) {
+  createCategory(data: $data) {
+    message
+    status
+  }
+}
+
+mutation UpdateCategory($data: UpdateCategoryValidation!, $categoryId: String!) {
+  updateCategory(data: $data, categoryId: $categoryId) {
+    message
+  }
+}
+
+mutation movedcategory($categoryId: String!){
+  moveCategoryTrash(categoryId: $categoryId) {
+    message
+  }
+}
+
+mutation RecoverFromTrash($categoryId: String!) {
+  recoverFromTrash(categoryId: $categoryId) {
+    message
+    status
+  }
+}
+
+mutation DeleteCategoryPermanent($categoryId: String!) {
+  deleteCategoryPermanent(categoryId: $categoryId) {
+    message
+    status
+  }
+}

@@ -40,3 +40,32 @@ query GetCurrentUser {
     }
   }
 }
+
+query GetMyCategory($query: CommonQuery!) {
+  getMyCategory(query: $query) {
+    data {
+      description
+      id
+      name
+    }
+    meta {
+      currentPage
+      lastPage
+      prevPage
+      totalCount
+      nextPage
+    }
+  }
+}
+
+
+query GetMyTrashedCategory($query: CommonQuery!) {
+  getMyTrashedCategory(query: $query) {
+    data {
+      createdAt
+      description
+      id
+      name
+    }
+  }
+}

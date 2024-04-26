@@ -29,10 +29,29 @@ export enum AuthType {
   Traditional = 'TRADITIONAL'
 }
 
+export type Category = {
+  __typename?: 'Category';
+  createdAt: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type CommonQuery = {
+  page?: Scalars['Int']['input'];
+  pageLimit?: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CommonResponse = {
   __typename?: 'CommonResponse';
   message: Scalars['String']['output'];
   status: Scalars['String']['output'];
+};
+
+export type CreateCategoryValidation = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type ForgotPasswordRequestValidator = {
@@ -86,14 +105,30 @@ export enum MediaType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Role: Organizer */
+  createCategory: CommonResponse;
+  deleteCategoryPermanent: CommonResponse;
   forgotPasswordRequest: CommonResponse;
   getAccessToken: AccessTokenResponse;
   login: LoginUserResponse;
+  moveCategoryTrash: CommonResponse;
+  recoverFromTrash: CommonResponse;
   registerUser: RegisterUserResponse;
   resetForgotPassword: CommonResponse;
+  updateCategory: CommonResponse;
   updateUser: CommonResponse;
   uploadMedia: MediaSchema;
   verifyOtp: CommonResponse;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  data: CreateCategoryValidation;
+};
+
+
+export type MutationDeleteCategoryPermanentArgs = {
+  categoryId: Scalars['String']['input'];
 };
 
 
@@ -112,6 +147,16 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationMoveCategoryTrashArgs = {
+  categoryId: Scalars['String']['input'];
+};
+
+
+export type MutationRecoverFromTrashArgs = {
+  categoryId: Scalars['String']['input'];
+};
+
+
 export type MutationRegisterUserArgs = {
   data: RegisterUserSchema;
 };
@@ -119,6 +164,12 @@ export type MutationRegisterUserArgs = {
 
 export type MutationResetForgotPasswordArgs = {
   data: ResetForgotPasswordValidator;
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  categoryId: Scalars['String']['input'];
+  data: UpdateCategoryValidation;
 };
 
 
@@ -170,9 +221,36 @@ export type OtpVerifyValidator = {
   otp: Scalars['String']['input'];
 };
 
+export type PaginatedOrganizerCategory = {
+  __typename?: 'PaginatedOrganizerCategory';
+  data: Array<Category>;
+  meta: Pagination;
+};
+
+export type Pagination = {
+  __typename?: 'Pagination';
+  currentPage: Scalars['Int']['output'];
+  lastPage: Scalars['Int']['output'];
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalCount: Scalars['Int']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getCurrentUser: UserResponse;
+  getMyCategory: PaginatedOrganizerCategory;
+  getMyTrashedCategory: PaginatedOrganizerCategory;
+};
+
+
+export type QueryGetMyCategoryArgs = {
+  query: CommonQuery;
+};
+
+
+export type QueryGetMyTrashedCategoryArgs = {
+  query: CommonQuery;
 };
 
 export type RegisterUserResponse = {
@@ -206,6 +284,11 @@ export type SocialLinksResponse = {
   instagram?: Maybe<Scalars['String']['output']>;
   threads?: Maybe<Scalars['String']['output']>;
   twitter?: Maybe<Scalars['String']['output']>;
+};
+
+export type UpdateCategoryValidation = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateUserValidation = {
@@ -296,10 +379,60 @@ export type UpdateUserMutationVariables = Exact<{
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'CommonResponse', message: string, status: string } };
 
+export type CreateCategoryMutationVariables = Exact<{
+  data: CreateCategoryValidation;
+}>;
+
+
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CommonResponse', message: string, status: string } };
+
+export type UpdateCategoryMutationVariables = Exact<{
+  data: UpdateCategoryValidation;
+  categoryId: Scalars['String']['input'];
+}>;
+
+
+export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'CommonResponse', message: string } };
+
+export type MovedcategoryMutationVariables = Exact<{
+  categoryId: Scalars['String']['input'];
+}>;
+
+
+export type MovedcategoryMutation = { __typename?: 'Mutation', moveCategoryTrash: { __typename?: 'CommonResponse', message: string } };
+
+export type RecoverFromTrashMutationVariables = Exact<{
+  categoryId: Scalars['String']['input'];
+}>;
+
+
+export type RecoverFromTrashMutation = { __typename?: 'Mutation', recoverFromTrash: { __typename?: 'CommonResponse', message: string, status: string } };
+
+export type DeleteCategoryPermanentMutationVariables = Exact<{
+  categoryId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCategoryPermanentMutation = { __typename?: 'Mutation', deleteCategoryPermanent: { __typename?: 'CommonResponse', message: string, status: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
+
+export type GetMyCategoryQueryVariables = Exact<{
+  query: CommonQuery;
+}>;
+
+
+export type GetMyCategoryQuery = { __typename?: 'Query', getMyCategory: { __typename?: 'PaginatedOrganizerCategory', data: Array<{ __typename?: 'Category', description: string, id: string, name: string }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, prevPage?: number | null, totalCount: number, nextPage?: number | null } } };
+
+export type GetMyTrashedCategoryQueryVariables = Exact<{
+  query: CommonQuery;
+}>;
+
+
+export type GetMyTrashedCategoryQuery = { __typename?: 'Query', getMyTrashedCategory: { __typename?: 'PaginatedOrganizerCategory', data: Array<{ __typename?: 'Category', createdAt: string, description: string, id: string, name: string }> } };
 
 
 export const RegisterUserDocument = gql`
@@ -542,6 +675,175 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const CreateCategoryDocument = gql`
+    mutation CreateCategory($data: CreateCategoryValidation!) {
+  createCategory(data: $data) {
+    message
+    status
+  }
+}
+    `;
+export type CreateCategoryMutationFn = Apollo.MutationFunction<CreateCategoryMutation, CreateCategoryMutationVariables>;
+
+/**
+ * __useCreateCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCategoryMutation, { data, loading, error }] = useCreateCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateCategoryMutation, CreateCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCategoryMutation, CreateCategoryMutationVariables>(CreateCategoryDocument, options);
+      }
+export type CreateCategoryMutationHookResult = ReturnType<typeof useCreateCategoryMutation>;
+export type CreateCategoryMutationResult = Apollo.MutationResult<CreateCategoryMutation>;
+export type CreateCategoryMutationOptions = Apollo.BaseMutationOptions<CreateCategoryMutation, CreateCategoryMutationVariables>;
+export const UpdateCategoryDocument = gql`
+    mutation UpdateCategory($data: UpdateCategoryValidation!, $categoryId: String!) {
+  updateCategory(data: $data, categoryId: $categoryId) {
+    message
+  }
+}
+    `;
+export type UpdateCategoryMutationFn = Apollo.MutationFunction<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+
+/**
+ * __useUpdateCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCategoryMutation, { data, loading, error }] = useUpdateCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useUpdateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, options);
+      }
+export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCategoryMutation>;
+export type UpdateCategoryMutationResult = Apollo.MutationResult<UpdateCategoryMutation>;
+export type UpdateCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+export const MovedcategoryDocument = gql`
+    mutation movedcategory($categoryId: String!) {
+  moveCategoryTrash(categoryId: $categoryId) {
+    message
+  }
+}
+    `;
+export type MovedcategoryMutationFn = Apollo.MutationFunction<MovedcategoryMutation, MovedcategoryMutationVariables>;
+
+/**
+ * __useMovedcategoryMutation__
+ *
+ * To run a mutation, you first call `useMovedcategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMovedcategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [movedcategoryMutation, { data, loading, error }] = useMovedcategoryMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useMovedcategoryMutation(baseOptions?: Apollo.MutationHookOptions<MovedcategoryMutation, MovedcategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MovedcategoryMutation, MovedcategoryMutationVariables>(MovedcategoryDocument, options);
+      }
+export type MovedcategoryMutationHookResult = ReturnType<typeof useMovedcategoryMutation>;
+export type MovedcategoryMutationResult = Apollo.MutationResult<MovedcategoryMutation>;
+export type MovedcategoryMutationOptions = Apollo.BaseMutationOptions<MovedcategoryMutation, MovedcategoryMutationVariables>;
+export const RecoverFromTrashDocument = gql`
+    mutation RecoverFromTrash($categoryId: String!) {
+  recoverFromTrash(categoryId: $categoryId) {
+    message
+    status
+  }
+}
+    `;
+export type RecoverFromTrashMutationFn = Apollo.MutationFunction<RecoverFromTrashMutation, RecoverFromTrashMutationVariables>;
+
+/**
+ * __useRecoverFromTrashMutation__
+ *
+ * To run a mutation, you first call `useRecoverFromTrashMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecoverFromTrashMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [recoverFromTrashMutation, { data, loading, error }] = useRecoverFromTrashMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useRecoverFromTrashMutation(baseOptions?: Apollo.MutationHookOptions<RecoverFromTrashMutation, RecoverFromTrashMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RecoverFromTrashMutation, RecoverFromTrashMutationVariables>(RecoverFromTrashDocument, options);
+      }
+export type RecoverFromTrashMutationHookResult = ReturnType<typeof useRecoverFromTrashMutation>;
+export type RecoverFromTrashMutationResult = Apollo.MutationResult<RecoverFromTrashMutation>;
+export type RecoverFromTrashMutationOptions = Apollo.BaseMutationOptions<RecoverFromTrashMutation, RecoverFromTrashMutationVariables>;
+export const DeleteCategoryPermanentDocument = gql`
+    mutation DeleteCategoryPermanent($categoryId: String!) {
+  deleteCategoryPermanent(categoryId: $categoryId) {
+    message
+    status
+  }
+}
+    `;
+export type DeleteCategoryPermanentMutationFn = Apollo.MutationFunction<DeleteCategoryPermanentMutation, DeleteCategoryPermanentMutationVariables>;
+
+/**
+ * __useDeleteCategoryPermanentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCategoryPermanentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCategoryPermanentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCategoryPermanentMutation, { data, loading, error }] = useDeleteCategoryPermanentMutation({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useDeleteCategoryPermanentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCategoryPermanentMutation, DeleteCategoryPermanentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCategoryPermanentMutation, DeleteCategoryPermanentMutationVariables>(DeleteCategoryPermanentDocument, options);
+      }
+export type DeleteCategoryPermanentMutationHookResult = ReturnType<typeof useDeleteCategoryPermanentMutation>;
+export type DeleteCategoryPermanentMutationResult = Apollo.MutationResult<DeleteCategoryPermanentMutation>;
+export type DeleteCategoryPermanentMutationOptions = Apollo.BaseMutationOptions<DeleteCategoryPermanentMutation, DeleteCategoryPermanentMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -618,3 +920,99 @@ export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQ
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetMyCategoryDocument = gql`
+    query GetMyCategory($query: CommonQuery!) {
+  getMyCategory(query: $query) {
+    data {
+      description
+      id
+      name
+    }
+    meta {
+      currentPage
+      lastPage
+      prevPage
+      totalCount
+      nextPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetMyCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyCategoryQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useGetMyCategoryQuery(baseOptions: Apollo.QueryHookOptions<GetMyCategoryQuery, GetMyCategoryQueryVariables> & ({ variables: GetMyCategoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyCategoryQuery, GetMyCategoryQueryVariables>(GetMyCategoryDocument, options);
+      }
+export function useGetMyCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyCategoryQuery, GetMyCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyCategoryQuery, GetMyCategoryQueryVariables>(GetMyCategoryDocument, options);
+        }
+export function useGetMyCategorySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMyCategoryQuery, GetMyCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyCategoryQuery, GetMyCategoryQueryVariables>(GetMyCategoryDocument, options);
+        }
+export type GetMyCategoryQueryHookResult = ReturnType<typeof useGetMyCategoryQuery>;
+export type GetMyCategoryLazyQueryHookResult = ReturnType<typeof useGetMyCategoryLazyQuery>;
+export type GetMyCategorySuspenseQueryHookResult = ReturnType<typeof useGetMyCategorySuspenseQuery>;
+export type GetMyCategoryQueryResult = Apollo.QueryResult<GetMyCategoryQuery, GetMyCategoryQueryVariables>;
+export const GetMyTrashedCategoryDocument = gql`
+    query GetMyTrashedCategory($query: CommonQuery!) {
+  getMyTrashedCategory(query: $query) {
+    data {
+      createdAt
+      description
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyTrashedCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetMyTrashedCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyTrashedCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyTrashedCategoryQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useGetMyTrashedCategoryQuery(baseOptions: Apollo.QueryHookOptions<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables> & ({ variables: GetMyTrashedCategoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>(GetMyTrashedCategoryDocument, options);
+      }
+export function useGetMyTrashedCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>(GetMyTrashedCategoryDocument, options);
+        }
+export function useGetMyTrashedCategorySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>(GetMyTrashedCategoryDocument, options);
+        }
+export type GetMyTrashedCategoryQueryHookResult = ReturnType<typeof useGetMyTrashedCategoryQuery>;
+export type GetMyTrashedCategoryLazyQueryHookResult = ReturnType<typeof useGetMyTrashedCategoryLazyQuery>;
+export type GetMyTrashedCategorySuspenseQueryHookResult = ReturnType<typeof useGetMyTrashedCategorySuspenseQuery>;
+export type GetMyTrashedCategoryQueryResult = Apollo.QueryResult<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>;
