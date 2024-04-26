@@ -2,7 +2,7 @@ import { AppDataSource } from "../../config/database.config";
 import { MediaType } from "../../constants/enums/media.enum";
 import { Upload } from "../../constants/types/media.type";
 import { Media } from "../../entities/media/media.entity";
-import { PathUtil } from "../../utils/path.util";
+import PathUtil from "../../utils/path.util";
 import fs, { createWriteStream } from "fs";
 import path from "path";
 import CustomError from "../../utils/customError.util";
@@ -46,8 +46,13 @@ class MediaService {
     media.mediaType = mediaType; // or whatever your logic dictates
     await media.save();
 
-    console.log("Media details from media service", media);
-
+    // change the media permission to all allowed
+    if (media) {
+      const isMediaExists = fs.existsSync(PathUtil.TEMP_FOLDER_PATH);
+      if (isMediaExists) {
+        fs.chmodSync(`${PathUtil.TEMP_FOLDER_PATH}/${media.name}`, 777);
+      }
+    }
     return media;
   }
 

@@ -21,6 +21,8 @@ import CustomError from "../../utils/customError.util";
 import { HTTPStatusCode } from "../../utils/helper";
 import { RequestValidator } from "../../middlewares/requestValidator.middleware";
 import mediaService from "../../service/media/media.service";
+import mediamigrateUtil from "../../utils/mediamigrate.util";
+import { UUID } from "typeorm/driver/mongodb/bson.typings";
 
 @Resolver()
 class UserResolver {
@@ -87,6 +89,11 @@ class UserResolver {
     const response = await userService.updateProfilePic(context.user!, media);
 
     if (response) {
+      mediamigrateUtil.migrate({
+        //@ts-ignore
+        userId:context.user?.id, 
+        mediaName:response.profile.name, 
+      })
       return { message: "Update user sucessfully", status: "success" };
     } else {
       throw new CustomError(

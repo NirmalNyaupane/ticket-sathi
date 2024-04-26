@@ -1,10 +1,12 @@
 import { Field, ObjectType } from "type-graphql";
 import { CommonEntity } from "../common/common.entity";
 import { AuthType, UserRole } from "../../constants/enums/auth.enum";
-import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { AfterLoad, Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import { OrganizerDetails } from "./organizerDetails.entity";
 import { OrganizerDocuments } from "./organizerDocuments.entity";
 import { Media } from "../media/media.entity";
+import PathUtil from "../../utils/path.util";
+import { EnvConfiguration } from "../../config/env.config";
 
 @ObjectType()
 @Entity()
@@ -65,4 +67,11 @@ export class User extends CommonEntity {
 
   @Column({ nullable: true, select: false, type: "timestamp" })
   otpExpires?: Date;
+
+  @AfterLoad()
+  _() {
+    if(this.profile){
+      this.profile.name = `${EnvConfiguration.BACKEND_URL}/public/upload/${this.profile.name}`
+    }
+  }
 }

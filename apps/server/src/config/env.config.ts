@@ -4,7 +4,8 @@ dotenv.config();
 class EnvConfiguration {
   static PORT = process.env.PORT;
   static NODE_ENV = process.env.NODE_ENV;
-  static FRONTEND_URL = process.env.FRONTEND_URL
+  static FRONTEND_URL = process.env.FRONTEND_URL;
+  static BACKEND_URL = process.env.BACKEND_URL
 
   static DB_TYPE = process.env.DB_TYPE;
   static DB_HOST = process.env.DB_HOST;
@@ -27,6 +28,8 @@ class EnvConfiguration {
 
   static JWT_FORGOT_PASSWORD_SECRET = process.env.JWT_FORGOT_PASSWORD_SECRET ?? "";
   static JWT_FORGOT_PASSWORD_EXPIRY = process.env.JWT_FORGOT_PASSWORD_EXPIRY
+
+
 }
 
 export enum Environment {
