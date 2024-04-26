@@ -27,7 +27,7 @@ class Server {
         new RedisUtil().initiate();
         new QueueUtil().initiate();
         httpServer.listen(EnvConfiguration.PORT, () => {
-          console.log("TCP server established");
+          console.log(`Server started at http://localhost:${EnvConfiguration.PORT} 🚀🚀🚀`);
         });
       })
       .catch((err) => {

@@ -8,11 +8,11 @@ import {
 
 @ObjectType()
 export class CommonEntity extends BaseEntity {
-  @Field(()=>String)
+  @Field(() => String)
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Field(()=>String)
+  @Field(() => String)
   @CreateDateColumn({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",
@@ -20,5 +20,5 @@ export class CommonEntity extends BaseEntity {
   createdAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date | null;
 }

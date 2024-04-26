@@ -1,10 +1,9 @@
 "use client";
-import useCustomToast from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 
