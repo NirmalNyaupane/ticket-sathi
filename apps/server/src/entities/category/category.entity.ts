@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany } from "typeorm";
 import { CommonEntity } from "../common/common.entity";
 import { OrganizerDetails } from "../user/organizerDetails.entity";
 import { Event } from "../event/event.entity";
@@ -8,6 +8,7 @@ import { Event } from "../event/event.entity";
 export class Category extends CommonEntity {
   @Field(() => String)
   @Column({ nullable: false })
+  @Index()
   name: string;
 
   @Field(() => String)

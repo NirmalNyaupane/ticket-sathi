@@ -4,6 +4,7 @@ import {
   AfterLoad,
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -22,6 +23,7 @@ import { EnvConfiguration } from "../../config/env.config";
 export class Event extends CommonEntity {
   @Field(() => String)
   @Column({ nullable: false })
+  @Index()
   name: string;
 
   @Field(() => EventType)
@@ -45,7 +47,7 @@ export class Event extends CommonEntity {
   venue: string;
 
   @Field(() => [Media])
-  @OneToMany(() => Media, (media) => media.event, {cascade:true})
+  @OneToMany(() => Media, (media) => media.event, { cascade: true })
   images: Media[];
 
   @Field(() => Media)

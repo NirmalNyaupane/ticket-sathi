@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { OrganizerStatus } from "../../constants/enums/organizer.enum";
 import {
   SocialLinkInput,
@@ -14,6 +14,7 @@ import { Event } from "../event/event.entity";
 export class OrganizerDetails extends CommonEntity {
   @Field(() => String)
   @Column({ nullable: false })
+  @Index()
   organizerName: string;
 
   @Field(() => String)

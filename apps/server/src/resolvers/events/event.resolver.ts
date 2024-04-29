@@ -1,4 +1,11 @@
-import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import { UserRole } from "../../constants/enums/auth.enum";
 import { InternalServerError } from "../../constants/errors/exceptions.error";
 import authentication from "../../middlewares/authentication.middleware";
@@ -8,6 +15,12 @@ import eventService from "../../service/event/event.service";
 import { Context } from "../../types/context.type";
 import { CreateEventValidator } from "../../validators/event/event.validator";
 import { RequestValidator } from "../../middlewares/requestValidator.middleware";
+import { PaginatedEventObject } from "../../schemas/event/event.schemas";
+import {
+  CommonQuery,
+  PaginationInput,
+} from "../../schemas/common/common.schema";
+import paginationUtil from "../../utils/pagination.util";
 
 @Resolver()
 export class EventResolver {
@@ -30,5 +43,18 @@ export class EventResolver {
     } else {
       throw new InternalServerError();
     }
+  }
+
+  @Query(() => PaginatedEventObject)
+  @UseMiddleware(authentication([UserRole.ORGANIZER]))
+  async getMyEvents(
+    @Ctx() context: Context,
+    @Arg("query") query: CommonQuery
+  ) {
+    const [event, count] = await eventService.getMyEvents(context.user?.id!, query)
+    return {
+      data: event,
+      meta: paginationUtil.paginatedResponse(count, query),
+    };
   }
 }

@@ -7,6 +7,9 @@ import { Category } from "../../entities/category/category.entity";
 import { Event } from "../../entities/event/event.entity";
 import { CreateEventValidator } from "../../validators/event/event.validator";
 import mediaService from "../media/media.service";
+import { CommonQuery } from "../../schemas/common/common.schema";
+import paginationUtil from "../../utils/pagination.util";
+import { UUID } from "../../types/commontype";
 class EventService {
   async createEvent(category: Category, data: CreateEventValidator) {
     const event = new Event();
@@ -16,7 +19,6 @@ class EventService {
     event.eventStartDate = data.eventStartDate;
     event.eventEndDate = data.eventEndDate;
     event.venue = data.venue;
-
     event.category = category;
 
     //validate cover
@@ -50,6 +52,33 @@ class EventService {
     event.images = images;
 
     return await event.save();
+  }
+
+  async getMyEvents(organizerId: UUID, query: CommonQuery) {
+    const builder = Event.createQueryBuilder("event")
+      .leftJoin("event.category", "category")
+      .leftJoin("category.organizer", "organizer")
+      .leftJoin("organizer.user", "user")
+      .leftJoinAndSelect("event.cover", "cover")
+      .leftJoinAndSelect("event.images", "images")
+      .where("user.id=:id", {
+        id: organizerId,
+      });
+
+    const { take, skip } = paginationUtil.skipTakeMaker({
+      page: query.page,
+      pageLimit: query.pageLimit,
+    });
+
+    builder.take(take);
+    builder.skip(skip);
+    if (query.search) {
+      builder.andWhere("event.name ILIKE :name", {
+        name: `%${query.search}%`,
+      });
+    }
+
+    return await builder.getManyAndCount();
   }
 }
 
