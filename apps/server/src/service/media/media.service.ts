@@ -13,7 +13,7 @@ class MediaService {
     const { createReadStream, filename, mimetype } = await file;
     const stream = createReadStream();
     const fileId = Date.now(); // Generate a unique ID for the file
-    console.log(PathUtil.TEMP_FOLDER_PATH)
+    console.log(PathUtil.TEMP_FOLDER_PATH);
     if (!fs.existsSync(PathUtil.UPLOADS_FOLDER_PATH)) {
       fs.mkdirSync(PathUtil.UPLOADS_FOLDER_PATH, { recursive: true });
     }
@@ -64,14 +64,14 @@ class MediaService {
     return media;
   }
 
-  async findMultipleMediabyIds(mediaIds: Media[]) {
+  async findMultipleMediabyIds(mediaIds: UUID[]) {
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.startTransaction();
     try {
       const results = mediaIds.map((media) => {
         return queryRunner.manager
           .createQueryBuilder(Media, "media")
-          .where("media.id=:id", { id: media.id })
+          .where("media.id=:id", { id: media })
           .getOne();
       });
 

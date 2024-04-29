@@ -10,10 +10,11 @@ import {
   CreateCategoryValidation,
   UpdateCategoryValidation,
 } from "../../validators/category/category.validator";
+import { UUID } from "../../types/commontype";
 
 class CategoryService {
   //return the category by category id
-  async findCategoryById(id: string): Promise<Category> {
+  async findCategoryById(id: UUID): Promise<Category> {
     const category = await Category.findOneBy({ id });
 
     if (!category) {
@@ -27,7 +28,7 @@ class CategoryService {
   }
 
   //find category by id with organizer id
-  async findOrganizerSingleCategory(categoryId: string, organizerId: string) {
+  async findOrganizerSingleCategory(categoryId: UUID, organizerId: UUID) {
     const category = await Category.findOne({
       where: {
         id: categoryId,
@@ -113,7 +114,7 @@ class CategoryService {
   }
 
   //get trashed items
-  async findTrashCategoryById(categoryId: string, organizerId: string) {
+  async findTrashCategoryById(categoryId: UUID, organizerId: UUID) {
     const category = await Category.findOne({
       withDeleted: true,
       where: {

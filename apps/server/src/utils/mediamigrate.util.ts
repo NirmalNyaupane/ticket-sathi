@@ -16,6 +16,17 @@ class MediaUtil {
           `${userGeneratedPath}/${info.mediaName}`
         );
         break;
+
+      case MediaOf.Event:
+        let eventGeneratedPath = PathUtil.generateEventPath(info.eventId);
+        //create user folder if it is not created
+        this.checkCreateDir(eventGeneratedPath);
+        //move file from temp to upload/user/:id/.document
+        fs.renameSync(
+          `${PathUtil.TEMP_FOLDER_PATH}/${info.mediaName}`,
+          `${eventGeneratedPath}/${info.mediaName}`
+        );
+        break;
     }
   }
 

@@ -1,15 +1,14 @@
-import { IsOptional, IsUrl } from "class-validator";
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { OrganizerStatus } from "../../constants/enums/organizer.enum";
-import { CommonEntity } from "../common/common.entity";
-import { User } from "./user.entity";
 import {
   SocialLinkInput,
   SocialLinksResponse,
 } from "../../validators/organizers/updateOrganizerValidator";
 import { Category } from "../category/category.entity";
-
+import { CommonEntity } from "../common/common.entity";
+import { User } from "./user.entity";
+import { Event } from "../event/event.entity";
 @ObjectType()
 @Entity()
 export class OrganizerDetails extends CommonEntity {

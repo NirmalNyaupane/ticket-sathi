@@ -1,8 +1,8 @@
 import { Field, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { CommonEntity } from "../common/common.entity";
 import { OrganizerDetails } from "../user/organizerDetails.entity";
-
+import { Event } from "../event/event.entity";
 @Entity()
 @ObjectType()
 export class Category extends CommonEntity {
@@ -14,6 +14,11 @@ export class Category extends CommonEntity {
   @Column({ type: "text", nullable: false })
   description: string;
 
-  @ManyToOne(()=>OrganizerDetails, (category)=>category.category)
-  organizer:OrganizerDetails
+  @ManyToOne(() => OrganizerDetails, (category) => category.category, {
+    cascade: true,
+  })
+  organizer: OrganizerDetails;
+
+  @OneToMany(() => Event, (event) => event.category, { cascade: true })
+  event: Event[];
 }

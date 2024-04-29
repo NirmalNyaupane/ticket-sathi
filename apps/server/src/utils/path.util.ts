@@ -17,6 +17,10 @@ class PathUtil {
   static generateOrganizerPath(proposalId: string) {
     return path.join(this.UPLOADS_FOLDER_PATH, "proposal", proposalId);
   }
+
+  static generateEventPath(proposalId: string) {
+    return path.join(this.UPLOADS_FOLDER_PATH, "event", proposalId);
+  }
 }
 
 export default PathUtil;

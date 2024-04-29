@@ -17,6 +17,16 @@ class MediaValidation {
         acceptedExtensions = [".png", ".jpg", ".jpeg"];
         acceptedFileSize = 1024 * 1024; //1mb
         break;
+
+      case MediaType.EVENT_COVER:
+        acceptedExtensions = [".png", ".jpg", ".jpeg"];
+        acceptedFileSize = 1024 * 1024; //1mb
+        break;
+
+      case MediaType.EVENT_IMAGE:
+        acceptedExtensions = [".png", ".jpg", ".jpeg"];
+        acceptedFileSize = 1024 * 1024; //1mb
+        break;
     }
 
     //checking file extensions

@@ -2,20 +2,17 @@
 import {
   MediaType,
   useUpdateProfilePicMutation,
-  useUpdateUserMutation,
   useUploadMediaMutation,
 } from "@/__generated__/graphql";
 import DragAndDropImage from "@/components/common/DragAndDropImage";
 import useCustomToast from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
-import { useMutation } from "@apollo/client";
-import Image from "next/image";
+import { Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import { FaCheck, FaCross } from "react-icons/fa";
-import { IoCloseSharp, IoCheckmark } from "react-icons/io5";
+import { IoCheckmark } from "react-icons/io5";
 import { useSelector } from "react-redux";
 
 const links = [
@@ -33,6 +30,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const auth = useSelector((state: RootState) => state.auth);
   const user = useSelector((state: RootState) => state.user);
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
+  const [delteBtn, setDeleteBtn] = useState(false);
   const pathname = usePathname();
 
   const toast = useCustomToast();
@@ -62,28 +60,45 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex items-center gap-3 ">
           {/* profile picture */}
           <div className="w-[100px] h-[100px] rounded-[50%] relative border-2 ">
-            <DragAndDropImage
-              onChange={(e) => setAvatarImage(e!)}
-              className="rounded-[50%]"
-              imageUrl={`${
-                user.profile?.name ? user.profile.name : "/upload.png"
-              }`}
-            />
+            <div
+              onMouseEnter={() => {
+                console.log("jello");
+                setDeleteBtn(true);
+              }}
+              onMouseLeave={() => setDeleteBtn(!delteBtn)}
+            >
+              <DragAndDropImage
+                onChange={(e) => setAvatarImage(e!)}
+                className="rounded-[50%]"
+                imageUrl={`${
+                  user.profile?.name ? user.profile.name : "/upload.png"
+                }`}
+              />
+            </div>
             {avatarImage && (
-              <div
-                className="bg-gray-800 text-white flex justify-center 
+              <>
+                <div
+                  className="bg-gray-800 text-white flex justify-center 
             items-center text-w h-[30px] w-[30px] rounded-full absolute right-0 bottom-0 cursor-pointer"
-                onClick={() => {
-                  mutate({
-                    variables: {
-                      mediaType: MediaType.UserProfile,
-                      file: avatarImage,
-                    },
-                  });
-                }}
-              >
-                <IoCheckmark />
-              </div>
+                  onClick={() => {
+                    mutate({
+                      variables: {
+                        mediaType: MediaType.UserProfile,
+                        file: avatarImage,
+                      },
+                    });
+                  }}
+                >
+                  <IoCheckmark />
+                </div>
+                {/* <div
+                  className={cn(
+                    `flex items-center text-red-500 h-[30px] w-[30px] rounded-full absolute left-0 top-0 cursor-pointer`
+                  )}
+                >
+                  <Trash2 />
+                </div> */}
+              </>
             )}
           </div>
 

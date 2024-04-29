@@ -1,4 +1,5 @@
 .env
 node_modules
 temp
-/pnpm-lock.yaml
+pnpm-lock.yaml
+uploads

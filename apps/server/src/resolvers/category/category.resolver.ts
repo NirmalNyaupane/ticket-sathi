@@ -21,7 +21,7 @@ import {
   CreateCategoryValidation,
   UpdateCategoryValidation,
 } from "../../validators/category/category.validator";
-
+type UUID = `${string}-${string}-${string}-${string}-${string}`;
 @Resolver()
 export class CategoryResolver {
   @Mutation(() => CommonResponse, { description: "Role: Organizer" })
@@ -72,7 +72,7 @@ export class CategoryResolver {
   @UseMiddleware(authentication([UserRole.ORGANIZER]))
   async updateCategory(
     @Ctx() context: Context,
-    @Arg("categoryId") categoryId: string,
+    @Arg("categoryId", () => String) categoryId: UUID,
     @Arg("data") updatedData: UpdateCategoryValidation
   ): Promise<CommonResponse> {
     const category = await categoryService.findOrganizerSingleCategory(
@@ -98,7 +98,7 @@ export class CategoryResolver {
   @Mutation(() => CommonResponse)
   @UseMiddleware(authentication([UserRole.ORGANIZER]))
   async moveCategoryTrash(
-    @Arg("categoryId") categoryId: string,
+    @Arg("categoryId", () => String) categoryId: UUID,
     @Ctx() context: Context
   ): Promise<CommonResponse> {
     const category = await categoryService.findOrganizerSingleCategory(
@@ -141,7 +141,7 @@ export class CategoryResolver {
   @Mutation(() => CommonResponse)
   @UseMiddleware(authentication([UserRole.ORGANIZER]))
   async recoverFromTrash(
-    @Arg("categoryId") categoryId: string,
+    @Arg("categoryId", () => String) categoryId: UUID,
     @Ctx() context: Context
   ): Promise<CommonResponse> {
     const category = await categoryService.findTrashCategoryById(
@@ -162,7 +162,7 @@ export class CategoryResolver {
   @Mutation(() => CommonResponse)
   @UseMiddleware(authentication([UserRole.ORGANIZER]))
   async deleteCategoryPermanent(
-    @Arg("categoryId") categoryId: string,
+    @Arg("categoryId", () => String) categoryId: UUID,
     @Ctx() context: Context
   ): Promise<CommonResponse> {
     const category = await categoryService.findTrashCategoryById(

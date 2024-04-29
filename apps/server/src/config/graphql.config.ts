@@ -7,9 +7,16 @@ import { AuthResolver } from "../resolvers/auth/auth.resolver";
 import UserResolver from "../resolvers/user/user.resolver";
 import { Container } from "typedi";
 import { CategoryResolver } from "../resolvers/category/category.resolver";
+import { EventResolver } from "../resolvers/events/event.resolver";
 function configGraphQLServer(httpServer: http.Server) {
   const { typeDefs, resolvers } = buildTypeDefsAndResolversSync({
-    resolvers: [MediaResolver, AuthResolver, UserResolver, CategoryResolver],
+    resolvers: [
+      MediaResolver,
+      AuthResolver,
+      UserResolver,
+      CategoryResolver,
+      EventResolver,
+    ],
     // container: Container
   });
 
@@ -18,6 +25,7 @@ function configGraphQLServer(httpServer: http.Server) {
     resolvers,
     csrfPrevention: false,
     formatError: (err) => {
+      console.log(err)
       return {
         message: err.message,
         errors: err?.extensions?.errors,
