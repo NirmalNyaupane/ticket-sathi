@@ -26,7 +26,7 @@ class JwtUtils {
                     throw new CustomError("Invalid token type", HTTPStatusCode.BAD_REQUEST);
             }
         } catch (error: any) {
-            throw new CustomError("Token is expired or invalid", HTTPStatusCode.INTERNAL_SERVER_ERROR);
+            throw new CustomError("Unauthorized", HTTPStatusCode.UNAUTHORIZED);
         }
     }
     generateAccessRefreshToken(payload: { email: string, role: UserRole, id: string }) {

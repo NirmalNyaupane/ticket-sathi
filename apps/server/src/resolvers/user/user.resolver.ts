@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import {
   Arg,
   Ctx,
@@ -6,23 +7,22 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
+import { MediaOf } from "../../constants/enums/media.enum";
 import authentication from "../../middlewares/authentication.middleware";
+import { RequestValidator } from "../../middlewares/requestValidator.middleware";
+import { CommonResponse } from "../../schemas";
 import { UserResponse } from "../../schemas/user/user.schema";
+import authService from "../../service/auth/auth.service";
+import mediaService from "../../service/media/media.service";
 import userService from "../../service/user/user.service";
 import { Context } from "../../types/context.type";
-import { CommonResponse } from "../../schemas";
+import CustomError from "../../utils/customError.util";
+import { HTTPStatusCode } from "../../utils/helper";
+import mediamigrateUtil from "../../utils/mediamigrate.util";
 import {
   UpdateProfilePic,
   UpdateUserValidation,
 } from "../../validators/user/updateuser.validation";
-import authService from "../../service/auth/auth.service";
-import bcrypt from "bcrypt";
-import CustomError from "../../utils/customError.util";
-import { HTTPStatusCode } from "../../utils/helper";
-import { RequestValidator } from "../../middlewares/requestValidator.middleware";
-import mediaService from "../../service/media/media.service";
-import mediamigrateUtil from "../../utils/mediamigrate.util";
-import { UUID } from "typeorm/driver/mongodb/bson.typings";
 
 @Resolver()
 class UserResolver {
@@ -90,10 +90,10 @@ class UserResolver {
 
     if (response) {
       mediamigrateUtil.migrate({
-        //@ts-ignore
-        userId:context.user?.id, 
-        mediaName:response.profile.name, 
-      })
+        userId: context.user?.id!,
+        mediaName: response.profile.name,
+        type: MediaOf.User,
+      });
       return { message: "Update user sucessfully", status: "success" };
     } else {
       throw new CustomError(

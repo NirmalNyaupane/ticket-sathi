@@ -81,7 +81,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
           <div className="hidden md:flex h-5 items-center space-x-4 text-white text-sm font-bold">
             {linkItems.map((singleLink, ind) => {
               return ind === 0 ? (
-                <div className="bg-gray-700 rounded-md px-3 py-1 hover:bg-red-500 cursor-pointer">
+                <div className="bg-gray-700 rounded-md px-3 py-1 hover:bg-red-500 cursor-pointer" key={singleLink.url}>
                   <Link href={singleLink.url}>{singleLink.label}</Link>
                 </div>
               ) : (

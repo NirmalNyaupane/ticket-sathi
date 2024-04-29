@@ -33,7 +33,6 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const auth = useSelector((state: RootState) => state.auth);
   const user = useSelector((state: RootState) => state.user);
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
-  const [avatarLink, setAvatarLink] = useState("");
   const pathname = usePathname();
 
   const toast = useCustomToast();
@@ -61,13 +60,14 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     <main className="max-width flex flex-col gap-5 mt-3">
       <div className="rounded-lg pl-4 pt-4 pr-4 pb-1 bg-white">
         <div className="flex items-center gap-3 ">
-          
           {/* profile picture */}
           <div className="w-[100px] h-[100px] rounded-[50%] relative border-2 ">
             <DragAndDropImage
               onChange={(e) => setAvatarImage(e!)}
               className="rounded-[50%]"
-              imageUrl="/upload.png"
+              imageUrl={`${
+                user.profile?.name ? user.profile.name : "/upload.png"
+              }`}
             />
             {avatarImage && (
               <div

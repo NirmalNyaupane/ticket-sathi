@@ -28,7 +28,6 @@ export class MediaResolver {
         .createReadStream()
         .on("data", (chunk) => {
           count += chunk.length;
-          console.log("chunck length", count)
           try {
             mediaValidationUtil.validate(count, fileExtensions, mediaType);
           } catch (error) {

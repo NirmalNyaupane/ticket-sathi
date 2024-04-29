@@ -5,7 +5,7 @@ class EnvConfiguration {
   static PORT = process.env.PORT;
   static NODE_ENV = process.env.NODE_ENV;
   static FRONTEND_URL = process.env.FRONTEND_URL;
-  static BACKEND_URL = process.env.BACKEND_URL
+  static BACKEND_URL = process.env.BACKEND_URL;
 
   static DB_TYPE = process.env.DB_TYPE;
   static DB_HOST = process.env.DB_HOST;
@@ -22,14 +22,16 @@ class EnvConfiguration {
   static LOG_LEVEL = process.env.LOG_LEVEL;
 
   static ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET ?? "";
-  static ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY
+  static ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY;
   static REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET ?? "";
-  static REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY
+  static REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 
-  static JWT_FORGOT_PASSWORD_SECRET = process.env.JWT_FORGOT_PASSWORD_SECRET ?? "";
-  static JWT_FORGOT_PASSWORD_EXPIRY = process.env.JWT_FORGOT_PASSWORD_EXPIRY
+  static JWT_FORGOT_PASSWORD_SECRET =
+    process.env.JWT_FORGOT_PASSWORD_SECRET ?? "";
+  static JWT_FORGOT_PASSWORD_EXPIRY = process.env.JWT_FORGOT_PASSWORD_EXPIRY;
 
-
+  static MEDIA_TEMP_PATH = process.env.MEDIA_TEMP_PATH;
+  static MEDIA_UPLOAD_PATH = process.env.MEDIA_UPLOAD_PATH;
 }
 
 export enum Environment {

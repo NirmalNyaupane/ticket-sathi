@@ -27,7 +27,7 @@ class Server {
         new RedisUtil().initiate();
         new QueueUtil().initiate();
         httpServer.listen(EnvConfiguration.PORT, () => {
-          console.log(`Server started at http://localhost:${EnvConfiguration.PORT} 🚀🚀🚀`);
+          console.log(`Server started at http://localhost:${EnvConfiguration.PORT}/graphql 🚀🚀🚀`);
         });
       })
       .catch((err) => {

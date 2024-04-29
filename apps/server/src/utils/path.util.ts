@@ -1,7 +1,14 @@
 import path from "path";
+import { EnvConfiguration } from "../config/env.config";
 class PathUtil {
-  static TEMP_FOLDER_PATH = path.resolve(process.cwd(), "temp");
-  static UPLOADS_FOLDER_PATH = path.resolve(process.cwd(), "public", "uploads");
+  static TEMP_FOLDER_PATH = path.join(
+    process.cwd(),
+    EnvConfiguration.MEDIA_TEMP_PATH!
+  );
+  static UPLOADS_FOLDER_PATH = path.join(
+    process.cwd(),
+    EnvConfiguration.MEDIA_UPLOAD_PATH!
+  );
 
   static generateUserPath(id: string) {
     return path.join(this.UPLOADS_FOLDER_PATH, "user", id);

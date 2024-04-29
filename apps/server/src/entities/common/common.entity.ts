@@ -5,12 +5,13 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
+type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @ObjectType()
 export class CommonEntity extends BaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: UUID;
 
   @Field(() => String)
   @CreateDateColumn({

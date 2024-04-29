@@ -6,13 +6,14 @@ import PathUtil from "../../utils/path.util";
 import fs, { createWriteStream } from "fs";
 import path from "path";
 import CustomError from "../../utils/customError.util";
+import { UUID } from "../../types/commontype";
 
 class MediaService {
   async uploadMedia(file: Upload, mediaType: MediaType): Promise<Media> {
     const { createReadStream, filename, mimetype } = await file;
     const stream = createReadStream();
     const fileId = Date.now(); // Generate a unique ID for the file
-
+    console.log(PathUtil.TEMP_FOLDER_PATH)
     if (!fs.existsSync(PathUtil.UPLOADS_FOLDER_PATH)) {
       fs.mkdirSync(PathUtil.UPLOADS_FOLDER_PATH, { recursive: true });
     }
@@ -31,7 +32,6 @@ class MediaService {
       stream
         .pipe(writeStream)
         .on("finish", () => {
-          console.log("File write finished successfully");
           resolve();
         })
         .on("error", (error: any) => {
@@ -56,7 +56,7 @@ class MediaService {
     return media;
   }
 
-  async findMediaById(id: string) {
+  async findMediaById(id: UUID) {
     const media = await Media.findOneBy({ id });
     if (!media) {
       throw new CustomError("Media is not found");

@@ -18,11 +18,12 @@ const ChangePassword = () => {
   const [isConfirmPasswordShow, setConfirmPasswordShow] = useState(false);
 
   const toast = useCustomToast();
-  
+
   const {
     register,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<formData>({
     resolver: zodResolver(changePasswordValidation),
   });
@@ -30,6 +31,7 @@ const ChangePassword = () => {
   const [mutation, { error, data, loading }] = useUpdateUserMutation({
     onCompleted(data, clientOptions) {
       toast.sucess("Password changed sucessfully");
+      reset();
     },
   });
 
@@ -54,7 +56,7 @@ const ChangePassword = () => {
 
       <form className="space-y-4" onSubmit={formSubmit}>
         <InputFieldWithRightIcon
-          label="Password"
+          label="Old Password"
           type={!isOldPasswordShow ? "password" : "text"}
           rightIcon={
             !isOldPasswordShow ? (
@@ -70,7 +72,7 @@ const ChangePassword = () => {
           }}
         />
         <InputFieldWithRightIcon
-          label="Password"
+          label="New Password"
           type={!isNewPasswordShow ? "password" : "text"}
           rightIcon={
             !isNewPasswordShow ? (

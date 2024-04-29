@@ -3,15 +3,14 @@ import PathUtil from "./path.util";
 import { MediaOf } from "../constants/enums/media.enum";
 import { MediaMigratePayload } from "../types/media";
 class MediaUtil {
-  //migrate
+  //migrate media from temp folder if everythings goes alrightssssss
   migrate(info: MediaMigratePayload) {
     switch (info.type) {
       case MediaOf.User:
         let userGeneratedPath = PathUtil.generateUserPath(info.userId);
-
-        //create proposal folder if it is not creted
+        //create user folder if it is not created
         this.checkCreateDir(userGeneratedPath);
-        //move file from temp to upload/proposal/:id/.document
+        //move file from temp to upload/user/:id/.document
         fs.renameSync(
           `${PathUtil.TEMP_FOLDER_PATH}/${info.mediaName}`,
           `${userGeneratedPath}/${info.mediaName}`
@@ -20,9 +19,9 @@ class MediaUtil {
     }
   }
 
-  async deleteFile(path: string) {
+  deleteFile(path: string) {
     if (fs.existsSync(path)) {
-      await fs.unlink(path, () => {
+      fs.unlink(path, () => {
         console.log("file deleted");
       });
     }

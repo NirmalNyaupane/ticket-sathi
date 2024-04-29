@@ -71,7 +71,7 @@ export class User extends CommonEntity {
   @AfterLoad()
   _() {
     if(this.profile){
-      this.profile.name = `${EnvConfiguration.BACKEND_URL}/public/upload/${this.profile.name}`
+      this.profile.name = `${EnvConfiguration.BACKEND_URL}/uploads/user/${this.id}/${this.profile.name}`
     }
   }
 }

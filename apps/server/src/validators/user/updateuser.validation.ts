@@ -1,14 +1,16 @@
 import {
-    IsNotEmpty,
-    IsOptional,
-    IsPhoneNumber,
-    IsString,
-    IsStrongPassword,
-    IsUUID,
-    Length,
-    ValidateIf
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsStrongPassword,
+  IsUUID,
+  Length,
+  ValidateIf,
 } from "class-validator";
 import { Field, InputType } from "type-graphql";
+
+type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @InputType()
 class UpdateUserValidation {
@@ -44,8 +46,7 @@ class UpdateProfilePic {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  mediaId: string;
+  mediaId: UUID;
 }
 
 export { UpdateProfilePic, UpdateUserValidation };
-

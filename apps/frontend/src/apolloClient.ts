@@ -1,10 +1,9 @@
-import { ApolloClient, from, HttpLink, InMemoryCache } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
-import { getCookie } from "./utils/cookie";
-import { AUTH_COOKIE_NAME, BACKEND_URL } from "./constants/config";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import { AUTH_COOKIE_NAME, BACKEND_URL } from "./constants/config";
+import { getCookie } from "./utils/cookie";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {

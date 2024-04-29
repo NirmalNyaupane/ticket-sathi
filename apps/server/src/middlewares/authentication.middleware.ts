@@ -9,7 +9,7 @@ import userService from "../service/user/user.service";
 
 const authentication = (userRoles?: UserRole[]) => {
     return async ({ context }: { context: Context }, next: NextFn) => {
-        const authorizationToken = context.req.headers.authorization;
+        const authorizationToken = context.req.headers?.authorization;
         if (!authorizationToken) {
             throw new CustomError("Unauthorized", HTTPStatusCode.UNAUTHORIZED)
         }
