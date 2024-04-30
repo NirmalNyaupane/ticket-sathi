@@ -1,5 +1,8 @@
 "use client";
-import { useCreateCategoryMutation } from "@/__generated__/graphql";
+import {
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@/__generated__/graphql";
 import CustomTextArea from "@/components/common/CustomTextArea";
 import { InputField } from "@/components/common/InputField";
 import LoadingButton from "@/components/common/LoadingButton";
@@ -45,7 +48,14 @@ const CategoryModal = (props: props) => {
   const [mutate, { loading }] = useCreateCategoryMutation({
     onCompleted() {
       toast.sucess("Category created sucessfully");
-      reset()
+      reset();
+    },
+  });
+
+  const [updateMutate, { loading: updateLoading }] = useUpdateCategoryMutation({
+    onCompleted() {
+      toast.sucess("Category updated sucessfully");
+      reset();
     },
   });
 
@@ -54,6 +64,16 @@ const CategoryModal = (props: props) => {
       mutate({
         variables: {
           data,
+        },
+      }).catch((error) => {
+        toast.error(showError(error));
+      });
+    }
+    if (props.action === "update") {
+      updateMutate({
+        variables: {
+          data,
+          categoryId: props.category.id,
         },
       }).catch((error) => {
         toast.error(showError(error));
@@ -73,7 +93,7 @@ const CategoryModal = (props: props) => {
         errorMessage={errors.description?.message}
         {...register("description")}
       />
-      <LoadingButton type="submit" isLoading={loading}>
+      <LoadingButton type="submit" isLoading={loading || updateLoading}>
         Submit
       </LoadingButton>
     </form>

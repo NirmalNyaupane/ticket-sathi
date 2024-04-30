@@ -1,7 +1,6 @@
 "use client";
 import {
   GetMyCategoryQuery,
-  useGetMyCategoryLazyQuery,
   useGetMyCategoryQuery,
 } from "@/__generated__/graphql";
 import CategoryCard from "@/components/card/CategoryCard";
@@ -9,39 +8,63 @@ import GlobalDialog from "@/components/common/Dialog/GlobalDialog";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import CategoryModal from "@/components/organizer/dashboard/modals/CategoryModal";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import { useCallback, useEffect, useState } from "react";
+import { MoreHorizontalIcon } from "lucide-react";
+import { useState } from "react";
+import { InView } from "react-intersection-observer";
 
 type CategoryData = GetMyCategoryQuery["getMyCategory"]["data"];
 const EventCategory = () => {
-  const [page, setPage] = useState(1);
-  const [categories, setCategories] = useState<CategoryData>([]);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const updateCategory = useCallback((data: CategoryData) => {
-    setPage(page + 1);
-    setCategories((prevCategories) => [...prevCategories, ...data]);
-  }, []);
-
-  const [mutate, { loading, data, error, networkStatus, fetchMore }] =
-    useGetMyCategoryLazyQuery({
-      onCompleted(data) {
-        updateCategory(data.getMyCategory.data);
+  const handleMenuItemClick = () => {
+    setOpenDialog(true);
+  };
+  const { loading, data, networkStatus, fetchMore, updateQuery } =
+    useGetMyCategoryQuery({
+      variables: {
+        query: {
+          page: 1,
+          pageLimit: 10,
+        },
       },
+      notifyOnNetworkStatusChange: true,
     });
 
   const lastPageRef = useIntersectionObserver(async () => {
-    if (data?.getMyCategory.meta.nextPage && !loading) {
+    if (data?.getMyCategory.meta.nextPage) {
       fetchMore({
         variables: {
           query: {
-            page: page,
+            page: data.getMyCategory.meta.nextPage,
             pageLimit: 10,
           },
+        },
+        updateQuery(previousQueryResult, { variables, fetchMoreResult }) {
+          if (!fetchMoreResult) {
+            return previousQueryResult;
+          }
+
+          return {
+            ...previousQueryResult,
+            getMyCategory: {
+              ...previousQueryResult.getMyCategory,
+              data: fetchMoreResult.getMyCategory.data,
+            },
+          };
         },
       });
     }
   }, [data?.getMyCategory.meta.nextPage ? true : false, !loading]);
 
+  console.log(data);
   if (loading) {
     return <p>Loading............</p>;
   }
@@ -66,10 +89,10 @@ const EventCategory = () => {
           gap: "2rem",
         }}
       >
-        {categories?.map((singleCategory, index, categories) => {
+        {data?.getMyCategory?.data?.map((singleCategory, index, categories) => {
           return (
             <CategoryCard
-              ref={index === categories.length - 1 ? lastPageRef : null}
+              // ref={index === categories.length - 1 ? lastPageRef : null}
               key={singleCategory.id}
               id={singleCategory.id}
               categoryName={singleCategory.name}
@@ -78,9 +101,44 @@ const EventCategory = () => {
             />
           );
         })}
-      </main>
+        {/* 
+        <InView
+          as="div"
+          onChange={(inView, entry) => {
+            if (inView) {
+              fetchMore({
+                variables: {
+                  query: {
+                    page: data?.getMyCategory.meta.nextPage,
+                    pageLimit: 10,
+                  },
+                },
 
-      <div>Loader..............</div>
+                // updateQuery(prev, { fetchMoreResult }) {
+                //   if (!prev) {
+                //     return prev;
+                //   }
+                //   return {
+                //     ...prev,
+                //     getMyCategory: {
+                //       data: {
+                //         ...prev.getMyCategory.data,
+                //         ...fetchMoreResult.getMyCategory.data,
+                //       },
+                //       meta: {
+                //         ...prev.getMyCategory.meta,
+                //         ...fetchMoreResult.getMyCategory.meta,
+                //       },
+                //     },
+                //   };
+                // },
+              });
+            }
+          }}
+        >
+          Loading.........
+        </InView> */}
+      </main>
     </div>
   );
 };

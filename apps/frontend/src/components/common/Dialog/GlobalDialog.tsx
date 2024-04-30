@@ -8,12 +8,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogProps } from "@radix-ui/react-dialog";
-import { ReactElement, useState } from "react";
+import { memo, ReactElement, useState } from "react";
 
 interface props extends DialogProps {
   dialogButton: ReactElement;
   dialogTitle: string;
-  open?: boolean;
+  isModelOpen?: boolean;
+  closeModel?: () => void;
   dialogDescription?: string;
 }
 export function GlobalDialog({
@@ -21,15 +22,11 @@ export function GlobalDialog({
   dialogButton,
   dialogTitle,
   dialogDescription,
+  isModelOpen,
+  closeModel
 }: props) {
-  const [open, setOpen] = useState(false);
-
-  const openCloseModel = () => {
-    setOpen(!open);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={openCloseModel}>
+    <Dialog open={isModelOpen} onOpenChange={closeModel}>
       <DialogTrigger asChild>{dialogButton}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] overflow-auto">
         <DialogHeader>
@@ -44,4 +41,4 @@ export function GlobalDialog({
   );
 }
 
-export default GlobalDialog;
+export default memo(GlobalDialog);

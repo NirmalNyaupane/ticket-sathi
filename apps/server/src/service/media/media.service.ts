@@ -83,6 +83,12 @@ class MediaService {
       await queryRunner.release();
     }
   }
+
+  async checkMediaForAlreadyUsed(lookFor: any, media: Media) {
+    const mediaType = media.mediaType;
+
+    
+  }
 }
 
 export default new MediaService();
