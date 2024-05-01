@@ -87,3 +87,11 @@ mutation DeleteCategoryPermanent($categoryId: String!) {
     status
   }
 }
+
+mutation CreateEvent($data: CreateEventValidator!) {
+  createEvent(data: $data) {
+    message
+    message
+    status
+  }
+}

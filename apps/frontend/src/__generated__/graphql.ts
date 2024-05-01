@@ -54,6 +54,48 @@ export type CreateCategoryValidation = {
   name: Scalars['String']['input'];
 };
 
+export type CreateEventValidator = {
+  categoryId: Scalars['String']['input'];
+  cover: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  eventEndDate: Scalars['String']['input'];
+  eventStartDate: Scalars['String']['input'];
+  images?: InputMaybe<Array<Scalars['String']['input']>>;
+  name: Scalars['String']['input'];
+  type: EventType;
+  venue: Scalars['String']['input'];
+};
+
+export type Event = {
+  __typename?: 'Event';
+  cover: Media;
+  createdAt: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  eventEndDate: Scalars['String']['output'];
+  eventStartDate: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  images: Array<Media>;
+  name: Scalars['String']['output'];
+  rejectionCount: Scalars['Int']['output'];
+  status: EventStatus;
+  type: EventType;
+  venue: Scalars['String']['output'];
+};
+
+/** Defines status of event */
+export enum EventStatus {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
+/** Defines type of enum */
+export enum EventType {
+  Concert = 'CONCERT',
+  Theater = 'THEATER',
+  Virtual = 'VIRTUAL'
+}
+
 export type ForgotPasswordRequestValidator = {
   email: Scalars['String']['input'];
 };
@@ -99,6 +141,8 @@ export type MediaSchema = {
 };
 
 export enum MediaType {
+  EventCover = 'EVENT_COVER',
+  EventImage = 'EVENT_IMAGE',
   OrganizerDocument = 'ORGANIZER_DOCUMENT',
   UserProfile = 'USER_PROFILE'
 }
@@ -107,6 +151,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Role: Organizer */
   createCategory: CommonResponse;
+  createEvent: CommonResponse;
   deleteCategoryPermanent: CommonResponse;
   forgotPasswordRequest: CommonResponse;
   getAccessToken: AccessTokenResponse;
@@ -125,6 +170,11 @@ export type Mutation = {
 
 export type MutationCreateCategoryArgs = {
   data: CreateCategoryValidation;
+};
+
+
+export type MutationCreateEventArgs = {
+  data: CreateEventValidator;
 };
 
 
@@ -227,6 +277,12 @@ export type OtpVerifyValidator = {
   otp: Scalars['String']['input'];
 };
 
+export type PaginatedEventObject = {
+  __typename?: 'PaginatedEventObject';
+  data: Array<Event>;
+  meta: Pagination;
+};
+
 export type PaginatedOrganizerCategory = {
   __typename?: 'PaginatedOrganizerCategory';
   data: Array<Category>;
@@ -246,11 +302,17 @@ export type Query = {
   __typename?: 'Query';
   getCurrentUser: UserResponse;
   getMyCategory: PaginatedOrganizerCategory;
+  getMyEvents: PaginatedEventObject;
   getMyTrashedCategory: PaginatedOrganizerCategory;
 };
 
 
 export type QueryGetMyCategoryArgs = {
+  query: CommonQuery;
+};
+
+
+export type QueryGetMyEventsArgs = {
   query: CommonQuery;
 };
 
@@ -432,6 +494,13 @@ export type DeleteCategoryPermanentMutationVariables = Exact<{
 
 export type DeleteCategoryPermanentMutation = { __typename?: 'Mutation', deleteCategoryPermanent: { __typename?: 'CommonResponse', message: string, status: string } };
 
+export type CreateEventMutationVariables = Exact<{
+  data: CreateEventValidator;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'CommonResponse', message: string, status: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -450,6 +519,13 @@ export type GetMyTrashedCategoryQueryVariables = Exact<{
 
 
 export type GetMyTrashedCategoryQuery = { __typename?: 'Query', getMyTrashedCategory: { __typename?: 'PaginatedOrganizerCategory', data: Array<{ __typename?: 'Category', createdAt: string, description: string, id: string, name: string }> } };
+
+export type GetMyEventsQueryVariables = Exact<{
+  query: CommonQuery;
+}>;
+
+
+export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', createdAt: string, description: string, eventEndDate: string, eventStartDate: string, id: string, name: string, rejectionCount: number, status: EventStatus, type: EventType, venue: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }> } };
 
 
 export const RegisterUserDocument = gql`
@@ -897,6 +973,41 @@ export function useDeleteCategoryPermanentMutation(baseOptions?: Apollo.Mutation
 export type DeleteCategoryPermanentMutationHookResult = ReturnType<typeof useDeleteCategoryPermanentMutation>;
 export type DeleteCategoryPermanentMutationResult = Apollo.MutationResult<DeleteCategoryPermanentMutation>;
 export type DeleteCategoryPermanentMutationOptions = Apollo.BaseMutationOptions<DeleteCategoryPermanentMutation, DeleteCategoryPermanentMutationVariables>;
+export const CreateEventDocument = gql`
+    mutation CreateEvent($data: CreateEventValidator!) {
+  createEvent(data: $data) {
+    message
+    message
+    status
+  }
+}
+    `;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -1069,3 +1180,60 @@ export type GetMyTrashedCategoryQueryHookResult = ReturnType<typeof useGetMyTras
 export type GetMyTrashedCategoryLazyQueryHookResult = ReturnType<typeof useGetMyTrashedCategoryLazyQuery>;
 export type GetMyTrashedCategorySuspenseQueryHookResult = ReturnType<typeof useGetMyTrashedCategorySuspenseQuery>;
 export type GetMyTrashedCategoryQueryResult = Apollo.QueryResult<GetMyTrashedCategoryQuery, GetMyTrashedCategoryQueryVariables>;
+export const GetMyEventsDocument = gql`
+    query GetMyEvents($query: CommonQuery!) {
+  getMyEvents(query: $query) {
+    data {
+      cover {
+        name
+      }
+      createdAt
+      description
+      eventEndDate
+      eventStartDate
+      id
+      images {
+        name
+      }
+      name
+      rejectionCount
+      status
+      type
+      venue
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyEventsQuery__
+ *
+ * To run a query within a React component, call `useGetMyEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyEventsQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useGetMyEventsQuery(baseOptions: Apollo.QueryHookOptions<GetMyEventsQuery, GetMyEventsQueryVariables> & ({ variables: GetMyEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyEventsQuery, GetMyEventsQueryVariables>(GetMyEventsDocument, options);
+      }
+export function useGetMyEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyEventsQuery, GetMyEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyEventsQuery, GetMyEventsQueryVariables>(GetMyEventsDocument, options);
+        }
+export function useGetMyEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMyEventsQuery, GetMyEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMyEventsQuery, GetMyEventsQueryVariables>(GetMyEventsDocument, options);
+        }
+export type GetMyEventsQueryHookResult = ReturnType<typeof useGetMyEventsQuery>;
+export type GetMyEventsLazyQueryHookResult = ReturnType<typeof useGetMyEventsLazyQuery>;
+export type GetMyEventsSuspenseQueryHookResult = ReturnType<typeof useGetMyEventsSuspenseQuery>;
+export type GetMyEventsQueryResult = Apollo.QueryResult<GetMyEventsQuery, GetMyEventsQueryVariables>;

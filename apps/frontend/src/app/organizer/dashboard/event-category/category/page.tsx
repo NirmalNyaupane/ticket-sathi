@@ -8,25 +8,12 @@ import GlobalDialog from "@/components/common/Dialog/GlobalDialog";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import CategoryModal from "@/components/organizer/dashboard/modals/CategoryModal";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
-import { InView } from "react-intersection-observer";
 
 type CategoryData = GetMyCategoryQuery["getMyCategory"]["data"];
 const EventCategory = () => {
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleMenuItemClick = () => {
-    setOpenDialog(true);
-  };
+ 
   const { loading, data, networkStatus, fetchMore, updateQuery } =
     useGetMyCategoryQuery({
       variables: {

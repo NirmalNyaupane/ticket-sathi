@@ -1,90 +1,227 @@
-'use client'
-import { cn } from '@/lib/utils';
-import { FolderInputIcon, Home } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React from 'react';
-import { BiCalendarEvent, BiChat, BiSolidCoupon } from 'react-icons/bi';
-import { BsPeopleFill } from 'react-icons/bs';
+"use client";
+import { cn } from "@/lib/utils";
+import { FolderInputIcon, Home } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import { BiCalendarEvent, BiChat, BiSolidCoupon } from "react-icons/bi";
+import { BsPeopleFill } from "react-icons/bs";
 import { CiLogout } from "react-icons/ci";
-import './scrollbar.css';
+import "./scrollbar.css";
+import ConditionallyRender from "@/components/common/ConditionallyRender";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
+
+type ChildrenItems = {
+  name: string;
+  links: string[];
+};
+
+type SideBarItems = {
+  name: string;
+  icon: React.ReactNode;
+} & (
+  | {
+      hasChildren: false;
+      links: string[];
+    }
+  | {
+      hasChildren: true;
+      name: string;
+      children: ChildrenItems[];
+    }
+);
 
 const SideBar = () => {
-    const sidebarItems = [
-        {
-            name: "Dashboard",
-            icon: <Home />,
-            links: ["/organizer/dashboard"]
-        },
+  const sidebarItems: SideBarItems[] = [
+    {
+      name: "Dashboard",
+      icon: <Home />,
+      links: ["/organizer/dashboard"],
+      hasChildren: false,
+    },
 
+    {
+      name: "Event Category",
+      icon: <FolderInputIcon />,
+      hasChildren: true,
+      children: [
         {
-            name: "Event Category",
-            icon: <FolderInputIcon />,
-            links: ["/organizer/dashboard/event-category"]
+          name: "Category",
+          links: ["/organizer/dashboard/event-category/category"],
         },
+        {
+          name: "Trash",
+          links: ["/organizer/dashboard/event-category/trash"],
+        },
+      ],
+    },
 
+    {
+      name: "Event",
+      icon: (
+        <span className="text-[1.75rem]">
+          <BiCalendarEvent />
+        </span>
+      ),
+      hasChildren: true,
+      children: [
         {
-            name: "Event",
-            icon: <span className='text-[1.75rem]'><BiCalendarEvent /></span>,
-            links: ["/organizer/event"]
+          name: "View",
+          links: ["/organizer/dashboard/event/view"],
         },
+        {
+          name: "Create",
+          links: ["/organizer/dashboard/event/create"],
+        },
+        {
+          name: "Trash",
+          links: ["/organizer/dashboard/event/trash"],
+        },
+      ],
+    },
+    {
+      name: "Employees",
+      icon: (
+        <span className="text-[1.75rem]">
+          <BsPeopleFill />
+        </span>
+      ),
+      hasChildren: false,
+      links: ["/organizer/dashboard/employees"],
+    },
+    {
+      name: "Coupons",
+      icon: (
+        <span className="text-[1.75rem]">
+          <BiSolidCoupon />
+        </span>
+      ),
+      hasChildren: false,
+      links: ["/organizer/employees"],
+    },
+    {
+      name: "Chat",
+      icon: (
+        <span className="text-[1.75rem]">
+          <BiChat />
+        </span>
+      ),
+      hasChildren: false,
+      links: ["/organizer/employees"],
+    },
+  ];
 
-        {
-            name: "Employees",
-            icon: <span className='text-[1.75rem]'><BsPeopleFill /></span>,
-            links: ["/organizer/employees"]
-        },
-        {
-            name: "Coupons",
-            icon: <span className='text-[1.75rem]'><BiSolidCoupon /></span>,
-            links: ["/organizer/employees"]
-        },
-        {
-            name: "Chat",
-            icon: <span className='text-[1.75rem]'><BiChat /></span>,
-            links: ["/organizer/employees"]
-        },
-    ]
-
-
-    return (
-        <div className='md:w-[30%] lg:w-[18%] flex flex-col gap-3 overflow-y-auto side-nav-items 
+  return (
+    <div
+      className="md:w-[30%] lg:w-[18%] flex flex-col gap-3 overflow-y-auto side-nav-items 
         absolute md:static      
-        -translate-x-[100%] md:translate-x-0'>
-            {
-                sidebarItems.map((items) => {
-                    return <NavItems key={items.name} link={items.links} name={items.name} icon={items.icon} />
-                })
+        -translate-x-[100%] md:translate-x-0"
+    >
+      {sidebarItems.map((items) => {
+        return (
+          <ConditionallyRender
+            key={items.name}
+            condition={!items.hasChildren}
+            show={
+              <NavItems
+                key={items.name}
+                link={!items.hasChildren ? items.links : []}
+                name={items.name}
+                icon={items.icon}
+              />
             }
+            elseShow={
+              <>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1" className="p-0 border-none">
+                    <AccordionTrigger className="hover:no-underline w-full p-0 hover:bg-gray-200 rounded-md">
+                      {" "}
+                      <NavItems
+                        key={items.name}
+                        name={items.name}
+                        icon={items.icon}
+                      />
+                    </AccordionTrigger>
+                    <AccordionContent className="hover:bg-none">
+                      {items.hasChildren &&
+                        items.children.map((children) => {
+                          return (
+                            <React.Fragment key={children.name}>
+                              {/* <Separator orientation="vertical"/> */}
+                              <NavItems
+                                name={children.name}
+                                link={children.links}
+                              />
+                            </React.Fragment>
+                          );
+                        })}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </>
+            }
+          />
+        );
+      })}
 
-            <div className={"flex items-center gap-3 px-2 rounded-md hover:bg-gray-200  py-2 mr-3 transition-all cursor-pointer mt-auto text-red-500 font-medium"}>
-                <div className='text-[1.75rem]'><CiLogout /></div>
-                <div className='text-lg'>Signout</div>
-            </div>
+      <div
+        className={
+          "flex items-center gap-3 px-2 rounded-md hover:bg-gray-200  py-2 mr-3 transition-all cursor-pointer mt-auto text-red-500 font-medium w-full"
+        }
+      >
+        <div className="text-[1.75rem]">
+          <CiLogout />
         </div>
-    )
-}
+        <div className="text-lg">Signout</div>
+      </div>
+    </div>
+  );
+};
 
 interface NavItemsProps {
-    link: Array<string>;
-    name: string;
-    icon: React.ReactNode;
+  link?: Array<string>;
+  name: string;
+  icon?: React.ReactNode;
 }
 
 const NavItems = ({ link, name, icon }: NavItemsProps) => {
-    const path = usePathname();
+  const path = usePathname();
 
-    const isActive = (): boolean => {
-        return link.includes(path);
-    }
+  const isActive = (): boolean => {
+    if (!link) return false;
+    return link.includes(path);
+  };
 
-    return (
-        <Link href={link?.[0]} className={cn(`flex items-center gap-3 px-2 rounded-md hover:bg-gray-200 
-            py-2 mr-3 transition-all ${isActive() && "bg-gray-200"}`)}>
-            <div>{icon}</div>
-            <div className='text-md'>{name}</div>
+  return (
+    <ConditionallyRender
+      condition={link?.[0] ? true : false}
+      show={
+        <Link
+          href={link?.[0] ?? ""}
+          className={cn(`flex items-center gap-3 px-2 rounded-md hover:bg-gray-200
+            py-2 mr-3 transition-all ${isActive() && "bg-gray-200"}`)}
+        >
+          <div>{icon}</div>
+          <div className="text-md">{name}</div>
         </Link>
-    )
-}
+      }
+      elseShow={
+        <div
+          className={cn(`flex items-center gap-3 px-2 rounded-md hover:bg-gray-200
+          py-2 mr-3 transition-all ${isActive() && "bg-gray-200"}`)}
+        >
+          <div>{icon}</div>
+          <div className="text-md">{name}</div>
+        </div>
+      }
+    />
+  );
+};
 
 export default SideBar;

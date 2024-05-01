@@ -69,3 +69,26 @@ query GetMyTrashedCategory($query: CommonQuery!) {
     }
   }
 }
+
+query GetMyEvents($query: CommonQuery!) {
+  getMyEvents(query: $query) {
+    data {
+      cover {
+        name
+      }
+      createdAt
+      description
+      eventEndDate
+      eventStartDate
+      id
+      images {
+        name
+      }
+      name
+      rejectionCount
+      status
+      type
+      venue
+    }
+  }
+}
