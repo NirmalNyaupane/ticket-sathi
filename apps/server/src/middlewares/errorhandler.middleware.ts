@@ -1,5 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-import { GraphQLError } from "graphql";
+import { NextFunction, Request, Response } from "express";
 import { QueryFailedError } from "typeorm";
 const errorHandler = (
   err: Error,

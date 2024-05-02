@@ -134,10 +134,10 @@ export type MediaInput = {
 
 export type MediaSchema = {
   __typename?: 'MediaSchema';
-  id?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
   mediaType?: Maybe<MediaType>;
   mimeType?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 export enum MediaType {
@@ -442,7 +442,7 @@ export type UploadMediaMutationVariables = Exact<{
 }>;
 
 
-export type UploadMediaMutation = { __typename?: 'Mutation', uploadMedia: { __typename?: 'MediaSchema', id?: string | null, name?: string | null, mimeType?: string | null, mediaType?: MediaType | null } };
+export type UploadMediaMutation = { __typename?: 'Mutation', uploadMedia: { __typename?: 'MediaSchema', id: string, name: string, mimeType?: string | null, mediaType?: MediaType | null } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserValidation;

@@ -94,7 +94,7 @@ const DragAndDropPdf = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="outer flex flex-col gap-2">
         <div>
           <Label
-            htmlFor="dropzone-file"
+            htmlFor="dropzone-multiple-pdf"
             className={cn(
               `flex justify-center items-center flex-col inset-0 cursor-pointer h-full
                     border-2 border-dotted text-gray-400 rounded-md aspect-auto overflow-hidden transition-all delay-100`,
@@ -142,7 +142,7 @@ const DragAndDropPdf = React.forwardRef<HTMLInputElement, InputProps>(
 
             <input
               accept="application/pdf"
-              id="dropzone-file"
+              id="dropzone-multiple-pdf"
               type="file"
               hidden
               multiple

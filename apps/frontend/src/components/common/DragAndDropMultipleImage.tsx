@@ -1,10 +1,10 @@
 "use client";
-import { cn, validateFileType, validateImageFileType } from "@/lib/utils";
+import useCustomToast from "@/hooks/useToast";
+import { cn, validateImageFileType } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { CiTrash } from "react-icons/ci";
 import { Label } from "../ui/label";
-import useCustomToast from "@/hooks/useToast";
 
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLElement>, "type" | "onChange"> {
@@ -94,7 +94,7 @@ const DragDropMultipleImages = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="outer flex flex-col gap-2">
         <div>
           <Label
-            htmlFor="dropzone-file"
+            htmlFor="dropzone-multiple-images"
             className={cn(
               `flex justify-center items-center flex-col inset-0 cursor-pointer h-full
                     border-2 border-dotted text-gray-400 rounded-md aspect-auto overflow-hidden transition-all delay-100`,
@@ -142,7 +142,7 @@ const DragDropMultipleImages = React.forwardRef<HTMLInputElement, InputProps>(
 
             <input
               accept="image/jpeg, image/jpg, image/png"
-              id="dropzone-file"
+              id="dropzone-multiple-images"
               type="file"
               hidden
               multiple
@@ -153,13 +153,13 @@ const DragDropMultipleImages = React.forwardRef<HTMLInputElement, InputProps>(
           </Label>
         </div>
 
-        <div className="space-y-2 flex h-[100px] overflow-hidden">
-          {pdfFiles.length > 0 &&
-            pdfFiles?.map((file, index) => {
+        {pdfFiles.length > 0 && (
+          <div className="space-y-2 flex h-[100px]">
+            {pdfFiles?.map((file, index) => {
               const url = URL.createObjectURL(file);
               return (
                 <div
-                  className="border border-gray-300 p-2 rounded-md flex  text-sm"
+                  className="border border-gray-300 p-2 rounded-md flex items-center justify-between text-sm"
                   key={(index + 989) * 34}
                 >
                   <Image
@@ -167,7 +167,7 @@ const DragDropMultipleImages = React.forwardRef<HTMLInputElement, InputProps>(
                     alt="drop-images"
                     height={100}
                     width={100}
-                    className="object-cover"
+                    className=" object-cover"
                   />
                   <span
                     className="text-lg cursor-pointer"
@@ -178,12 +178,13 @@ const DragDropMultipleImages = React.forwardRef<HTMLInputElement, InputProps>(
                 </div>
               );
             })}
-          {errorMessage && (
-            <p className="text-[0.875rem] mt-2 font-medium text-red-500">
-              {errorMessage}
-            </p>
-          )}
-        </div>
+          </div>
+        )}
+        {errorMessage && (
+          <p className="text-[0.875rem] mt-2 font-medium text-red-500">
+            {errorMessage}
+          </p>
+        )}
       </div>
     );
   }
