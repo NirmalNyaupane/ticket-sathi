@@ -35,7 +35,6 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
   const [isPasswordShow, setPasswordShow] = useState(false);
   const [isConfirmPasswordShow, setConfirmPasswordShow] = useState(false);
   const [countryCode, setCountryCode] = useState<string>("");
-  const [mediaIds, setMediaIds] = useState<string[]>([]);
 
   /******************* Hooks *******************/
   const toast = useCustomToast();
@@ -52,27 +51,11 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
     resolver: zodResolver(organizerRegisterValidation),
   });
 
-  const handleFileChange = (files: File[]) => {
-    form.setValue("document", files);
-  };
-
   //mutation for file upload
   const [
     fileMutation,
     { loading: fileuploadLoading, data: fileData, error: fileErrors },
-  ] = useUploadMediaMutation({
-    onCompleted(data) {
-      if (data.uploadMedia) {
-        setMediaIds((prev) => {
-          if (prev) {
-            return [...prev, data.uploadMedia.id];
-          } else {
-            return [data.uploadMedia.id];
-          }
-        });
-      }
-    },
-  });
+  ] = useUploadMediaMutation();
 
   //mutation using generated registeruser mutation
   const [mutation, { loading, error, data }] = useRegisterUserMutation({
@@ -85,35 +68,34 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
   });
   const formSubmit: SubmitHandler<formData> = async (e) => {
     const { document, confirmPassword, phone, ...restInput } = e;
-
-    //upload all file
-    for (let file of document) {
-      if (!fileErrors) {
-        //handle media upload
-        await fileMutation({
+    const documentsResponse = await Promise.all(
+      document?.map((doc: File) => {
+        return fileMutation({
           variables: {
             mediaType: MediaType.OrganizerDocument,
-            file: file,
+            file: doc,
           },
-        }).catch((error: any) => {
-          toast.error(showError(error));
         });
-      } else {
-        break;
-      }
-    }
+      })
+    ).catch((error) => {
+      toast.error(showError(error));
+    });
 
-    if (fileData?.uploadMedia) {
+    const documentIds = documentsResponse?.map((response) => {
+      return {
+        id: response.data.uploadMedia.id,
+      };
+    });
+
+    if (documentsResponse) {
       //register user
-      mutation({
+      await mutation({
         variables: {
           data: {
             ...restInput,
             role: UserRole.Organizer,
             phone: countryCode + phone,
-            documents: mediaIds.map((doc) => {
-              return { id: doc };
-            }),
+            documents: documentIds,
           },
         },
       }).catch((error: any) => {
@@ -202,10 +184,20 @@ const RegisterOrganizer: FC<props> = ({ className }: props) => {
           errorMessage={form.formState.errors.abnAcn?.message}
         />
 
-        <p>Documents</p>
-        <DragAndDropPdf
-          onChange={handleFileChange}
-          errorMessage={form.formState.errors.document?.message?.toString()}
+        <FormField
+          control={form.control}
+          name="document"
+          render={({ field }) => {
+            return (
+              <>
+                <FormLabel>Documents</FormLabel>
+                <DragAndDropPdf
+                  onChange={field.onChange}
+                  errorMessage={form.formState.errors.document?.message?.toString()}
+                />
+              </>
+            );
+          }}
         />
 
         <InputFieldWithRightIcon

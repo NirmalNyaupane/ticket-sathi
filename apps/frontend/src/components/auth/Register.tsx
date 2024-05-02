@@ -67,7 +67,7 @@ const Register: FC<props> = ({ role, className }: props) => {
   });
   const formSubmit: SubmitHandler<formData> = async (e) => {
     const { confirmPassword, phone, ...data } = e;
-    console.log(e.phone)
+
     mutation({
       variables: {
         data: {
@@ -126,33 +126,6 @@ const Register: FC<props> = ({ role, className }: props) => {
           errorMessage={errors.phone?.message}
           getCountryCode={getCountryCode}
         />
-
-        {/* only for organizer */}
-        {
-          role === UserRole.Organizer && (
-            <>
-              <InputField label="Organizer name" />
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="terms"
-                  checked={true}
-                // onCheckedChange={() => setKeepMeLoggedIn(!keepMeLoggedIn)}
-                />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed
-             peer-disabled:opacity-70"
-                >
-                  Gst register
-                </label>
-              </div>
-              <InputField label="ABN ACN number" />
-
-              <p>Documents</p>
-              <DragAndDropPdf onChange={handleFileChange} />
-            </>
-          )
-        }
 
         <InputFieldWithRightIcon
           label="Password"

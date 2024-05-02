@@ -78,7 +78,7 @@ export class Event extends CommonEntity {
     }
 
     //migrate images
-    if (this.images.length > 0) {
+    if (this.images && this.images.length > 0) {
       for (let image of this.images) {
         mediamigrateUtil.migrate({
           mediaName: image.name,

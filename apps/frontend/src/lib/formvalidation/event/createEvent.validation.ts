@@ -34,21 +34,23 @@ const createEventValidation = z
     images: z
       .any()
       .optional()
-      .refine(
-        (data: File[]) => {
-          if (!data) return true;
-          if (data.length === 0) return true;
-          for (let file of data) {
-            if (file.size >= 1 * 1024 * 1024) {
-              return false;
-            }
-          }
-          return true;
-        },
-        {
-          message: "image size must be equal of less than 1MB",
-        }
-      ),
+      // .refine(
+      //   (data: File[]) => {
+      //     if (!data) return true;
+      //     if (data.length === 0) return true;
+      //     for (let file of data) {
+      //       if (file.size >= 1 * 1024 * 1024) {
+      //         return false;
+      //       }
+      //     }
+      //     return true;
+      //   },
+      //   {
+      //     message: "image size must be equal of less than 1MB",
+      //   }
+      // )
+      
+      ,
 
     cover: z
       .any()
@@ -64,7 +66,6 @@ const createEventValidation = z
           message: "cover image must or less than 1MB",
         }
       ),
-
     categoryId: z.string().uuid(),
   })
   .refine(

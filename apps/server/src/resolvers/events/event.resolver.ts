@@ -9,18 +9,17 @@ import {
 import { UserRole } from "../../constants/enums/auth.enum";
 import { InternalServerError } from "../../constants/errors/exceptions.error";
 import authentication from "../../middlewares/authentication.middleware";
+import { RequestValidator } from "../../middlewares/requestValidator.middleware";
 import { CommonResponse } from "../../schemas";
+import {
+  CommonQuery
+} from "../../schemas/common/common.schema";
+import { PaginatedEventObject } from "../../schemas/event/event.schemas";
 import categoryService from "../../service/category/category.service";
 import eventService from "../../service/event/event.service";
 import { Context } from "../../types/context.type";
-import { CreateEventValidator } from "../../validators/event/event.validator";
-import { RequestValidator } from "../../middlewares/requestValidator.middleware";
-import { PaginatedEventObject } from "../../schemas/event/event.schemas";
-import {
-  CommonQuery,
-  PaginationInput,
-} from "../../schemas/common/common.schema";
 import paginationUtil from "../../utils/pagination.util";
+import { CreateEventValidator } from "../../validators/event/event.validator";
 
 @Resolver()
 export class EventResolver {

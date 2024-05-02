@@ -6,7 +6,7 @@ const EventCreatePage = () => {
   return (
     <div className="">
       <DashboardTopContent text={"Event Create"} />
-      <EventCeateUpdate />
+      <EventCeateUpdate action="create"/>
     </div>
   );
 };

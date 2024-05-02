@@ -23,6 +23,7 @@ import {
   UpdateProfilePic,
   UpdateUserValidation,
 } from "../../validators/user/updateuser.validation";
+import { UUID } from "../../types/commontype";
 
 @Resolver()
 class UserResolver {
@@ -48,7 +49,7 @@ class UserResolver {
           HTTPStatusCode.BAD_REQUEST
         );
       }
-      const user = await authService.findTokenById(context.user?.id as string);
+      const user = await authService.findTokenById(context.user?.id as UUID);
       const isPasswordCorrect = await bcrypt.compare(
         userData.oldPassword,
         user?.password as string

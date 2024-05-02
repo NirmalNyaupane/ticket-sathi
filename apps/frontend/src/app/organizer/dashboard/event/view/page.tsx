@@ -1,20 +1,26 @@
 "use client";
 import { EventStatus, EventType } from "@/__generated__/graphql";
+import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-
+import { Eye } from "lucide-react";
+import Link from "next/link";
 export type Event = {
   id: string;
   name: string;
-  // cover: string;
   type: EventType;
   status: EventStatus;
   startDate: string;
   endDate: string;
   venue: string;
+  action?: string;
 };
 
 export const columns: ColumnDef<Event>[] = [
+  {
+    accessorKey: "id",
+    header:"No",
+  },
   {
     accessorKey: "name",
     header: "Name",
@@ -71,12 +77,24 @@ export const columns: ColumnDef<Event>[] = [
     header: "Venue",
     enableColumnFilter: false,
   },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell({ cell, row, column }) {
+      const id = row.getValue("id");
+      return (
+        <Link href={`/organizer/dashboard/event/${id}`}>
+          <Eye className="cursor-pointer" />
+        </Link>
+      );
+    },
+  },
 ];
 
 const data: Event[] = [
   {
     id: "728ed52f",
-
+    action: "",
     status: EventStatus.Pending,
     type: EventType.Concert,
     name: "Test Event",
@@ -256,7 +274,12 @@ const data: Event[] = [
   },
 ];
 const EventPage = () => {
-  return <DataTable columns={columns} data={data} />;
+  return (
+    <>
+      <DashboardTopContent text={"Events"} />
+      <DataTable columns={columns} data={data} />
+    </>
+  );
 };
 
 export default EventPage;

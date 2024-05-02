@@ -5,7 +5,7 @@ import {
   MediaType,
   useCreateEventMutation,
   useGetMyCategoryQuery,
-  useUploadMediaMutation,
+  useUploadMediaMutation
 } from "@/__generated__/graphql";
 import CustomTextArea from "@/components/common/CustomTextArea";
 import DatePicker from "@/components/common/DatePicker";
@@ -44,8 +44,6 @@ type Props = {} & (
 
 const EventCeateUpdate: React.FC<Props> = (props: Props) => {
   const [imageIds, setImageIds] = useState<string[]>([]);
-  const [coverIds, setCoverIds] = useState("");
-  const [isMediaError, setMediaError] = useState(false);
 
   const toast = useCustomToast();
   const form = useForm<FormData>({
@@ -66,67 +64,52 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
   });
 
   const [mediaMutation, { loading: mediaLoading, error: mediaError }] =
-    useUploadMediaMutation({
-      onCompleted(data) {
-        if (data.uploadMedia.mediaType === MediaType.EventCover) {
-          setCoverIds(data.uploadMedia.id?.toString());
-        } else {
-          setImageIds((prev) => {
-            if (prev) {
-              return [...prev, data.uploadMedia.id];
-            } else {
-              return [data.uploadMedia.id];
-            }
-          });
-        }
-      },
-    });
+    useUploadMediaMutation();
 
   const [eventMutation, { loading: eventLoading, error: eventError }] =
     useCreateEventMutation({
       onCompleted() {
         toast.sucess("Event is created");
         form.reset();
-        setCoverIds("");
         setImageIds([]);
       },
     });
   const formSubmit = form.handleSubmit(async (data) => {
     const { cover, images, ...restData } = data;
     //first upload a cover picture
-    await mediaMutation({
+    const coverResponse = await mediaMutation({
       variables: {
         mediaType: MediaType.EventCover,
         file: cover,
       },
     }).catch((error) => {
-      setMediaError(true);
       toast.error(showError(error));
     });
 
-    if (!isMediaError && !mediaLoading) {
-      if (images?.length > 0) {
-        for (let image of images) {
-          await mediaMutation({
-            variables: {
-              mediaType: MediaType.EventImage,
-              file: image,
-            },
-          }).catch((error) => {
-            setMediaError(true);
-            toast.error(showError(error));
-          });
-        }
-      }
-    }
+    const imagesResponse = await Promise.all(
+      images?.map((image: File) => {
+        return mediaMutation({
+          variables: {
+            mediaType: MediaType.EventImage,
+            file: image,
+          },
+        });
+      })
+    ).catch((error) => {
+      toast.error(showError(error));
+    });
 
-    if (!isMediaError && !mediaLoading) {
+    const imagesIds = imagesResponse?.map(
+      (image) => image.data?.uploadMedia.id
+    ) as string[];
+
+    if (coverResponse && imagesIds) {
       await eventMutation({
         variables: {
           data: {
             ...restData,
-            images: imageIds,
-            cover: coverIds,
+            ...(imageIds && imagesIds?.length > 0 ? { images: imagesIds } : {}),
+            cover: coverResponse.data?.uploadMedia.id!,
           },
         },
       }).catch((error) => {
