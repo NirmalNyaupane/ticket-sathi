@@ -62,10 +62,17 @@ query GetMyCategory($query: CommonQuery!) {
 query GetMyTrashedCategory($query: CommonQuery!) {
   getMyTrashedCategory(query: $query) {
     data {
-      createdAt
       description
       id
       name
+      deletedAt
+    }
+  meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
     }
   }
 }

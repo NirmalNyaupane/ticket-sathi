@@ -2,17 +2,15 @@
 import {
   EventStatus,
   EventType,
-  GetMyEventsDocument,
-  useGetMyEventsQuery,
+  useGetMyEventsQuery
 } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { format, formatDate } from "date-fns";
+import { format } from "date-fns";
 import { Eye } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
 export type Event = {
   id: string;
   name: string;

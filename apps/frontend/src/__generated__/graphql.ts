@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTimeISO: { input: any; output: any; }
   Upload: { input: any; output: any; }
 };
 
@@ -31,7 +32,8 @@ export enum AuthType {
 
 export type Category = {
   __typename?: 'Category';
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   description: Scalars['String']['output'];
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -69,10 +71,11 @@ export type CreateEventValidator = {
 export type Event = {
   __typename?: 'Event';
   cover: Media;
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   description: Scalars['String']['output'];
-  eventEndDate: Scalars['String']['output'];
-  eventStartDate: Scalars['String']['output'];
+  eventEndDate: Scalars['DateTimeISO']['output'];
+  eventStartDate: Scalars['DateTimeISO']['output'];
   id: Scalars['String']['output'];
   images: Array<Media>;
   name: Scalars['String']['output'];
@@ -118,7 +121,8 @@ export type LoginValidator = {
 
 export type Media = {
   __typename?: 'Media';
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   id: Scalars['String']['output'];
   mediaType?: Maybe<MediaType>;
   mimeType?: Maybe<Scalars['String']['output']>;
@@ -249,7 +253,8 @@ export type OrganizerDetails = {
   abnAcn: Scalars['String']['output'];
   address: Scalars['String']['output'];
   bio?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   id: Scalars['String']['output'];
   isGstRegister: Scalars['Boolean']['output'];
   organizerName: Scalars['String']['output'];
@@ -260,7 +265,8 @@ export type OrganizerDetails = {
 
 export type OrganizerDocuments = {
   __typename?: 'OrganizerDocuments';
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   documents?: Maybe<Array<Media>>;
   id: Scalars['String']['output'];
   logo?: Maybe<Media>;
@@ -383,7 +389,8 @@ export type UserResponse = {
   __typename?: 'UserResponse';
   address?: Maybe<Scalars['String']['output']>;
   authType: AuthType;
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   email: Scalars['String']['output'];
   fullName: Scalars['String']['output'];
   id: Scalars['String']['output'];
@@ -504,7 +511,7 @@ export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __ty
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: string, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: string, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: any, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: any, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
 
 export type GetMyCategoryQueryVariables = Exact<{
   query: CommonQuery;
@@ -518,14 +525,14 @@ export type GetMyTrashedCategoryQueryVariables = Exact<{
 }>;
 
 
-export type GetMyTrashedCategoryQuery = { __typename?: 'Query', getMyTrashedCategory: { __typename?: 'PaginatedOrganizerCategory', data: Array<{ __typename?: 'Category', createdAt: string, description: string, id: string, name: string }> } };
+export type GetMyTrashedCategoryQuery = { __typename?: 'Query', getMyTrashedCategory: { __typename?: 'PaginatedOrganizerCategory', data: Array<{ __typename?: 'Category', description: string, id: string, name: string, deletedAt?: any | null }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
 
 export type GetMyEventsQueryVariables = Exact<{
   query: CommonQuery;
 }>;
 
 
-export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: string, description: string, eventStartDate: string, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, createdAt: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
+export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, createdAt: any, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
 
 
 export const RegisterUserDocument = gql`
@@ -1139,10 +1146,17 @@ export const GetMyTrashedCategoryDocument = gql`
     query GetMyTrashedCategory($query: CommonQuery!) {
   getMyTrashedCategory(query: $query) {
     data {
-      createdAt
       description
       id
       name
+      deletedAt
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
     }
   }
 }
