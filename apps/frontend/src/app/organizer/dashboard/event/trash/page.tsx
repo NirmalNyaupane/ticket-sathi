@@ -1,11 +1,19 @@
 "use client";
-import {
-  useGetMyTrashedCategoryQuery
-} from "@/__generated__/graphql";
+import { useGetMyTrashedCategoryQuery } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
+import { Edit, Trash2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { BsThreeDotsVertical } from "react-icons/bs";
 export type Category = {
   id: string;
   name: string;
@@ -28,9 +36,36 @@ export const columns: ColumnDef<Category>[] = [
     header: "Deleted At",
   },
   {
-    accessorKey:"action",
-    header:"Action"
-  }
+    accessorKey: "action",
+    header: "Action",
+    cell(props) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="link">
+              <BsThreeDotsVertical />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                // onSelect={handleMenuItemClick}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className="cursor-pointer">
+                <Trash2 className="mr-2 h-4 w-4" />
+                <span>Move to trash</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
 ];
 
 const TrashPage = () => {
@@ -54,7 +89,7 @@ const TrashPage = () => {
     return {
       id: data.id.toString(),
       name: data.name,
-      deletedAt:data.deletedAt
+      deletedAt: data.deletedAt,
     };
   });
   return (
