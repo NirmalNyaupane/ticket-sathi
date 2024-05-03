@@ -2,6 +2,7 @@
 import {
   EventStatus,
   EventType,
+  GetMyEventsDocument,
   useGetMyEventsQuery,
 } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
@@ -10,6 +11,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format, formatDate } from "date-fns";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
 export type Event = {
   id: string;
   name: string;
@@ -71,10 +74,10 @@ export const columns: ColumnDef<Event>[] = [
     accessorKey: "startDate",
     header: "Event Start Date",
     enableColumnFilter: false,
-    cell({cell}) {
-        const date = new Date(cell.getValue() as string);
+    cell({ cell }) {
+      const date = new Date(cell.getValue() as string);
 
-        return <p>{format(date,"MMM dd, yyyy hh:mm a")}</p>
+      return <p>{format(date, "MMM dd, yyyy hh:mm a")}</p>;
     },
   },
   {
@@ -102,13 +105,17 @@ export const columns: ColumnDef<Event>[] = [
 ];
 
 const EventPage = () => {
-  const { data, loading, error } = useGetMyEventsQuery({
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const pageLimit = searchParams.get("pageLimit");
+  const { data, loading } = useGetMyEventsQuery({
     variables: {
       query: {
-        page: 1,
-        pageLimit: 15,
+        page: parseInt(page ?? "1"),
+        pageLimit: parseInt(pageLimit ?? "10"),
       },
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   if (loading) {
@@ -128,7 +135,11 @@ const EventPage = () => {
   return (
     <>
       <DashboardTopContent text={"Events"} />
-      <DataTable columns={columns} data={formatedData!} />
+      <DataTable
+        columns={columns}
+        data={formatedData!}
+        meta={data?.getMyEvents.meta}
+      />
     </>
   );
 };
