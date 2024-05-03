@@ -525,7 +525,7 @@ export type GetMyEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', createdAt: string, description: string, eventEndDate: string, eventStartDate: string, id: string, name: string, rejectionCount: number, status: EventStatus, type: EventType, venue: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }> } };
+export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: string, description: string, eventStartDate: string, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, createdAt: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
 
 
 export const RegisterUserDocument = gql`
@@ -1184,22 +1184,30 @@ export const GetMyEventsDocument = gql`
     query GetMyEvents($query: CommonQuery!) {
   getMyEvents(query: $query) {
     data {
+      eventEndDate
       cover {
         name
       }
-      createdAt
       description
-      eventEndDate
       eventStartDate
-      id
       images {
         name
       }
       name
       rejectionCount
-      status
       type
+      type
+      status
       venue
+      id
+      createdAt
+    }
+    meta {
+      currentPage
+      prevPage
+      nextPage
+      lastPage
+      totalCount
     }
   }
 }

@@ -13,13 +13,14 @@ export class CommonEntity extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: UUID;
 
-  @Field(() => String)
+  @Field(() => Date)
   @CreateDateColumn({
     type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
+    // default: () => "CURRENT_TIMESTAMP",
   })
   createdAt: Date;
 
+  @Field(() => Date, { nullable: true })
   @DeleteDateColumn()
   deletedAt: Date | null;
 }

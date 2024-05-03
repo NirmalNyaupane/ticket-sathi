@@ -73,22 +73,30 @@ query GetMyTrashedCategory($query: CommonQuery!) {
 query GetMyEvents($query: CommonQuery!) {
   getMyEvents(query: $query) {
     data {
+    eventEndDate
       cover {
         name
       }
-      createdAt
       description
-      eventEndDate
       eventStartDate
-      id
       images {
         name
       }
       name
       rejectionCount
-      status
       type
+      type
+      status
       venue
+      id
+      createdAt
+    },
+    meta {
+      currentPage
+      prevPage
+      nextPage
+      lastPage
+      totalCount
     }
   }
 }

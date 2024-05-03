@@ -34,11 +34,11 @@ export class Event extends CommonEntity {
   @Column({ type: "text", nullable: false })
   description: string;
 
-  @Field(() => String)
+  @Field(() => Date)
   @Column({ type: "timestamp", nullable: false })
   eventStartDate: string;
 
-  @Field(() => String)
+  @Field(() => Date)
   @Column({ type: "timestamp", nullable: false })
   eventEndDate: string;
 

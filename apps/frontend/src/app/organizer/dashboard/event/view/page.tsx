@@ -1,8 +1,13 @@
 "use client";
-import { EventStatus, EventType } from "@/__generated__/graphql";
+import {
+  EventStatus,
+  EventType,
+  useGetMyEventsQuery,
+} from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { format, formatDate } from "date-fns";
 import { Eye } from "lucide-react";
 import Link from "next/link";
 export type Event = {
@@ -19,7 +24,7 @@ export type Event = {
 export const columns: ColumnDef<Event>[] = [
   {
     accessorKey: "id",
-    header:"No",
+    header: "No",
   },
   {
     accessorKey: "name",
@@ -66,6 +71,11 @@ export const columns: ColumnDef<Event>[] = [
     accessorKey: "startDate",
     header: "Event Start Date",
     enableColumnFilter: false,
+    cell({cell}) {
+        const date = new Date(cell.getValue() as string);
+
+        return <p>{format(date,"MMM dd, yyyy hh:mm a")}</p>
+    },
   },
   {
     accessorKey: "endDate",
@@ -91,193 +101,34 @@ export const columns: ColumnDef<Event>[] = [
   },
 ];
 
-const data: Event[] = [
-  {
-    id: "728ed52f",
-    action: "",
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Approved,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Rejected,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Approved,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Rejected,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Rejected,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Approved,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Approved,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Pending,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-  {
-    id: "728ed52f",
-
-    status: EventStatus.Rejected,
-    type: EventType.Concert,
-    name: "Test Event",
-    startDate: "2024-02-01",
-    endDate: "2024-04-02",
-    venue: "Nepal hall",
-  },
-];
 const EventPage = () => {
+  const { data, loading, error } = useGetMyEventsQuery({
+    variables: {
+      query: {
+        page: 1,
+        pageLimit: 15,
+      },
+    },
+  });
+
+  if (loading) {
+    return <p>Loading.............</p>;
+  }
+  const formatedData = data?.getMyEvents.data.map((data): Event => {
+    return {
+      id: data.id.toString(),
+      name: data.name,
+      type: data.type,
+      status: data.status,
+      startDate: data.eventStartDate,
+      endDate: data.eventEndDate,
+      venue: data.venue,
+    };
+  });
   return (
     <>
       <DashboardTopContent text={"Events"} />
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={formatedData!} />
     </>
   );
 };
