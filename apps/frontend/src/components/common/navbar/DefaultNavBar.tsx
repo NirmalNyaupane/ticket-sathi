@@ -44,7 +44,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
       <nav className="flex justify-between items-center relative w-[full]">
         {/* Logo section  */}
         <div className="flex items-center gap-4">
-          <Link href={"/"}>
+          <Link href={"/"} key={"main-logo"}>
             <Image
               src={"/logo.png"}
               alt="logo"

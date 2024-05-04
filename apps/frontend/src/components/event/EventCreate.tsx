@@ -5,7 +5,7 @@ import {
   MediaType,
   useCreateEventMutation,
   useGetMyCategoryQuery,
-  useUploadMediaMutation
+  useUploadMediaMutation,
 } from "@/__generated__/graphql";
 import CustomTextArea from "@/components/common/CustomTextArea";
 import DatePicker from "@/components/common/DatePicker";
@@ -347,7 +347,10 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
               </div>
             </div>
           </div>
-          <LoadingButton isLoading={mediaLoading || eventLoading}>
+          <LoadingButton
+            isLoading={mediaLoading || eventLoading}
+            clasName="w-fit"
+          >
             Create Event
           </LoadingButton>
         </form>
