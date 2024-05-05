@@ -2,8 +2,8 @@ import CustomError from "../../utils/customError.util";
 import { HTTPStatusCode } from "../../utils/helper";
 
 class NotFoundExceptions extends CustomError {
-  constructor(title: string) {
-    super(`${title} not found`, HTTPStatusCode.NOT_FOUND);
+  constructor(description: string) {
+    super(description, HTTPStatusCode.NOT_FOUND);
   }
 }
 

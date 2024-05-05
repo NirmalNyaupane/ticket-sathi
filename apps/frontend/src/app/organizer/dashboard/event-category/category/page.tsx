@@ -86,43 +86,6 @@ const EventCategory = () => {
             />
           );
         })}
-        {/* 
-        <InView
-          as="div"
-          onChange={(inView, entry) => {
-            if (inView) {
-              fetchMore({
-                variables: {
-                  query: {
-                    page: data?.getMyCategory.meta.nextPage,
-                    pageLimit: 10,
-                  },
-                },
-
-                // updateQuery(prev, { fetchMoreResult }) {
-                //   if (!prev) {
-                //     return prev;
-                //   }
-                //   return {
-                //     ...prev,
-                //     getMyCategory: {
-                //       data: {
-                //         ...prev.getMyCategory.data,
-                //         ...fetchMoreResult.getMyCategory.data,
-                //       },
-                //       meta: {
-                //         ...prev.getMyCategory.meta,
-                //         ...fetchMoreResult.getMyCategory.meta,
-                //       },
-                //     },
-                //   };
-                // },
-              });
-            }
-          }}
-        >
-          Loading.........
-        </InView> */}
       </main>
     </div>
   );

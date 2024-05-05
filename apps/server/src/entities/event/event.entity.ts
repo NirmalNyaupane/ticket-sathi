@@ -17,6 +17,7 @@ import { Category } from "../category/category.entity";
 import mediamigrateUtil from "../../utils/mediamigrate.util";
 import { MediaOf } from "../../constants/enums/media.enum";
 import { EnvConfiguration } from "../../config/env.config";
+import { Ticket } from "../ticket/ticket.entity";
 
 @ObjectType()
 @Entity()
@@ -66,6 +67,9 @@ export class Event extends CommonEntity {
   @ManyToOne(() => Category, (cateogry) => cateogry.event)
   category: Category;
 
+  @OneToMany(()=>Ticket, (ticket)=>ticket.event)
+  tickets:Ticket[]
+
   @AfterInsert()
   _() {
     //migrate cover
@@ -95,7 +99,7 @@ export class Event extends CommonEntity {
       this.cover.name = `${EnvConfiguration.BACKEND_URL}/uploads/event/${this.id}/${this.cover.name}`;
     }
 
-    if (this.images.length > 0) {
+    if (this?.images?.length > 0) {
       for (let image of this.images) {
         image.name = `${EnvConfiguration.BACKEND_URL}/uploads/event/${this.id}/${image.name}`;
       }

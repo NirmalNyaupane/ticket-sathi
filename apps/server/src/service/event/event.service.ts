@@ -80,6 +80,28 @@ class EventService {
 
     return await builder.getManyAndCount();
   }
+
+  async getTicketByOrganizerId(organizerId: UUID) {
+    const event = await Event.findOne({
+      where: {
+        category: {
+          organizer: {
+            user: {
+              id: organizerId,
+            },
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      throw new NotFoundExceptions(
+        "Event is not found or it is not belongs to this organizer"
+      );
+    }
+
+    return event;
+  }
 }
 
 export default new EventService();

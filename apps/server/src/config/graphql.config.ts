@@ -2,12 +2,12 @@ import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
 import { buildTypeDefsAndResolversSync } from "type-graphql";
-import { MediaResolver } from "../resolvers/media/media.resolver";
 import { AuthResolver } from "../resolvers/auth/auth.resolver";
-import UserResolver from "../resolvers/user/user.resolver";
-import { Container } from "typedi";
 import { CategoryResolver } from "../resolvers/category/category.resolver";
 import { EventResolver } from "../resolvers/events/event.resolver";
+import { MediaResolver } from "../resolvers/media/media.resolver";
+import UserResolver from "../resolvers/user/user.resolver";
+import { TicketResolver } from "../resolvers/tickets/ticket.resolver";
 function configGraphQLServer(httpServer: http.Server) {
   const { typeDefs, resolvers } = buildTypeDefsAndResolversSync({
     resolvers: [
@@ -16,6 +16,7 @@ function configGraphQLServer(httpServer: http.Server) {
       UserResolver,
       CategoryResolver,
       EventResolver,
+      TicketResolver
     ],
     // container: Container
   });
