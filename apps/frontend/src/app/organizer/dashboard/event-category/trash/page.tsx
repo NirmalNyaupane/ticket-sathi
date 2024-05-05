@@ -1,21 +1,11 @@
 "use client";
 import { useGetMyTrashedCategoryQuery } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
+import TrashCategoryAction from "@/components/organizer/dashboard/TrashCategoryAction";
 import { DataTable } from "@/components/table/data-table";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Trash2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaWindowRestore } from "react-icons/fa";
 export type Category = {
   id: string;
   name: string;
@@ -38,41 +28,16 @@ export const columns: ColumnDef<Category>[] = [
     header: "Deleted At",
     cell({ cell }) {
       const date = new Date(cell.getValue() as string);
-
       return <p>{format(date, "MMM dd, yyyy hh:mm a")}</p>;
     },
   },
   {
     accessorKey: "action",
     header: "Action",
-    cell() {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="link">
-              <BsThreeDotsVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end">
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                // onSelect={handleMenuItemClick}
-              >
-                <span className="mr-2 h-4 w-4">
-                  <FaWindowRestore />
-                </span>
-                <span>Restore</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="cursor-pointer">
-                <Trash2 className="mr-2 h-4 w-4" />
-                <span>Delete Permanently</span>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    cell({ row }) {
+      const id = row.getValue("id") as string;
+      const name = row.getValue("name") as string;
+      return <TrashCategoryAction categoryId={id} categoryName={name} />;
     },
   },
 ];

@@ -9,11 +9,9 @@ import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopCo
 import CategoryModal from "@/components/organizer/dashboard/modals/CategoryModal";
 import { Button } from "@/components/ui/button";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import { useState } from "react";
 
 type CategoryData = GetMyCategoryQuery["getMyCategory"]["data"];
 const EventCategory = () => {
- 
   const { loading, data, networkStatus, fetchMore, updateQuery } =
     useGetMyCategoryQuery({
       variables: {
