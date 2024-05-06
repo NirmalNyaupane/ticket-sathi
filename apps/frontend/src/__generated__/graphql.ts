@@ -68,6 +68,24 @@ export type CreateEventValidator = {
   venue: Scalars['String']['input'];
 };
 
+export type CreateTicketValidator = {
+  discount?: InputMaybe<Scalars['Int']['input']>;
+  discountEndDate?: InputMaybe<Scalars['String']['input']>;
+  discountType: DiscountType;
+  earlyBirdOffer: Scalars['Boolean']['input'];
+  eventId: Scalars['String']['input'];
+  isUnlimited: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
+  totalTicket?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** This is a enum that provide discount type */
+export enum DiscountType {
+  Flat = 'FLAT',
+  Percentage = 'PERCENTAGE'
+}
+
 export type Event = {
   __typename?: 'Event';
   cover: Media;
@@ -156,7 +174,9 @@ export type Mutation = {
   /** Role: Organizer */
   createCategory: CommonResponse;
   createEvent: CommonResponse;
+  createTicket: CommonResponse;
   deleteCategoryPermanent: CommonResponse;
+  deleteTicket: CommonResponse;
   forgotPasswordRequest: CommonResponse;
   getAccessToken: AccessTokenResponse;
   login: LoginUserResponse;
@@ -166,6 +186,7 @@ export type Mutation = {
   resetForgotPassword: CommonResponse;
   updateCategory: CommonResponse;
   updateProfilePic: CommonResponse;
+  updateTicket: CommonResponse;
   updateUser: CommonResponse;
   uploadMedia: MediaSchema;
   verifyOtp: CommonResponse;
@@ -182,8 +203,18 @@ export type MutationCreateEventArgs = {
 };
 
 
+export type MutationCreateTicketArgs = {
+  data: CreateTicketValidator;
+};
+
+
 export type MutationDeleteCategoryPermanentArgs = {
   categoryId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteTicketArgs = {
+  ticketId: Scalars['String']['input'];
 };
 
 
@@ -230,6 +261,11 @@ export type MutationUpdateCategoryArgs = {
 
 export type MutationUpdateProfilePicArgs = {
   data: UpdateProfilePic;
+};
+
+
+export type MutationUpdateTicketArgs = {
+  data: UpdateTicketValidator;
 };
 
 
@@ -310,6 +346,9 @@ export type Query = {
   getMyCategory: PaginatedOrganizerCategory;
   getMyEvents: PaginatedEventObject;
   getMyTrashedCategory: PaginatedOrganizerCategory;
+  /** Open */
+  getSingleEvent: Event;
+  viewEventsTicket: Array<Ticket>;
 };
 
 
@@ -325,6 +364,16 @@ export type QueryGetMyEventsArgs = {
 
 export type QueryGetMyTrashedCategoryArgs = {
   query: CommonQuery;
+};
+
+
+export type QueryGetSingleEventArgs = {
+  eventId: Scalars['String']['input'];
+};
+
+
+export type QueryViewEventsTicketArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 export type RegisterUserResponse = {
@@ -360,6 +409,21 @@ export type SocialLinksResponse = {
   twitter?: Maybe<Scalars['String']['output']>;
 };
 
+export type Ticket = {
+  __typename?: 'Ticket';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  discount?: Maybe<Scalars['Int']['output']>;
+  discountEndDate?: Maybe<Scalars['DateTimeISO']['output']>;
+  discountType: DiscountType;
+  earlyBirdOffer: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  isUnlimited: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['Float']['output'];
+  totalTicket?: Maybe<Scalars['Int']['output']>;
+};
+
 export type UpdateCategoryValidation = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -367,6 +431,18 @@ export type UpdateCategoryValidation = {
 
 export type UpdateProfilePic = {
   mediaId: Scalars['String']['input'];
+};
+
+export type UpdateTicketValidator = {
+  discount?: InputMaybe<Scalars['Int']['input']>;
+  discountEndDate?: InputMaybe<Scalars['String']['input']>;
+  discountType?: InputMaybe<DiscountType>;
+  earlyBirdOffer?: InputMaybe<Scalars['Boolean']['input']>;
+  isUnlimited?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  ticketsId: Scalars['String']['input'];
+  totalTicket?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateUserValidation = {
@@ -532,7 +608,14 @@ export type GetMyEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, createdAt: any, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
+export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
+
+export type GetSingleEventQueryVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type GetSingleEventQuery = { __typename?: 'Query', getSingleEvent: { __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> } };
 
 
 export const RegisterUserDocument = gql`
@@ -1214,7 +1297,6 @@ export const GetMyEventsDocument = gql`
       status
       venue
       id
-      createdAt
     }
     meta {
       currentPage
@@ -1259,3 +1341,58 @@ export type GetMyEventsQueryHookResult = ReturnType<typeof useGetMyEventsQuery>;
 export type GetMyEventsLazyQueryHookResult = ReturnType<typeof useGetMyEventsLazyQuery>;
 export type GetMyEventsSuspenseQueryHookResult = ReturnType<typeof useGetMyEventsSuspenseQuery>;
 export type GetMyEventsQueryResult = Apollo.QueryResult<GetMyEventsQuery, GetMyEventsQueryVariables>;
+export const GetSingleEventDocument = gql`
+    query GetSingleEvent($eventId: String!) {
+  getSingleEvent(eventId: $eventId) {
+    eventEndDate
+    cover {
+      name
+    }
+    description
+    eventStartDate
+    images {
+      name
+    }
+    name
+    rejectionCount
+    type
+    type
+    status
+    venue
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetSingleEventQuery__
+ *
+ * To run a query within a React component, call `useGetSingleEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSingleEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSingleEventQuery({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useGetSingleEventQuery(baseOptions: Apollo.QueryHookOptions<GetSingleEventQuery, GetSingleEventQueryVariables> & ({ variables: GetSingleEventQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSingleEventQuery, GetSingleEventQueryVariables>(GetSingleEventDocument, options);
+      }
+export function useGetSingleEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSingleEventQuery, GetSingleEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSingleEventQuery, GetSingleEventQueryVariables>(GetSingleEventDocument, options);
+        }
+export function useGetSingleEventSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSingleEventQuery, GetSingleEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSingleEventQuery, GetSingleEventQueryVariables>(GetSingleEventDocument, options);
+        }
+export type GetSingleEventQueryHookResult = ReturnType<typeof useGetSingleEventQuery>;
+export type GetSingleEventLazyQueryHookResult = ReturnType<typeof useGetSingleEventLazyQuery>;
+export type GetSingleEventSuspenseQueryHookResult = ReturnType<typeof useGetSingleEventSuspenseQuery>;
+export type GetSingleEventQueryResult = Apollo.QueryResult<GetSingleEventQuery, GetSingleEventQueryVariables>;

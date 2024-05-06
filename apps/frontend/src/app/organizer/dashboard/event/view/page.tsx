@@ -2,7 +2,7 @@
 import {
   EventStatus,
   EventType,
-  useGetMyEventsQuery
+  useGetMyEventsQuery,
 } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
@@ -82,6 +82,11 @@ export const columns: ColumnDef<Event>[] = [
     accessorKey: "endDate",
     header: "Event End Date",
     enableColumnFilter: false,
+    cell({ cell }) {
+      const date = new Date(cell.getValue() as string);
+
+      return <p>{format(date, "MMM dd, yyyy hh:mm a")}</p>;
+    },
   },
   {
     accessorKey: "venue",
@@ -94,7 +99,7 @@ export const columns: ColumnDef<Event>[] = [
     cell({ cell, row, column }) {
       const id = row.getValue("id");
       return (
-        <Link href={`/organizer/dashboard/event/${id}`}>
+        <Link href={`/organizer/dashboard/event/view/${id}`}>
           <Eye className="cursor-pointer" />
         </Link>
       );

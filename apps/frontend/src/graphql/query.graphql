@@ -96,7 +96,6 @@ query GetMyEvents($query: CommonQuery!) {
       status
       venue
       id
-      createdAt
     },
     meta {
       currentPage
@@ -105,5 +104,26 @@ query GetMyEvents($query: CommonQuery!) {
       lastPage
       totalCount
     }
+  }
+}
+
+query GetSingleEvent($eventId: String!) {
+  getSingleEvent(eventId: $eventId) {
+     eventEndDate
+      cover {
+        name
+      }
+      description
+      eventStartDate
+      images {
+        name
+      }
+      name
+      rejectionCount
+      type
+      type
+      status
+      venue
+      id
   }
 }

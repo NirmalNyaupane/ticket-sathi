@@ -121,6 +121,24 @@ class EventService {
 
     return event;
   }
+
+  async getSingleEvent(id: UUID) {
+    const event = await Event.findOne({
+      where: {
+        id,
+      },
+      relations:{
+        images:true, 
+        cover:true, 
+      }
+    });
+
+    if (!event) {
+      throw new NotFoundExceptions("Event is not found with that id");
+    }
+
+    return event;
+  }
 }
 
 export default new EventService();
