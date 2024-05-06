@@ -34,9 +34,7 @@ export class EventResolver {
       data.categoryId,
       context.user?.id!
     );
-
     const response = await eventService.createEvent(category, data);
-
     if (response) {
       return { message: "Category created sucessfully", status: "success" };
     } else {

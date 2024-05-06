@@ -47,10 +47,8 @@ class EventService {
         }
       }
     }
-
     //@ts-ignore
     event.images = images;
-
     return await event.save();
   }
 
@@ -69,7 +67,6 @@ class EventService {
       page: query.page,
       pageLimit: query.pageLimit,
     });
-
     builder.take(take);
     builder.skip(skip);
     if (query.search) {
@@ -77,7 +74,6 @@ class EventService {
         name: `%${query.search}%`,
       });
     }
-
     return await builder.getManyAndCount();
   }
 

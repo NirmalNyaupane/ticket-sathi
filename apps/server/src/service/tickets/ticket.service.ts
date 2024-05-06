@@ -3,7 +3,10 @@ import { InvalidException } from "../../constants/errors/exceptions.error";
 import { Event } from "../../entities/event/event.entity";
 import { Ticket } from "../../entities/ticket/ticket.entity";
 import { UUID } from "../../types/commontype";
-import { CreateTicketValidator } from "../../validators/tickets/createticket.validator";
+import {
+  CreateTicketValidator,
+  UpdateTicketValidator,
+} from "../../validators/tickets/createticket.validator";
 
 class TicketService {
   async createTicket(event: Event, data: CreateTicketValidator) {
@@ -50,6 +53,38 @@ class TicketService {
     });
 
     return tickets;
+  }
+
+  async getTicketsByOrganizerandId(organizerId: UUID, ticketId: UUID) {
+    const ticket = await Ticket.findOne({
+      where: {
+        id: ticketId,
+        event: {
+          category: {
+            organizer: {
+              user: {
+                id: organizerId,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!ticket) {
+      throw new InvalidException(
+        "Ticket is not found or it is not belongs to this organizer"
+      );
+    }
+    return ticket;
+  }
+
+  async updateTicket(ticket: Ticket, updateData: UpdateTicketValidator) {
+    return await Ticket.update({ id: ticket.id }, updateData);
+  }
+
+  async deleteTicket(ticket:Ticket){
+    return await ticket.remove();
   }
 }
 export default new TicketService();
