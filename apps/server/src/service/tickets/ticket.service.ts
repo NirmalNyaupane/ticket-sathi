@@ -2,6 +2,7 @@ import { DiscountType } from "../../constants/enums/ticket.enum";
 import { InvalidException } from "../../constants/errors/exceptions.error";
 import { Event } from "../../entities/event/event.entity";
 import { Ticket } from "../../entities/ticket/ticket.entity";
+import { UUID } from "../../types/commontype";
 import { CreateTicketValidator } from "../../validators/tickets/createticket.validator";
 
 class TicketService {
@@ -37,6 +38,18 @@ class TicketService {
     ticket.event = event;
 
     return ticket.save();
+  }
+
+  async getAllTicketsOfEvent(eventId: UUID) {
+    const tickets = await Ticket.find({
+      where: {
+        event: {
+          id: eventId,
+        },
+      },
+    });
+
+    return tickets;
   }
 }
 export default new TicketService();
