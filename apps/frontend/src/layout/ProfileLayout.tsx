@@ -91,13 +91,6 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                 >
                   <IoCheckmark />
                 </div>
-                {/* <div
-                  className={cn(
-                    `flex items-center text-red-500 h-[30px] w-[30px] rounded-full absolute left-0 top-0 cursor-pointer`
-                  )}
-                >
-                  <Trash2 />
-                </div> */}
               </>
             )}
           </div>

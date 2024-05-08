@@ -99,7 +99,7 @@ export const columns: ColumnDef<Event>[] = [
     cell({ cell, row, column }) {
       const id = row.getValue("id");
       return (
-        <Link href={`/organizer/dashboard/event/view/${id}`}>
+        <Link href={`/organizer/dashboard/event/view/${id}/details`}>
           <Eye className="cursor-pointer" />
         </Link>
       );

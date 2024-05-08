@@ -12,11 +12,11 @@ interface DashBoardTopContent {
 
 const DashboardTopContent = ({ text, section1, section2, section3, section4 }: DashBoardTopContent) => {
     return (
-        <div className='w-full flex justify-between mb-4 items-center'>
+        <div className='w-full flex justify-between mb-4 items-center gap-2'>
             <h2 className='text-2xl font-bold'>{text}</h2>
             <div>{section1}</div>
-            {section2}
-            {section3}
+            <div>{section2}</div>
+            <div>{section3}</div>
             {section4 && <div>{section4}</div>}
         </div>
     )
