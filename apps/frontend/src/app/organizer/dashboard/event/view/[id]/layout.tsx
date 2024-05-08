@@ -3,6 +3,7 @@ import { useGetSingleEventQuery } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -71,7 +72,8 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
           );
         })}
       </div>
-      {children}
+      <Separator />
+      <div className="my-3">{children}</div>
     </div>
   );
 };

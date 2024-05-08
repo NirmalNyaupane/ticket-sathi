@@ -77,7 +77,7 @@
 
 /* start general styling */
 .max-width {
-  @apply max-w-["1440px"] mx-auto w-[95%];
+  @apply max-w-[1440px] mx-auto w-[95%];
 }
 
 .secondary-heading {

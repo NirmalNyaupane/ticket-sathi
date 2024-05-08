@@ -95,3 +95,10 @@ mutation CreateEvent($data: CreateEventValidator!) {
     status
   }
 }
+
+mutation CreateTicket($data: CreateTicketValidator!) {
+  createTicket(data: $data) {
+    message
+    status
+  }
+}
