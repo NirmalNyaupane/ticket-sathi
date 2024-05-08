@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormDescription,
 } from "@/components/ui/form";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -20,23 +20,65 @@ import {
 } from "@/components/ui/select";
 import { DiscountType } from "@/__generated__/graphql";
 import LoadingButton from "@/components/common/LoadingButton";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ticketValidation } from "@/lib/formvalidation/event/ticket.validation";
+import { z } from "zod";
+import { register } from "module";
+type FormData = z.infer<typeof ticketValidation>;
+
 const CreateUpdateEventModal = () => {
-  const form = useForm();
+  const form = useForm<FormData>({
+    resolver: zodResolver(ticketValidation),
+    mode: "onChange",
+  });
+
+  const [isUnlimited, setUnlimited] = useState(false);
+  const [isEarlyBird, setEarlyBird] = useState(false);
+
+  const unlimitedChanged = () => {
+    setUnlimited((prev) => !prev);
+  };
+
+  useEffect(() => {
+    form.setValue("isUnlimited", isUnlimited);
+  }, [isUnlimited, isEarlyBird]);
+
+  console.log(form.formState.errors);
+
+  const formSubmit = form.handleSubmit((data) => {
+    console.log(data);
+  });
   return (
     <Form {...form}>
-      <form>
-        <InputField type="text" label="Name" />
-        <InputField type="number" label="Price" />
+      <form onSubmit={formSubmit}>
+        <InputField
+          type="text"
+          label="Name"
+          {...form.register("name")}
+          errorMessage={form.formState.errors.name?.message}
+        />
+        <InputField
+          type="number"
+          label="Price"
+          {...form.register("price")}
+          errorMessage={form.formState.errors.price?.message}
+          min={0}
+          onKeyDown={(e) => {
+            if (e.key === "-") {
+              e.preventDefault();
+            }
+          }}
+        />
 
         <FormField
           control={form.control}
-          name="mobile"
+          name="isUnlimited"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow my-2">
               <FormControl>
                 <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  checked={isUnlimited}
+                  onCheckedChange={() => unlimitedChanged()}
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -45,21 +87,36 @@ const CreateUpdateEventModal = () => {
                   Check this field if ticket is unlimited
                 </FormDescription>
               </div>
+              {form.formState.errors.isUnlimited?.message && (
+                <p className=" text-[0.875rem] mt-2 font-medium text-red-500">
+                  {form.formState.errors.isUnlimited?.message}
+                </p>
+              )}
             </FormItem>
           )}
         />
 
-        <InputField type="number" label="Total Tickets" />
+        {!isUnlimited && (
+          <InputField
+            type="number"
+            label="Total Tickets"
+            errorMessage={form.formState.errors.totalTicket?.message}
+            {...form.register("totalTicket")}
+          />
+        )}
 
         <FormField
           control={form.control}
-          name="mobile"
+          name="earlyBirdOffer"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow my-2">
               <FormControl>
                 <Checkbox
                   checked={field.value}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={() => {
+                    field.onChange(field.value);
+                    setUnlimited(field.value);
+                  }}
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -74,7 +131,7 @@ const CreateUpdateEventModal = () => {
 
         <FormField
           control={form.control}
-          name="category"
+          name="discountType"
           render={() => {
             return (
               <FormItem>
@@ -95,7 +152,12 @@ const CreateUpdateEventModal = () => {
           }}
         />
 
-        <InputField type="number" label="Discount" />
+        <InputField
+          type="number"
+          label="Discount"
+          {...form.register("discount")}
+          errorMessage={form.formState.errors.discount?.message}
+        />
         <LoadingButton>Create</LoadingButton>
       </form>
     </Form>
