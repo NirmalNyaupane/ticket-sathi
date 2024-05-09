@@ -23,11 +23,11 @@ export class Ticket extends CommonEntity {
   price: number;
 
   @Field(() => Boolean)
-  @Column({ type: "boolean" })
+  @Column({ type: "boolean", default: false })
   earlyBirdOffer: boolean;
 
-  @Field(() => DiscountType)
-  @Column({ type: "enum", enum: DiscountType })
+  @Field(() => DiscountType, {nullable:true})
+  @Column({ type: "enum", enum: DiscountType, nullable:true})
   discountType: DiscountType;
 
   @Field(() => Int, { nullable: true })

@@ -45,7 +45,7 @@ class CreateTicketValidator {
   @IsBoolean()
   earlyBirdOffer: boolean;
 
-  @Field(() => DiscountType)
+  @Field(() => DiscountType, {nullable:true})
   @ValidateIf((field) => field.earlyBirdOffer)
   @IsNotEmpty()
   @IsEnum(DiscountType)

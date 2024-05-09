@@ -1,5 +1,5 @@
 import { GlobalDialog } from "@/components/common/Dialog/GlobalDialog";
-import CreateUpdateEventModal from "@/components/organizer/dashboard/modals/CreateEventModal";
+import CreateUpdateTicketModal from "@/components/organizer/dashboard/modals/CreateUpdateTicketModal";
 import { Button } from "@/components/ui/button";
 
 const TicketPage = () => {
@@ -11,7 +11,7 @@ const TicketPage = () => {
           dialogButton={<Button>Create Ticket</Button>}
           dialogTitle="Create Ticket"
         >
-          <CreateUpdateEventModal />
+          <CreateUpdateTicketModal />
         </GlobalDialog>
       </div>
     </div>

@@ -13,32 +13,29 @@ export const ticketValidation = z
       .optional()
       .transform((data) => Number(data)),
     earlyBirdOffer: z.boolean().default(false),
-    discount: z.string().optional(),
+    discount: z
+      .string()
+      .optional()
+      .transform((discount) => Number(discount)),
     discountEndDate: z
       .date()
       .optional()
-      .refine(
-        (date) => {
-          if (date) {
-            if (new Date(date) < new Date()) {
-              return false;
-            }
-            return true;
-          }
-        },
-        { message: "startDate must be a future date" }
-      )
-      .transform((date) => new Date(date ?? "")?.toISOString()),
+      .transform((val, ctx) => {
+        if (val) {
+          return new Date(val).toISOString();
+        }
+      }),
     discountType: z
       .enum([DiscountType.Flat, DiscountType.Percentage])
       .optional(),
   })
   .refine(
     (field) => {
-      if (field.isUnlimited) {
-        if (!field.totalTicket) {
-          return true;
-        }
+      if (field.isUnlimited) return true;
+      if (field.totalTicket) {
+        return true;
+      } else {
+        return false;
       }
     },
     {
@@ -48,24 +45,11 @@ export const ticketValidation = z
   )
   .refine(
     (field) => {
-      if (field.earlyBirdOffer) {
-        if (!field.discountType) {
-          return true;
-        }
+      if (!field.earlyBirdOffer) return true;
+      if (field.discount) {
+        return true;
       }
-    },
-    {
-      message: "Discount type is required",
-      path: ["discountType"],
-    }
-  )
-  .refine(
-    (field) => {
-      if (field.earlyBirdOffer) {
-        if (field.discount) {
-          return true;
-        }
-      }
+      return false;
     },
     {
       message: "Discount is required",
@@ -74,25 +58,50 @@ export const ticketValidation = z
   )
   .refine(
     (field) => {
-      if (field.earlyBirdOffer) {
-        if (field.discountEndDate) {
-          return true;
-        }
-      }
+      if (!field.earlyBirdOffer) return true;
+      if (field.discountType) return true;
+      return false;
     },
     {
-      message: "Discount End Date is required",
+      message: "Discount type is required",
+      path: ["discountType"],
+    }
+  )
+  .refine(
+    (field) => {
+      if (!field.earlyBirdOffer) return true;
+      if (field.discountEndDate) return true;
+      return false;
+    },
+    {
+      message: "Discount end date is required",
       path: ["discountEndDate"],
     }
   )
   .refine(
     (field) => {
-      if (field.discount) {
-        if (field.discountType == DiscountType.Percentage) {
-          if (Number(field.discount) < 100) {
-            return true;
-          }
+      if (!field.earlyBirdOffer) return true;
+      if (field.discountEndDate) {
+        if (new Date(field.discountEndDate) < new Date()) {
+          return false;
         }
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Discount end must be a future date",
+      path: ["discountEndDate"],
+    }
+  )
+  .refine(
+    (field) => {
+      if (!field.earlyBirdOffer) return true;
+      if (field.discountType === DiscountType.Percentage) {
+        if (field.discount > 100) {
+          return false;
+        }
+        return true;
       }
     },
     {

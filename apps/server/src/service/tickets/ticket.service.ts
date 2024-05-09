@@ -21,10 +21,8 @@ class TicketService {
     } else {
       ticket.totalTicket = data.totalTicket;
     }
-    //perform validation for early bird offer
+    
     if (data.earlyBirdOffer) {
-      ticket.earlyBirdOffer = data.earlyBirdOffer;
-
       if (
         data.discountType === DiscountType.PERCENTAGE &&
         data.discount > 100
@@ -83,7 +81,7 @@ class TicketService {
     return await Ticket.update({ id: ticket.id }, updateData);
   }
 
-  async deleteTicket(ticket:Ticket){
+  async deleteTicket(ticket: Ticket) {
     return await ticket.remove();
   }
 }

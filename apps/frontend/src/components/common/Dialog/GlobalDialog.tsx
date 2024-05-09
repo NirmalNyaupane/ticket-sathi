@@ -23,19 +23,19 @@ export function GlobalDialog({
   dialogTitle,
   dialogDescription,
   isModelOpen,
-  closeModel
+  closeModel,
 }: props) {
   return (
     <Dialog open={isModelOpen} onOpenChange={closeModel}>
       <DialogTrigger asChild>{dialogButton}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] overflow-auto">
+      <DialogContent className="sm:max-w-[425px] max-h-[70vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           {dialogDescription && (
             <DialogDescription>{dialogDescription}</DialogDescription>
           )}
         </DialogHeader>
-        {children}
+        <div>{children}</div>
       </DialogContent>
     </Dialog>
   );

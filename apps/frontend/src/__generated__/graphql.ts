@@ -71,7 +71,7 @@ export type CreateEventValidator = {
 export type CreateTicketValidator = {
   discount?: InputMaybe<Scalars['Int']['input']>;
   discountEndDate?: InputMaybe<Scalars['String']['input']>;
-  discountType: DiscountType;
+  discountType?: InputMaybe<DiscountType>;
   earlyBirdOffer: Scalars['Boolean']['input'];
   eventId: Scalars['String']['input'];
   isUnlimited: Scalars['Boolean']['input'];
