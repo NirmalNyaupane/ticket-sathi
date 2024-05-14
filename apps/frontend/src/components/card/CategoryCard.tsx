@@ -1,8 +1,23 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import useCustomToast from "@/hooks/useToast";
+import { showError } from "@/utils/helper";
 import { Edit, Trash2 } from "lucide-react";
 import { forwardRef, useCallback, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import {
+  GetMyCategoryDocument,
+  useMovedcategoryMutation,
+} from "../../__generated__/graphql";
 import CategoryModal from "../organizer/dashboard/modals/CategoryModal";
+import { AlertDialogFooter, AlertDialogHeader } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -20,22 +35,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { showError } from "@/utils/helper";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
-import { toast, useToast } from "../ui/use-toast";
-import {
-  GetMyCategoryDocument,
-  useMovedcategoryMutation,
-} from "../../__generated__/graphql";
-import useCustomToast from "@/hooks/useToast";
 interface Props {
   id: string;
   categoryName: string;

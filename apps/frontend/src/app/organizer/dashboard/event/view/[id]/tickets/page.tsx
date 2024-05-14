@@ -17,7 +17,7 @@ const TicketPage = () => {
         </GlobalDialog>
       </div>
 
-      <div className="ticket-section space-y-3">
+      <div className="ticket-section space-y-3 mt-2">
         {/* ticket cards */}
         <TicketCard />
         <TicketCard />

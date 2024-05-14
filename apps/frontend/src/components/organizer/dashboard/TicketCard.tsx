@@ -7,7 +7,7 @@ const TicketCard = () => {
   return (
     <div className="ticket p-2 border-2 border-gray-300 rounded-md flex flex-col gap-3">
       {/* ticket heading section  */}
-      <div className="ticket-heading-section flex items-center gap-2">
+      <div className="ticket-heading-section flex items-center gap-2 relative">
         <Ticket className="size-8" />
         <div>
           <h2 className="text-xl font-semibold">VVIP</h2>
