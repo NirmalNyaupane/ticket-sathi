@@ -1,5 +1,7 @@
+"use client"
 import { GlobalDialog } from "@/components/common/Dialog/GlobalDialog";
 import CreateUpdateTicketModal from "@/components/organizer/dashboard/modals/CreateUpdateTicketModal";
+import TicketCard from "@/components/organizer/dashboard/TicketCard";
 import { Button } from "@/components/ui/button";
 
 const TicketPage = () => {
@@ -13,6 +15,18 @@ const TicketPage = () => {
         >
           <CreateUpdateTicketModal />
         </GlobalDialog>
+      </div>
+
+      <div className="ticket-section space-y-3">
+        {/* ticket cards */}
+        <TicketCard />
+        <TicketCard />
+
+        <TicketCard />
+        <TicketCard />
+        <TicketCard />
+        <TicketCard />
+        <TicketCard />
       </div>
     </div>
   );
