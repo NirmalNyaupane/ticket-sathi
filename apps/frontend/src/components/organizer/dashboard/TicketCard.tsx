@@ -1,20 +1,21 @@
-import { Separator } from "@radix-ui/react-separator";
+import { Ticket as TicketType } from "@/__generated__/graphql";
+import { Separator } from "@/components/ui/separator";
+import { formatDate } from "date-fns";
 import { Ticket, CircleDotIcon, SatelliteDishIcon } from "lucide-react";
 import React from "react";
 import { BiSolidOffer } from "react-icons/bi";
 
-const TicketCard = () => {
+interface TicketCardticket{
+  ticket:TicketType
+}
+
+const TicketCard = ({ticket}:TicketCardticket) => {
   return (
     <div className="ticket p-2 border-2 border-gray-300 rounded-md flex flex-col gap-3">
       {/* ticket heading section  */}
       <div className="ticket-heading-section flex items-center gap-2 relative">
         <Ticket className="size-8" />
-        <div>
-          <h2 className="text-xl font-semibold">VVIP</h2>
-          <p className="text-gray-600">
-            30 Jun, 2023 10:00 AM - 30 Jun, 2023 10:00 AM
-          </p>
-        </div>
+        <h2 className="text-xl font-semibold">{ticket.name}</h2>
       </div>
       <Separator />
 
@@ -24,7 +25,7 @@ const TicketCard = () => {
           <CircleDotIcon />
           <div>
             <h3 className="text-semibold text-gray-600">Status</h3>
-            <p className="text-bold font-bold">ACTIVE</p>
+            <p className="text-bold font-bold">{ticket.status}</p>
           </div>
         </div>
 
@@ -32,7 +33,9 @@ const TicketCard = () => {
           <SatelliteDishIcon />
           <div>
             <h3 className="text-semibold text-gray-600">Total Used</h3>
-            <p className="text-bold font-bold">0/100</p>
+            <p className="text-bold font-bold">
+              0/{ticket.isUnlimited ? "Unlimited" : ticket.totalTicket}
+            </p>
           </div>
         </div>
 
@@ -40,7 +43,9 @@ const TicketCard = () => {
           <BiSolidOffer className="text-2xl" />
           <div>
             <h3 className="text-semibold text-gray-600">Discount</h3>
-            <p className="text-bold font-bold">10%</p>
+            <p className="text-bold font-bold">
+              {ticket.earlyBirdOffer ? ticket.discount : "Not available"}
+            </p>
           </div>
         </div>
       </div>

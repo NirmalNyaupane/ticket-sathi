@@ -127,3 +127,18 @@ query GetSingleEvent($eventId: String!) {
       id
   }
 }
+query ViewEventsTicket($eventId: String!) {
+  viewEventsTicket(eventId: $eventId) {
+    discount
+    discountEndDate
+    discountType
+    earlyBirdOffer
+    id
+    isUnlimited
+    name
+    totalTicket
+    price
+    status
+    createdAt
+  }
+}

@@ -80,7 +80,7 @@ export type CreateTicketValidator = {
   totalTicket?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** This is a enum that provide discount type */
+/** This is an enum that provide discount type */
 export enum DiscountType {
   Flat = 'FLAT',
   Percentage = 'PERCENTAGE'
@@ -415,14 +415,21 @@ export type Ticket = {
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   discount?: Maybe<Scalars['Int']['output']>;
   discountEndDate?: Maybe<Scalars['DateTimeISO']['output']>;
-  discountType: DiscountType;
+  discountType?: Maybe<DiscountType>;
   earlyBirdOffer: Scalars['Boolean']['output'];
   id: Scalars['String']['output'];
   isUnlimited: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
+  status: TicketStatus;
   totalTicket?: Maybe<Scalars['Int']['output']>;
 };
+
+/** This is an enum that defines ticket status */
+export enum TicketStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}
 
 export type UpdateCategoryValidation = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -623,6 +630,13 @@ export type GetSingleEventQueryVariables = Exact<{
 
 
 export type GetSingleEventQuery = { __typename?: 'Query', getSingleEvent: { __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> } };
+
+export type ViewEventsTicketQueryVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type ViewEventsTicketQuery = { __typename?: 'Query', viewEventsTicket: Array<{ __typename?: 'Ticket', discount?: number | null, discountEndDate?: any | null, discountType?: DiscountType | null, earlyBirdOffer: boolean, id: string, isUnlimited: boolean, name: string, totalTicket?: number | null, price: number, status: TicketStatus, createdAt: any }> };
 
 
 export const RegisterUserDocument = gql`
@@ -1437,3 +1451,53 @@ export type GetSingleEventQueryHookResult = ReturnType<typeof useGetSingleEventQ
 export type GetSingleEventLazyQueryHookResult = ReturnType<typeof useGetSingleEventLazyQuery>;
 export type GetSingleEventSuspenseQueryHookResult = ReturnType<typeof useGetSingleEventSuspenseQuery>;
 export type GetSingleEventQueryResult = Apollo.QueryResult<GetSingleEventQuery, GetSingleEventQueryVariables>;
+export const ViewEventsTicketDocument = gql`
+    query ViewEventsTicket($eventId: String!) {
+  viewEventsTicket(eventId: $eventId) {
+    discount
+    discountEndDate
+    discountType
+    earlyBirdOffer
+    id
+    isUnlimited
+    name
+    totalTicket
+    price
+    status
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useViewEventsTicketQuery__
+ *
+ * To run a query within a React component, call `useViewEventsTicketQuery` and pass it any options that fit your needs.
+ * When your component renders, `useViewEventsTicketQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useViewEventsTicketQuery({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useViewEventsTicketQuery(baseOptions: Apollo.QueryHookOptions<ViewEventsTicketQuery, ViewEventsTicketQueryVariables> & ({ variables: ViewEventsTicketQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>(ViewEventsTicketDocument, options);
+      }
+export function useViewEventsTicketLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>(ViewEventsTicketDocument, options);
+        }
+export function useViewEventsTicketSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>(ViewEventsTicketDocument, options);
+        }
+export type ViewEventsTicketQueryHookResult = ReturnType<typeof useViewEventsTicketQuery>;
+export type ViewEventsTicketLazyQueryHookResult = ReturnType<typeof useViewEventsTicketLazyQuery>;
+export type ViewEventsTicketSuspenseQueryHookResult = ReturnType<typeof useViewEventsTicketSuspenseQuery>;
+export type ViewEventsTicketQueryResult = Apollo.QueryResult<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>;
