@@ -67,7 +67,7 @@ class CreateTicketValidator {
   @Field(() => String)
   @IsNotEmpty()
   @IsUUID()
-  eventId: string;
+  eventId: UUID;
 }
 
 @InputType()

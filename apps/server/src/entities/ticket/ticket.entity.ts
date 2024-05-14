@@ -1,6 +1,6 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
 import { Column, Entity, ManyToOne } from "typeorm";
-import { DiscountType } from "../../constants/enums/ticket.enum";
+import { DiscountType, TicketStatus } from "../../constants/enums/ticket.enum";
 import { CommonEntity } from "../common/common.entity";
 import { Event } from "../event/event.entity";
 @ObjectType()
@@ -26,13 +26,17 @@ export class Ticket extends CommonEntity {
   @Column({ type: "boolean", default: false })
   earlyBirdOffer: boolean;
 
-  @Field(() => DiscountType, {nullable:true})
-  @Column({ type: "enum", enum: DiscountType, nullable:true})
+  @Field(() => DiscountType, { nullable: true })
+  @Column({ type: "enum", enum: DiscountType, nullable: true })
   discountType: DiscountType;
 
   @Field(() => Int, { nullable: true })
   @Column({ type: "float", nullable: true })
   discount: number;
+
+  @Field(() => TicketStatus)
+  @Column({ type: "enum", enum: TicketStatus, default: TicketStatus.ACTIVE })
+  status: TicketStatus;
 
   @Field(() => Date, { nullable: true })
   @Column({ type: "timestamp", nullable: true })
