@@ -1,9 +1,10 @@
 "use client";
 import {
-  CreateTicketMutation,
   CreateTicketMutationVariables,
   DiscountType,
+  Ticket as TicketType,
   useCreateTicketMutation,
+  useUpdateTicketMutation,
 } from "@/__generated__/graphql";
 import DatePicker from "@/components/common/DatePicker";
 import { InputField } from "@/components/common/InputField";
@@ -34,22 +35,42 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 type FormData = z.infer<typeof ticketValidation>;
 
-const CreateUpdateTicketModal = () => {
+type Props = {} & (
+  | {
+      action: "create";
+    }
+  | {
+      action: "update";
+      ticket: TicketType;
+    }
+);
+
+const CreateUpdateTicketModal = (props: Props) => {
   const form = useForm<FormData>({
     resolver: zodResolver(ticketValidation),
     mode: "onChange",
+    ...(props.action === "update"
+      ? { defaultValues: { ...props.ticket } }
+      : {}),
   });
 
-  const [isUnlimited, setUnlimited] = useState(false);
-  const [isEarlyBird, setEarlyBird] = useState(false);
+  const [isUnlimited, setUnlimited] = useState(
+    (props.action === "update" && props.ticket.isUnlimited) ?? false
+  );
+  const [isEarlyBird, setEarlyBird] = useState(
+    (props.action === "update" && props.ticket.earlyBirdOffer) ?? false
+  );
   const params = useParams();
   const toast = useCustomToast();
 
-  const [mutation, { loading, error }] = useCreateTicketMutation({
+  const [createMutation, { loading: createLoading }] = useCreateTicketMutation({
     onCompleted() {
       toast.sucess("Ticket created sucessfully");
     },
   });
+
+  const [updateMutation, { loading: updateLoading }] =
+    useUpdateTicketMutation();
 
   const unlimitedChanged = () => {
     setUnlimited((prev) => !prev);
@@ -79,16 +100,28 @@ const CreateUpdateTicketModal = () => {
       sendData.discountType = undefined;
     }
 
-    console.log(sendData)
-
-    mutation({
-      variables: {
-        data: sendData,
-      },
-    }).catch((error) => {
-      toast.error(showError(error));
-    });
+    if (props.action === "create") {
+      createMutation({
+        variables: {
+          data: sendData,
+        },
+      }).catch((error) => {
+        toast.error(showError(error));
+      });
+    }
+    if (props.action === "update") {
+      updateMutation({
+        variables: {
+          data: { ...sendData, ticketsId: props.ticket.id },
+        },
+      }).catch((error) => {
+        toast.error(showError(error));
+      });
+    }
   });
+
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -227,7 +260,7 @@ const CreateUpdateTicketModal = () => {
           </>
         )}
 
-        <LoadingButton isLoading={loading}>Create</LoadingButton>
+        <LoadingButton isLoading={createLoading}>Create</LoadingButton>
       </form>
     </Form>
   );

@@ -1,4 +1,7 @@
-import { Ticket as TicketType } from "@/__generated__/graphql";
+import {
+  Ticket as TicketType,
+  useDeleteTicketMutation,
+} from "@/__generated__/graphql";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +33,8 @@ import { useCallback, useState } from "react";
 import { BiSolidOffer } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import CreateUpdateTicketModal from "./modals/CreateUpdateTicketModal";
+import useCustomToast from "@/hooks/useToast";
+import { showError } from "@/utils/helper";
 
 interface TicketCardticket {
   ticket: TicketType;
@@ -39,6 +44,8 @@ const TicketCard = ({ ticket }: TicketCardticket) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
+  const toast = useCustomToast();
+
   const handleMenuItemClick = () => {
     setOpenDialog(true);
   };
@@ -46,6 +53,13 @@ const TicketCard = ({ ticket }: TicketCardticket) => {
   const handleDelete = useCallback(() => {
     setDeleteDialog((prev) => !prev);
   }, []);
+
+  const [deleteMutation] =
+    useDeleteTicketMutation({
+      onCompleted() {
+        toast.sucess("Delete ticket sucessfully");
+      },
+    });
   return (
     <>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -53,7 +67,7 @@ const TicketCard = ({ ticket }: TicketCardticket) => {
           <h2 className="text-lg font-semibold leading-none tracking-tight">
             Edit Ticket
           </h2>
-          <CreateUpdateTicketModal />
+          <CreateUpdateTicketModal action="update" ticket={ticket} />
         </DialogContent>
       </Dialog>
 
@@ -70,15 +84,15 @@ const TicketCard = ({ ticket }: TicketCardticket) => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-500 hover:bg-red-500"
-              // onClick={() => {
-              //   mutation({
-              //     variables: {
-              //       categoryId: id,
-              //     },
-              //   }).catch((error) => {
-              //     toast.error(showError(error));
-              //   });
-              // }}
+              onClick={() => {
+                deleteMutation({
+                  variables: {
+                    ticketId: ticket.id,
+                  },
+                }).catch((error) => {
+                  toast.error(showError(error));
+                });
+              }}
             >
               Delete
             </AlertDialogAction>

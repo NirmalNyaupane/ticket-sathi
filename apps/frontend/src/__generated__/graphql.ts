@@ -598,6 +598,20 @@ export type CreateTicketMutationVariables = Exact<{
 
 export type CreateTicketMutation = { __typename?: 'Mutation', createTicket: { __typename?: 'CommonResponse', message: string, status: string } };
 
+export type DeleteTicketMutationVariables = Exact<{
+  ticketId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTicketMutation = { __typename?: 'Mutation', deleteTicket: { __typename?: 'CommonResponse', status: string } };
+
+export type UpdateTicketMutationVariables = Exact<{
+  data: UpdateTicketValidator;
+}>;
+
+
+export type UpdateTicketMutation = { __typename?: 'Mutation', updateTicket: { __typename?: 'CommonResponse', message: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1153,6 +1167,72 @@ export function useCreateTicketMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateTicketMutationHookResult = ReturnType<typeof useCreateTicketMutation>;
 export type CreateTicketMutationResult = Apollo.MutationResult<CreateTicketMutation>;
 export type CreateTicketMutationOptions = Apollo.BaseMutationOptions<CreateTicketMutation, CreateTicketMutationVariables>;
+export const DeleteTicketDocument = gql`
+    mutation DeleteTicket($ticketId: String!) {
+  deleteTicket(ticketId: $ticketId) {
+    status
+  }
+}
+    `;
+export type DeleteTicketMutationFn = Apollo.MutationFunction<DeleteTicketMutation, DeleteTicketMutationVariables>;
+
+/**
+ * __useDeleteTicketMutation__
+ *
+ * To run a mutation, you first call `useDeleteTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTicketMutation, { data, loading, error }] = useDeleteTicketMutation({
+ *   variables: {
+ *      ticketId: // value for 'ticketId'
+ *   },
+ * });
+ */
+export function useDeleteTicketMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTicketMutation, DeleteTicketMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTicketMutation, DeleteTicketMutationVariables>(DeleteTicketDocument, options);
+      }
+export type DeleteTicketMutationHookResult = ReturnType<typeof useDeleteTicketMutation>;
+export type DeleteTicketMutationResult = Apollo.MutationResult<DeleteTicketMutation>;
+export type DeleteTicketMutationOptions = Apollo.BaseMutationOptions<DeleteTicketMutation, DeleteTicketMutationVariables>;
+export const UpdateTicketDocument = gql`
+    mutation UpdateTicket($data: UpdateTicketValidator!) {
+  updateTicket(data: $data) {
+    message
+  }
+}
+    `;
+export type UpdateTicketMutationFn = Apollo.MutationFunction<UpdateTicketMutation, UpdateTicketMutationVariables>;
+
+/**
+ * __useUpdateTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTicketMutation, { data, loading, error }] = useUpdateTicketMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTicketMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTicketMutation, UpdateTicketMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTicketMutation, UpdateTicketMutationVariables>(UpdateTicketDocument, options);
+      }
+export type UpdateTicketMutationHookResult = ReturnType<typeof useUpdateTicketMutation>;
+export type UpdateTicketMutationResult = Apollo.MutationResult<UpdateTicketMutation>;
+export type UpdateTicketMutationOptions = Apollo.BaseMutationOptions<UpdateTicketMutation, UpdateTicketMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {

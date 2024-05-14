@@ -1,4 +1,3 @@
-import EventCeateUpdate from "@/components/event/EventCreate";
 import EventSlider from "@/components/event/EventSlider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";

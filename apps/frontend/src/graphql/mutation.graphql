@@ -102,3 +102,15 @@ mutation CreateTicket($data: CreateTicketValidator!) {
     status
   }
 }
+
+mutation DeleteTicket($ticketId: String!) {
+  deleteTicket(ticketId: $ticketId) {
+    status
+  }
+}
+
+mutation UpdateTicket($data: UpdateTicketValidator!) {
+  updateTicket(data: $data) {
+    message
+  }
+}
