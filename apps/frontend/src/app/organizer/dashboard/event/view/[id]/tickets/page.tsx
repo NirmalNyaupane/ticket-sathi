@@ -29,7 +29,7 @@ const TicketPage = () => {
         condition={loading}
         show={<>loading....</>}
         elseShow={
-          <div className="ticket-section space-y-3 mt-2">
+          <div className="ticket-section grid md:grid-cols-2 gap-3 mt-3">
            {
             data?.viewEventsTicket?.map((ticket)=>{
               return <TicketCard key={ticket.id} ticket={ticket} />
