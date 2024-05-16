@@ -1,8 +1,14 @@
+"use client";
 import EventSlider from "@/components/event/EventSlider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-const page = () => {
+import { useContext } from "react";
+import { EventContext } from "../layout";
+import { format } from "date-fns";
+const EventDetailsPage = () => {
+  const data = useContext(EventContext);
+
   return (
     <div className="flex flex-col gap-3">
       <Card>
@@ -14,19 +20,17 @@ const page = () => {
           <div className="grid grid-cols-2 sm:grid-cols-12 gap-2">
             <div className="sm:col-span-6 md:col-span-5">
               <h2 className="font-semibold">Name</h2>
-              <p className="text-justify text-gray-600">
-                Best event werwe wetwe{" "}
-              </p>
+              <p className="text-justify text-gray-600">{data?.name}</p>
             </div>
 
             <div className="md:col-span-6">
               <h2 className="font-semibold">Types</h2>
-              <p className="text-justify text-gray-600">Theater</p>
+              <p className="text-justify text-gray-600">{data?.type}</p>
             </div>
 
             <div className="md:col-start-1 sm:col-span-6 md:col-span-5">
               <h2 className="font-semibold">Venue</h2>
-              <p className="text-justify text-gray-600">Best event</p>
+              <p className="text-justify text-gray-600">{data?.venue}</p>
             </div>
 
             <div className="sm:col-span-6 md:col-span-6">
@@ -36,12 +40,7 @@ const page = () => {
 
             <div className="sm:col-start-1 sm:col-span-10 md:col-end-11 col-span-2">
               <h2 className="font-semibold">Description</h2>
-              <p className="text-justify text-gray-600">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit,
-                inventore rerum? Consectetur illum praesentium ad culpa nihil,
-                facere eaque fugit minus ex voluptas atque beatae doloribus!
-                Doloremque, minus culpa. Tempora?
-              </p>
+              <p className="text-justify text-gray-600">{data?.description}</p>
             </div>
           </div>
         </CardContent>
@@ -57,13 +56,19 @@ const page = () => {
             <div className="">
               <h2 className="font-semibold">Event Start Date</h2>
               <p className="text-justify text-gray-600">
-                May 08, 2024 03:00 PM
+                {format(
+                  new Date(data?.eventStartDate as string),
+                  "MMM dd, yyyy hh:mm a"
+                )}
               </p>
             </div>
             <div className="">
               <h2 className="font-semibold">Event End Date</h2>
               <p className="text-justify text-gray-600">
-                May 08, 2024 03:00 PM
+                {format(
+                  new Date(data?.eventEndDate as string),
+                  "MMM dd, yyyy hh:mm a"
+                )}
               </p>
             </div>
           </div>
@@ -77,7 +82,7 @@ const page = () => {
         </CardHeader>
         <CardContent className="space-y-2">
           <Image
-            src={"/background.png"}
+            src={`${data?.cover?.name}`}
             width={500}
             height={500}
             alt="slider"
@@ -86,18 +91,23 @@ const page = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Event Images</CardTitle>
-          <Separator></Separator>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <EventSlider />
-        </CardContent>
-      </Card>
+      {data?.images && data.images.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Event Images</CardTitle>
+            <Separator></Separator>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <EventSlider
+              imageUrls={data?.images.map((image) => image.name) ?? []}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       {/* <EventCeateUpdate action="create"/> */}
     </div>
   );
 };
 
-export default page;
+export default EventDetailsPage;

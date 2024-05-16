@@ -1,5 +1,9 @@
 "use client";
-import { useGetSingleEventQuery } from "@/__generated__/graphql";
+import {
+  EventStatus,
+  GetSingleEventQuery,
+  useGetSingleEventQuery,
+} from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { FaTrash } from "react-icons/fa";
 
 const links = [
@@ -21,14 +25,41 @@ const links = [
   },
 ];
 
+export const EventContext = createContext<
+  GetSingleEventQuery["getSingleEvent"] | undefined
+>(undefined);
+
 const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams();
   const pathname = usePathname();
+
   const { data, loading } = useGetSingleEventQuery({
     variables: {
       eventId: params.id as string,
     },
   });
+
+  const getVariants = (
+    status: EventStatus
+  ):
+    | "default"
+    | "secondary"
+    | "destructive"
+    | "outline"
+    | "pending"
+    | "active" => {
+    if (status === EventStatus.Approved) {
+      return "active";
+    } else if (status === EventStatus.Pending) {
+      return "pending";
+    } else {
+      return "destructive";
+    }
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
@@ -36,8 +67,14 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
         text="Test Event"
         section3={
           <>
-            <Badge className={badgeVariants({ variant: "active" })}>
-              Approved
+            <Badge
+              className={badgeVariants({
+                variant: getVariants(
+                  data?.getSingleEvent.status ?? EventStatus.Approved
+                ),
+              })}
+            >
+              {data?.getSingleEvent.status}
             </Badge>
             <Button className="bg-white text-red-700 hover:bg-white hover:text-red-500">
               <FaTrash />
@@ -45,12 +82,7 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
           </>
         }
       />
-      <p className="text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, ipsa
-        similique! Similique libero, temporibus laudantium at ad nobis
-        consequatur quos esse! Ratione, sint perferendis repellendus dignissimos
-        maiores harum enim nostrum.
-      </p>
+      <p className="text-gray-500">{data?.getSingleEvent.description}</p>
 
       <div className="flex text-md gap-3 font-bold mt-4">
         {links.map((link) => {
@@ -73,7 +105,9 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
         })}
       </div>
       <Separator />
-      <div className="my-3">{children}</div>
+      <EventContext.Provider value={data?.getSingleEvent}>
+        <div className="my-3">{children}</div>
+      </EventContext.Provider>
     </div>
   );
 };

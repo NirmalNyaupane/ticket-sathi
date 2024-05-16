@@ -143,8 +143,8 @@ export type Media = {
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   id: Scalars['String']['output'];
   mediaType?: Maybe<MediaType>;
-  mimeType?: Maybe<Scalars['String']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type MediaInput = {
@@ -615,7 +615,7 @@ export type UpdateTicketMutation = { __typename?: 'Mutation', updateTicket: { __
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: any, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: any, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name?: string | null }> | null, logo?: { __typename?: 'Media', name?: string | null } | null } | null, profile?: { __typename?: 'Media', name?: string | null } | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'UserResponse', id: string, createdAt: any, fullName: string, email: string, phone: string, role: UserRole, authType: AuthType, isVerified: boolean, address?: string | null, organizerDetails?: { __typename?: 'OrganizerDetails', id: string, createdAt: any, organizerName: string, address: string, bio?: string | null, website?: string | null, status: OrganizerStatus, isGstRegister: boolean, abnAcn: string, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, twitter?: string | null, threads?: string | null } | null } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', id: string, documents?: Array<{ __typename?: 'Media', name: string }> | null, logo?: { __typename?: 'Media', name: string } | null } | null, profile?: { __typename?: 'Media', name: string } | null } };
 
 export type GetMyCategoryQueryVariables = Exact<{
   query: CommonQuery;
@@ -636,14 +636,14 @@ export type GetMyEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
+export type GetMyEventsQuery = { __typename?: 'Query', getMyEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name: string }, images: Array<{ __typename?: 'Media', name: string }> }>, meta: { __typename?: 'Pagination', currentPage: number, prevPage?: number | null, nextPage?: number | null, lastPage: number, totalCount: number } } };
 
 export type GetSingleEventQueryVariables = Exact<{
   eventId: Scalars['String']['input'];
 }>;
 
 
-export type GetSingleEventQuery = { __typename?: 'Query', getSingleEvent: { __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name?: string | null }, images: Array<{ __typename?: 'Media', name?: string | null }> } };
+export type GetSingleEventQuery = { __typename?: 'Query', getSingleEvent: { __typename?: 'Event', eventEndDate: any, description: string, eventStartDate: any, name: string, rejectionCount: number, type: EventType, status: EventStatus, venue: string, id: string, cover: { __typename?: 'Media', name: string }, images: Array<{ __typename?: 'Media', name: string }> } };
 
 export type ViewEventsTicketQueryVariables = Exact<{
   eventId: Scalars['String']['input'];

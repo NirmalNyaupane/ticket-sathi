@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
@@ -6,7 +6,8 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css/pagination";
 import "./swiper.css";
 import Image from "next/image";
-const EventSlider = () => {
+
+const EventSlider = ({ imageUrls }: { imageUrls: string[] }) => {
   return (
     <Swiper
       slidesPerView={"auto"}
@@ -21,66 +22,22 @@ const EventSlider = () => {
       modules={[Pagination, Autoplay]}
       className="mySwiper"
     >
-      <SwiperSlide>
-        {" "}
-        <div className="h-full w-[90%]">
-          <Image
-            src={"/background.png"}
-            width={500}
-            height={500}
-            alt="slider"
-            className="w-full h-[80vh] object-cover rounded-2xl"
-          />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        {" "}
-        <div className="h-full w-[90%]">
-          <Image
-            src={"/background.png"}
-            width={500}
-            height={500}
-            alt="slider"
-            className="w-full h-[80vh] object-cover rounded-2xl"
-          />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        {" "}
-        <div className="h-full w-[90%]">
-          <Image
-            src={"/background.png"}
-            width={500}
-            height={500}
-            alt="slider"
-            className="w-full h-[80vh] object-cover rounded-2xl"
-          />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        {" "}
-        <div className="h-full w-[90%]">
-          <Image
-            src={"/background.png"}
-            width={500}
-            height={500}
-            alt="slider"
-            className="w-full h-[80vh] object-cover rounded-2xl"
-          />
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        {" "}
-        <div className="h-full w-[90%]">
-          <Image
-            src={"/background.png"}
-            width={500}
-            height={500}
-            alt="slider"
-            className="w-full h-[80vh] object-cover rounded-2xl"
-          />
-        </div>
-      </SwiperSlide>
+      {imageUrls.map((image) => {
+        return (
+          <SwiperSlide key={image}>
+            {" "}
+            <div className="h-full w-[90%]">
+              <Image
+                src={image}
+                width={500}
+                height={500}
+                alt="slider"
+                className="w-full h-[80vh] object-cover rounded-2xl"
+              />
+            </div>
+          </SwiperSlide>
+        );
+      })}
     </Swiper>
   );
 };

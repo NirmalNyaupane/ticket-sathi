@@ -4,6 +4,8 @@ import { EventAboutUs } from "@/components/event/EventDescription";
 import EventDetails from "@/components/event/EventDetails";
 import EventSlider from "@/components/event/EventSlider";
 
+const images = ["/event.png","/event.png","/event.png"]
+
 const page = () => {
   return (
     <div className="flex flex-col my-5 max-width gap-10">
@@ -25,7 +27,7 @@ const page = () => {
           </p>
         </div>
       </div>
-      <EventSlider />
+      <EventSlider imageUrls={images}/>
 
       <div className="flex flex-col lg:flex-row gap-6">
         <EventAboutUs />

@@ -6,11 +6,11 @@ import { Event } from "../event/event.entity";
 @ObjectType()
 @Entity({ name: "media" })
 export class Media extends CommonEntity {
-  @Field(() => String, { nullable: true })
+  @Field(() => String)
   @Column()
   name: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String)
   @Column()
   mimeType: string;
 

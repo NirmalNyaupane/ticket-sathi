@@ -46,6 +46,7 @@ type Props = {} & (
 );
 
 const CreateUpdateTicketModal = (props: Props) => {
+  //@ts-ignore
   const form = useForm<FormData>({
     resolver: zodResolver(ticketValidation),
     mode: "onChange",
@@ -119,7 +120,6 @@ const CreateUpdateTicketModal = (props: Props) => {
       });
     }
   });
-
 
   console.log(form.formState.errors);
 
