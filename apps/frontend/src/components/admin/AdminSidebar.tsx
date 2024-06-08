@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { BiCalendarEvent, BiChat, BiSolidCoupon } from "react-icons/bi";
 import { BsPeopleFill } from "react-icons/bs";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout } from "react-icons/ci";90
 import "./scrollbar.css";
 import ConditionallyRender from "@/components/common/ConditionallyRender";
 import {

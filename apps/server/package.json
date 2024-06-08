@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --transpile-only --respawn src/server.ts"
+    "dev": "ts-node-dev --transpile-only --respawn src/server.ts",
+    "admin:seed": "ts-node ./src/seeders/admin.seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
     "passport": "^0.7.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
+    "ts-node": "^10.9.2",
     "type-graphql": "2.0.0-beta.6",
     "typedi": "^0.10.0",
     "typeorm": "^0.3.17",

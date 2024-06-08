@@ -32,6 +32,9 @@ class EnvConfiguration {
 
   static MEDIA_TEMP_PATH = process.env.MEDIA_TEMP_PATH;
   static MEDIA_UPLOAD_PATH = process.env.MEDIA_UPLOAD_PATH;
+
+  static ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  static ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 }
 
 export enum Environment {

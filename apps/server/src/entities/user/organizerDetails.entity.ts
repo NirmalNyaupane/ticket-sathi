@@ -7,8 +7,8 @@ import {
 } from "../../validators/organizers/updateOrganizerValidator";
 import { Category } from "../category/category.entity";
 import { CommonEntity } from "../common/common.entity";
+import { OrganizerRejectReasons } from "./organizerRejectReason.entity";
 import { User } from "./user.entity";
-import { Event } from "../event/event.entity";
 @ObjectType()
 @Entity()
 export class OrganizerDetails extends CommonEntity {
@@ -55,4 +55,7 @@ export class OrganizerDetails extends CommonEntity {
 
   @OneToMany(() => Category, (category) => category.organizer)
   category: Category[];
+
+  @OneToMany(() => OrganizerRejectReasons, (reason) => reason.organizer)
+  rejectReasons: OrganizerRejectReasons[];
 }

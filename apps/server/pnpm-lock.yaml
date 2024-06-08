@@ -65,6 +65,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.1
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.11.16)(typescript@5.3.3)
       type-graphql:
         specifier: 2.0.0-beta.6
         version: 2.0.0-beta.6(class-validator@0.14.1)(graphql-scalars@1.22.4(graphql@16.8.1))(graphql@16.8.1)
