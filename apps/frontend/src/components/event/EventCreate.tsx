@@ -1,7 +1,7 @@
 "use client";
 import {
-  CreateEventMutationVariables,
   EventType,
+  GetSingleEventQuery,
   MediaType,
   useCreateEventMutation,
   useGetMyCategoryQuery,
@@ -38,7 +38,7 @@ type Props = {} & (
     }
   | {
       action: "update";
-      data: CreateEventMutationVariables["data"];
+      data: GetSingleEventQuery["getSingleEvent"];
     }
 );
 
@@ -48,7 +48,15 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
   const toast = useCustomToast();
   const form = useForm<FormData>({
     resolver: zodResolver(createEventValidation),
+    ...(props.action === "update"
+      ? {
+          defaultValues: {
+            ...props.data,
+          },
+        }
+      : {}),
   });
+
   //get categories
   const {
     data: categories,
@@ -63,6 +71,9 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
     },
   });
 
+
+
+
   const [mediaMutation, { loading: mediaLoading, error: mediaError }] =
     useUploadMediaMutation();
 
@@ -74,47 +85,65 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
         setImageIds([]);
       },
     });
+
+
+  // const [] = useEdit
+
+
+
   const formSubmit = form.handleSubmit(async (data) => {
     const { cover, images, ...restData } = data;
-    //first upload a cover picture
-    const coverResponse = await mediaMutation({
-      variables: {
-        mediaType: MediaType.EventCover,
-        file: cover,
-      },
-    }).catch((error) => {
-      toast.error(showError(error));
-    });
 
-    const imagesResponse = await Promise.all(
-      images?.map((image: File) => {
-        return mediaMutation({
-          variables: {
-            mediaType: MediaType.EventImage,
-            file: image,
-          },
-        });
-      })
-    ).catch((error) => {
-      toast.error(showError(error));
-    });
-
-    const imagesIds = imagesResponse?.map(
-      (image) => image.data?.uploadMedia.id
-    ) as string[];
-
-    if (coverResponse && imagesIds) {
-      await eventMutation({
+    if (props.action === "create") {
+      //first upload a cover picture
+      const coverResponse = await mediaMutation({
         variables: {
-          data: {
-            ...restData,
-            ...(imageIds && imagesIds?.length > 0 ? { images: imagesIds } : {}),
-            cover: coverResponse.data?.uploadMedia.id!,
-          },
+          mediaType: MediaType.EventCover,
+          file: cover,
         },
       }).catch((error) => {
         toast.error(showError(error));
       });
+
+      const imagesResponse = await Promise.all(
+        images?.map((image: File) => {
+          return mediaMutation({
+            variables: {
+              mediaType: MediaType.EventImage,
+              file: image,
+            },
+          });
+        })
+      ).catch((error) => {
+        toast.error(showError(error));
+      });
+
+      const imagesIds = imagesResponse?.map(
+        (image) => image.data?.uploadMedia.id
+      ) as string[];
+
+      if (coverResponse && imagesIds) {
+        await eventMutation({
+          variables: {
+            data: {
+              ...restData,
+              ...(imageIds && imagesIds?.length > 0
+                ? { images: imagesIds }
+                : {}),
+              cover: coverResponse.data?.uploadMedia.id!,
+            },
+          },
+        }).catch((error) => {
+          toast.error(showError(error));
+        });
+      }
+    }
+
+
+    if(props.action==="update"){
+      if(cover){
+
+      }
     }
   });
 
@@ -351,7 +380,7 @@ const EventCeateUpdate: React.FC<Props> = (props: Props) => {
             isLoading={mediaLoading || eventLoading}
             clasName="w-fit"
           >
-            Create Event
+            {props.action === "create" ? " Create Event" : "Update Event"}
           </LoadingButton>
         </form>
       </Form>

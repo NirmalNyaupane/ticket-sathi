@@ -1,8 +1,9 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { DiscountType, TicketStatus } from "../../constants/enums/ticket.enum";
 import { CommonEntity } from "../common/common.entity";
 import { Event } from "../event/event.entity";
+import { Coupon } from "../coupons/coupons.entity";
 @ObjectType()
 @Entity()
 export class Ticket extends CommonEntity {
@@ -44,4 +45,7 @@ export class Ticket extends CommonEntity {
 
   @ManyToOne(() => Event, (event) => event.tickets)
   event: Event;
+
+  @OneToMany(()=>Coupon, (coupon)=>coupon.ticket)
+  coupons:Ticket[]
 }

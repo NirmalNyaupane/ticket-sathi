@@ -8,6 +8,7 @@ import { EventResolver } from "../resolvers/events/event.resolver";
 import { MediaResolver } from "../resolvers/media/media.resolver";
 import UserResolver from "../resolvers/user/user.resolver";
 import { TicketResolver } from "../resolvers/tickets/ticket.resolver";
+import { CouponResolver } from "../resolvers/coupons/coupons.resolver";
 function configGraphQLServer(httpServer: http.Server) {
   const { typeDefs, resolvers } = buildTypeDefsAndResolversSync({
     resolvers: [
@@ -16,7 +17,8 @@ function configGraphQLServer(httpServer: http.Server) {
       UserResolver,
       CategoryResolver,
       EventResolver,
-      TicketResolver
+      TicketResolver,
+      CouponResolver
     ],
     // container: Container
   });

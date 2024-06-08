@@ -4,15 +4,17 @@ import {
   GetSingleEventQuery,
   useGetSingleEventQuery,
 } from "@/__generated__/graphql";
+import ConditionallyRender from "@/components/common/ConditionallyRender";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { Pencil, X } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React, { createContext, useContext } from "react";
-import { FaTrash } from "react-icons/fa";
+import React, { createContext, useContext, useState } from "react";
+import { FaCross, FaEdit, FaTrash } from "react-icons/fa";
 
 const links = [
   {
@@ -25,13 +27,20 @@ const links = [
   },
 ];
 
-export const EventContext = createContext<
-  GetSingleEventQuery["getSingleEvent"] | undefined
->(undefined);
+export const EventContext = createContext<{
+  event: GetSingleEventQuery["getSingleEvent"] | undefined;
+  action: "EDIT" | "VIEW";
+  setAction: React.Dispatch<React.SetStateAction<"EDIT" | "VIEW">> | undefined;
+}>({
+  event: undefined,
+  action: "EDIT",
+  setAction: undefined,
+});
 
 const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams();
   const pathname = usePathname();
+  const [action, setAction] = useState<"EDIT" | "VIEW">("VIEW");
 
   const { data, loading } = useGetSingleEventQuery({
     variables: {
@@ -66,7 +75,7 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
       <DashboardTopContent
         text="Test Event"
         section3={
-          <>
+          <div className="flex items-center">
             <Badge
               className={badgeVariants({
                 variant: getVariants(
@@ -79,7 +88,25 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
             <Button className="bg-white text-red-700 hover:bg-white hover:text-red-500">
               <FaTrash />
             </Button>
-          </>
+            <Button
+              className="bg-white text-black hover:bg-white"
+              onClick={() =>
+                setAction((prev) => {
+                  if (prev === "EDIT") {
+                    return "VIEW";
+                  } else {
+                    return "EDIT";
+                  }
+                })
+              }
+            >
+              <ConditionallyRender
+                condition={action === "EDIT"}
+                show={<X />}
+                elseShow={<Pencil />}
+              />
+            </Button>
+          </div>
         }
       />
       <p className="text-gray-500">{data?.getSingleEvent.description}</p>
@@ -105,7 +132,9 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
         })}
       </div>
       <Separator />
-      <EventContext.Provider value={data?.getSingleEvent}>
+      <EventContext.Provider
+        value={{ event: data?.getSingleEvent, action, setAction }}
+      >
         <div className="my-3">{children}</div>
       </EventContext.Provider>
     </div>
