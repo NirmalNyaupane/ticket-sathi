@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { FolderInputIcon, Home } from "lucide-react";
+import { FolderInputIcon, Home, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -73,7 +73,16 @@ const AdminSideBar = () => {
       hasChildren: false,
       links: ["/organizer/dashboard/commission"],
     },
-
+    {
+      name: "Change Password",
+      icon: (
+        <span className="text-[1.75rem]">
+          <Shield />
+        </span>
+      ),
+      hasChildren: false,
+      links: ["/admin/dashboard/change-password"],
+    },
   ];
 
   return (

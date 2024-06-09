@@ -51,9 +51,9 @@ class AdminService {
         profile: true,
         organizerDetails: true,
         organizerDocuments: {
-          logo:true, 
-          documents:true
-        }
+          logo: true,
+          documents: true,
+        },
       },
     });
 
@@ -91,6 +91,9 @@ class AdminService {
       //@ts-ignore
       where: {
         id: organizerId,
+        user: {
+          isVerified: true,
+        },
       },
     });
 
