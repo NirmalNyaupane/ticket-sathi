@@ -24,6 +24,29 @@ export type AccessTokenResponse = {
   accessToken: Scalars['String']['output'];
 };
 
+export type AdminOrganizerObject = {
+  __typename?: 'AdminOrganizerObject';
+  address?: Maybe<Scalars['String']['output']>;
+  authType: AuthType;
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  organizerDetails?: Maybe<OrganizerDetails>;
+  organizerDocuments?: Maybe<OrganizerDocuments>;
+  phone: Scalars['String']['output'];
+  profile?: Maybe<Media>;
+  role: UserRole;
+};
+
+export type AdminOrganizerValidator = {
+  organizerId: Scalars['String']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
+  status: OrganizerStatus;
+};
+
 export enum AuthType {
   Apple = 'APPLE',
   Google = 'GOOGLE',
@@ -49,6 +72,20 @@ export type CommonResponse = {
   __typename?: 'CommonResponse';
   message: Scalars['String']['output'];
   status: Scalars['String']['output'];
+};
+
+export enum CouponType {
+  Flat = 'FLAT',
+  Percentage = 'PERCENTAGE'
+}
+
+export type CouponValidator = {
+  expires: Scalars['DateTimeISO']['input'];
+  isUnlimited: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  totalCoupons?: InputMaybe<Scalars['Float']['input']>;
+  type: CouponType;
 };
 
 export type CreateCategoryValidation = {
@@ -171,8 +208,10 @@ export enum MediaType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeOrganizerStatus: CommonResponse;
   /** Role: Organizer */
   createCategory: CommonResponse;
+  createCoupon: CommonResponse;
   createEvent: CommonResponse;
   createTicket: CommonResponse;
   deleteCategoryPermanent: CommonResponse;
@@ -193,8 +232,18 @@ export type Mutation = {
 };
 
 
+export type MutationChangeOrganizerStatusArgs = {
+  data: AdminOrganizerValidator;
+};
+
+
 export type MutationCreateCategoryArgs = {
   data: CreateCategoryValidation;
+};
+
+
+export type MutationCreateCouponArgs = {
+  data: CouponValidator;
 };
 
 
@@ -325,6 +374,12 @@ export type PaginatedEventObject = {
   meta: Pagination;
 };
 
+export type PaginatedOrganizer = {
+  __typename?: 'PaginatedOrganizer';
+  data: Array<OrganizerDetails>;
+  meta: Pagination;
+};
+
 export type PaginatedOrganizerCategory = {
   __typename?: 'PaginatedOrganizerCategory';
   data: Array<Category>;
@@ -342,13 +397,20 @@ export type Pagination = {
 
 export type Query = {
   __typename?: 'Query';
+  getAllOrganizer: PaginatedOrganizer;
   getCurrentUser: UserResponse;
   getMyCategory: PaginatedOrganizerCategory;
   getMyEvents: PaginatedEventObject;
   getMyTrashedCategory: PaginatedOrganizerCategory;
   /** Open */
   getSingleEvent: Event;
+  getSingleOrganizerDetails: AdminOrganizerObject;
   viewEventsTicket: Array<Ticket>;
+};
+
+
+export type QueryGetAllOrganizerArgs = {
+  query: CommonQuery;
 };
 
 
@@ -369,6 +431,11 @@ export type QueryGetMyTrashedCategoryArgs = {
 
 export type QueryGetSingleEventArgs = {
   eventId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSingleOrganizerDetailsArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -651,6 +718,20 @@ export type ViewEventsTicketQueryVariables = Exact<{
 
 
 export type ViewEventsTicketQuery = { __typename?: 'Query', viewEventsTicket: Array<{ __typename?: 'Ticket', discount?: number | null, discountEndDate?: any | null, discountType?: DiscountType | null, earlyBirdOffer: boolean, id: string, isUnlimited: boolean, name: string, totalTicket?: number | null, price: number, status: TicketStatus, createdAt: any }> };
+
+export type GetAllOrganizerQueryVariables = Exact<{
+  query: CommonQuery;
+}>;
+
+
+export type GetAllOrganizerQuery = { __typename?: 'Query', getAllOrganizer: { __typename?: 'PaginatedOrganizer', data: Array<{ __typename?: 'OrganizerDetails', abnAcn: string, address: string, bio?: string | null, createdAt: any, organizerName: string, id: string, status: OrganizerStatus }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
+
+export type GetSingleOrganizerDetailsQueryVariables = Exact<{
+  getSingleOrganizerDetailsId: Scalars['String']['input'];
+}>;
+
+
+export type GetSingleOrganizerDetailsQuery = { __typename?: 'Query', getSingleOrganizerDetails: { __typename?: 'AdminOrganizerObject', role: UserRole, phone: string, isVerified: boolean, id: string, fullName: string, email: string, address?: string | null, profile?: { __typename?: 'Media', name: string } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', logo?: { __typename?: 'Media', name: string } | null, documents?: Array<{ __typename?: 'Media', name: string }> | null } | null, organizerDetails?: { __typename?: 'OrganizerDetails', abnAcn: string, address: string, bio?: string | null, createdAt: any, deletedAt?: any | null, id: string, organizerName: string, isGstRegister: boolean, status: OrganizerStatus, website?: string | null, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, threads?: string | null, twitter?: string | null } | null } | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -1581,3 +1662,134 @@ export type ViewEventsTicketQueryHookResult = ReturnType<typeof useViewEventsTic
 export type ViewEventsTicketLazyQueryHookResult = ReturnType<typeof useViewEventsTicketLazyQuery>;
 export type ViewEventsTicketSuspenseQueryHookResult = ReturnType<typeof useViewEventsTicketSuspenseQuery>;
 export type ViewEventsTicketQueryResult = Apollo.QueryResult<ViewEventsTicketQuery, ViewEventsTicketQueryVariables>;
+export const GetAllOrganizerDocument = gql`
+    query GetAllOrganizer($query: CommonQuery!) {
+  getAllOrganizer(query: $query) {
+    data {
+      abnAcn
+      address
+      bio
+      createdAt
+      organizerName
+      id
+      status
+      address
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllOrganizerQuery__
+ *
+ * To run a query within a React component, call `useGetAllOrganizerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllOrganizerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllOrganizerQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useGetAllOrganizerQuery(baseOptions: Apollo.QueryHookOptions<GetAllOrganizerQuery, GetAllOrganizerQueryVariables> & ({ variables: GetAllOrganizerQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>(GetAllOrganizerDocument, options);
+      }
+export function useGetAllOrganizerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>(GetAllOrganizerDocument, options);
+        }
+export function useGetAllOrganizerSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>(GetAllOrganizerDocument, options);
+        }
+export type GetAllOrganizerQueryHookResult = ReturnType<typeof useGetAllOrganizerQuery>;
+export type GetAllOrganizerLazyQueryHookResult = ReturnType<typeof useGetAllOrganizerLazyQuery>;
+export type GetAllOrganizerSuspenseQueryHookResult = ReturnType<typeof useGetAllOrganizerSuspenseQuery>;
+export type GetAllOrganizerQueryResult = Apollo.QueryResult<GetAllOrganizerQuery, GetAllOrganizerQueryVariables>;
+export const GetSingleOrganizerDetailsDocument = gql`
+    query GetSingleOrganizerDetails($getSingleOrganizerDetailsId: String!) {
+  getSingleOrganizerDetails(id: $getSingleOrganizerDetailsId) {
+    role
+    profile {
+      name
+    }
+    phone
+    organizerDocuments {
+      logo {
+        name
+      }
+      documents {
+        name
+      }
+    }
+    organizerDetails {
+      abnAcn
+      address
+      bio
+      createdAt
+      deletedAt
+      id
+      organizerName
+      isGstRegister
+      socialLinks {
+        facebook
+        instagram
+        threads
+        twitter
+      }
+      status
+      website
+    }
+    isVerified
+    id
+    fullName
+    email
+    address
+  }
+}
+    `;
+
+/**
+ * __useGetSingleOrganizerDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetSingleOrganizerDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSingleOrganizerDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSingleOrganizerDetailsQuery({
+ *   variables: {
+ *      getSingleOrganizerDetailsId: // value for 'getSingleOrganizerDetailsId'
+ *   },
+ * });
+ */
+export function useGetSingleOrganizerDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables> & ({ variables: GetSingleOrganizerDetailsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>(GetSingleOrganizerDetailsDocument, options);
+      }
+export function useGetSingleOrganizerDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>(GetSingleOrganizerDetailsDocument, options);
+        }
+export function useGetSingleOrganizerDetailsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>(GetSingleOrganizerDetailsDocument, options);
+        }
+export type GetSingleOrganizerDetailsQueryHookResult = ReturnType<typeof useGetSingleOrganizerDetailsQuery>;
+export type GetSingleOrganizerDetailsLazyQueryHookResult = ReturnType<typeof useGetSingleOrganizerDetailsLazyQuery>;
+export type GetSingleOrganizerDetailsSuspenseQueryHookResult = ReturnType<typeof useGetSingleOrganizerDetailsSuspenseQuery>;
+export type GetSingleOrganizerDetailsQueryResult = Apollo.QueryResult<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>;

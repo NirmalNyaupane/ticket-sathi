@@ -142,3 +142,65 @@ query ViewEventsTicket($eventId: String!) {
     createdAt
   }
 }
+query GetAllOrganizer($query: CommonQuery!) {
+  getAllOrganizer(query: $query) {
+    data {
+      abnAcn
+      address
+      bio
+      createdAt
+      organizerName
+      id
+      status
+      address
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}
+
+query GetSingleOrganizerDetails($getSingleOrganizerDetailsId: String!) {
+  getSingleOrganizerDetails(id: $getSingleOrganizerDetailsId) {
+    role
+    profile {
+      name
+    }
+    phone
+    organizerDocuments {
+      logo {
+        name
+      }
+      documents {
+        name
+      }
+    }
+    organizerDetails {
+      abnAcn
+      address
+      bio
+      createdAt
+      deletedAt
+      id
+      organizerName
+      isGstRegister
+      socialLinks {
+        facebook
+        instagram
+        threads
+        twitter
+      }
+      status
+      website
+    }
+    isVerified
+    id
+    fullName
+    email
+    address
+  }
+}

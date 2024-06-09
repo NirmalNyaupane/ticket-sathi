@@ -11,7 +11,7 @@ import EventCeateUpdate from "@/components/event/EventCreate";
 
 const EventDetailsPage = () => {
   const data = useContext(EventContext);
-  console.log(data.action);
+
   return (
     <div className="flex flex-col gap-3">
       <ConditionallyRender

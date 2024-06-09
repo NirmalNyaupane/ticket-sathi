@@ -43,6 +43,8 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
       await getUser();
       if (auth.role === UserRole.Organizer) {
         router.push("/organizer/dashboard");
+      } else if (auth.role === UserRole.Admin) {
+        router.push("/admin/dashboard");
       }
     }
   };

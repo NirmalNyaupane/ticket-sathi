@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 import { Pencil, X } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React, { createContext, useContext, useState } from "react";
-import { FaCross, FaEdit, FaTrash } from "react-icons/fa";
+import React, { createContext, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 
 const links = [
   {

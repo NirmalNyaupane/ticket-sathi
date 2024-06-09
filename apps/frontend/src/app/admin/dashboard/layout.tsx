@@ -1,8 +1,25 @@
+"use client"
+import { UserRole } from "@/__generated__/graphql";
 import AdminSideBar from "@/components/admin/AdminSidebar";
 import OrganizerAdminNavbar from "@/components/organizer/layout/OrganizerAdminNavbar";
-import React from "react";
+import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const OrganizerLayout = ({ children }: { children: React.ReactNode }) => {
+  const state = useSelector((state: RootState) => state.auth!);
+  const router = useRouter();
+
+  const checkRole = () => {
+      return state.role === UserRole.Admin;
+  }
+
+  useEffect(() => {
+      if (!checkRole()) {
+          router.push("/admin/login");
+      }
+  }, [state]);
   return (
     <main>
       <OrganizerAdminNavbar />

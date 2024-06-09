@@ -50,7 +50,10 @@ class AdminService {
       relations: {
         profile: true,
         organizerDetails: true,
-        organizerDocuments: true,
+        organizerDocuments: {
+          logo:true, 
+          documents:true
+        }
       },
     });
 
