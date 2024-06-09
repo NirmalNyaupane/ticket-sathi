@@ -204,3 +204,44 @@ query GetSingleOrganizerDetails($getSingleOrganizerDetailsId: String!) {
     address
   }
 }
+query GetAllEvents($query: CommonQuery!) {
+  getAllEvents(query: $query) {
+    data {
+      createdAt
+      description
+      eventEndDate
+      eventStartDate
+      id
+      name
+      status
+      type
+      venue
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}
+query GetParticularEventForAdmin($eventId: String!) {
+  getParticularEventForAdmin(eventId: $eventId) {
+    cover {
+      name
+    }
+    description
+    eventEndDate
+    eventStartDate
+    id
+    images {
+      name
+    }
+    name
+    status
+    rejectionCount
+    type
+    venue
+  }
+}

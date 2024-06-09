@@ -44,7 +44,7 @@ export class TicketResolver {
   }
 
   @Query(() => [Ticket])
-  @UseMiddleware(authentication([UserRole.ORGANIZER]))
+  @UseMiddleware(authentication([UserRole.ORGANIZER, UserRole.ADMIN]))
   async viewEventsTicket(
     @Arg("eventId", () => String) eventId: UUID,
     @Ctx() context: Context

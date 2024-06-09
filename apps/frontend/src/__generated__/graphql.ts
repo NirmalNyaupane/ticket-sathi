@@ -397,15 +397,22 @@ export type Pagination = {
 
 export type Query = {
   __typename?: 'Query';
+  getAllEvents: PaginatedEventObject;
   getAllOrganizer: PaginatedOrganizer;
   getCurrentUser: UserResponse;
   getMyCategory: PaginatedOrganizerCategory;
   getMyEvents: PaginatedEventObject;
   getMyTrashedCategory: PaginatedOrganizerCategory;
+  getParticularEventForAdmin: Event;
   /** Open */
   getSingleEvent: Event;
   getSingleOrganizerDetails: AdminOrganizerObject;
   viewEventsTicket: Array<Ticket>;
+};
+
+
+export type QueryGetAllEventsArgs = {
+  query: CommonQuery;
 };
 
 
@@ -426,6 +433,11 @@ export type QueryGetMyEventsArgs = {
 
 export type QueryGetMyTrashedCategoryArgs = {
   query: CommonQuery;
+};
+
+
+export type QueryGetParticularEventForAdminArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -739,6 +751,20 @@ export type GetSingleOrganizerDetailsQueryVariables = Exact<{
 
 
 export type GetSingleOrganizerDetailsQuery = { __typename?: 'Query', getSingleOrganizerDetails: { __typename?: 'AdminOrganizerObject', role: UserRole, phone: string, isVerified: boolean, id: string, fullName: string, email: string, address?: string | null, profile?: { __typename?: 'Media', name: string } | null, organizerDocuments?: { __typename?: 'OrganizerDocuments', logo?: { __typename?: 'Media', name: string } | null, documents?: Array<{ __typename?: 'Media', name: string }> | null } | null, organizerDetails?: { __typename?: 'OrganizerDetails', abnAcn: string, address: string, bio?: string | null, createdAt: any, deletedAt?: any | null, id: string, organizerName: string, isGstRegister: boolean, status: OrganizerStatus, website?: string | null, socialLinks?: { __typename?: 'SocialLinksResponse', facebook?: string | null, instagram?: string | null, threads?: string | null, twitter?: string | null } | null } | null } };
+
+export type GetAllEventsQueryVariables = Exact<{
+  query: CommonQuery;
+}>;
+
+
+export type GetAllEventsQuery = { __typename?: 'Query', getAllEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', createdAt: any, description: string, eventEndDate: any, eventStartDate: any, id: string, name: string, status: EventStatus, type: EventType, venue: string }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
+
+export type GetParticularEventForAdminQueryVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type GetParticularEventForAdminQuery = { __typename?: 'Query', getParticularEventForAdmin: { __typename?: 'Event', description: string, eventEndDate: any, eventStartDate: any, id: string, name: string, status: EventStatus, rejectionCount: number, type: EventType, venue: string, cover: { __typename?: 'Media', name: string }, images: Array<{ __typename?: 'Media', name: string }> } };
 
 
 export const RegisterUserDocument = gql`
@@ -1833,3 +1859,114 @@ export type GetSingleOrganizerDetailsQueryHookResult = ReturnType<typeof useGetS
 export type GetSingleOrganizerDetailsLazyQueryHookResult = ReturnType<typeof useGetSingleOrganizerDetailsLazyQuery>;
 export type GetSingleOrganizerDetailsSuspenseQueryHookResult = ReturnType<typeof useGetSingleOrganizerDetailsSuspenseQuery>;
 export type GetSingleOrganizerDetailsQueryResult = Apollo.QueryResult<GetSingleOrganizerDetailsQuery, GetSingleOrganizerDetailsQueryVariables>;
+export const GetAllEventsDocument = gql`
+    query GetAllEvents($query: CommonQuery!) {
+  getAllEvents(query: $query) {
+    data {
+      createdAt
+      description
+      eventEndDate
+      eventStartDate
+      id
+      name
+      status
+      type
+      venue
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllEventsQuery__
+ *
+ * To run a query within a React component, call `useGetAllEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllEventsQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useGetAllEventsQuery(baseOptions: Apollo.QueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables> & ({ variables: GetAllEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+      }
+export function useGetAllEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+        }
+export function useGetAllEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllEventsQuery, GetAllEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllEventsQuery, GetAllEventsQueryVariables>(GetAllEventsDocument, options);
+        }
+export type GetAllEventsQueryHookResult = ReturnType<typeof useGetAllEventsQuery>;
+export type GetAllEventsLazyQueryHookResult = ReturnType<typeof useGetAllEventsLazyQuery>;
+export type GetAllEventsSuspenseQueryHookResult = ReturnType<typeof useGetAllEventsSuspenseQuery>;
+export type GetAllEventsQueryResult = Apollo.QueryResult<GetAllEventsQuery, GetAllEventsQueryVariables>;
+export const GetParticularEventForAdminDocument = gql`
+    query GetParticularEventForAdmin($eventId: String!) {
+  getParticularEventForAdmin(eventId: $eventId) {
+    cover {
+      name
+    }
+    description
+    eventEndDate
+    eventStartDate
+    id
+    images {
+      name
+    }
+    name
+    status
+    rejectionCount
+    type
+    venue
+  }
+}
+    `;
+
+/**
+ * __useGetParticularEventForAdminQuery__
+ *
+ * To run a query within a React component, call `useGetParticularEventForAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetParticularEventForAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetParticularEventForAdminQuery({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useGetParticularEventForAdminQuery(baseOptions: Apollo.QueryHookOptions<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables> & ({ variables: GetParticularEventForAdminQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>(GetParticularEventForAdminDocument, options);
+      }
+export function useGetParticularEventForAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>(GetParticularEventForAdminDocument, options);
+        }
+export function useGetParticularEventForAdminSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>(GetParticularEventForAdminDocument, options);
+        }
+export type GetParticularEventForAdminQueryHookResult = ReturnType<typeof useGetParticularEventForAdminQuery>;
+export type GetParticularEventForAdminLazyQueryHookResult = ReturnType<typeof useGetParticularEventForAdminLazyQuery>;
+export type GetParticularEventForAdminSuspenseQueryHookResult = ReturnType<typeof useGetParticularEventForAdminSuspenseQuery>;
+export type GetParticularEventForAdminQueryResult = Apollo.QueryResult<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>;

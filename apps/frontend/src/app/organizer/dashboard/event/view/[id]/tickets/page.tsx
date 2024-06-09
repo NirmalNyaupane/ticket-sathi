@@ -22,7 +22,7 @@ const TicketPage = () => {
           dialogButton={<Button>Create Ticket</Button>}
           dialogTitle="Create Ticket"
         >
-          <CreateUpdateTicketModal />
+          <CreateUpdateTicketModal action="create" />
         </GlobalDialog>
       </div>
       <ConditionallyRender
@@ -30,11 +30,9 @@ const TicketPage = () => {
         show={<>loading....</>}
         elseShow={
           <div className="ticket-section grid md:grid-cols-2 gap-3 mt-3">
-           {
-            data?.viewEventsTicket?.map((ticket)=>{
-              return <TicketCard key={ticket.id} ticket={ticket} />
-            })
-           }
+            {data?.viewEventsTicket?.map((ticket) => {
+              return <TicketCard key={ticket.id} ticket={ticket} />;
+            })}
           </div>
         }
       />

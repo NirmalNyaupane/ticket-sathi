@@ -4,6 +4,8 @@ import {
   InternalServerError,
   NotFoundExceptions,
 } from "../../constants/errors/exceptions.error";
+import { Event } from "../../entities/event/event.entity";
+import { Ticket } from "../../entities/ticket/ticket.entity";
 import { OrganizerDetails } from "../../entities/user/organizerDetails.entity";
 import { OrganizerRejectReasons } from "../../entities/user/organizerRejectReason.entity";
 import { User } from "../../entities/user/user.entity";
@@ -120,6 +122,66 @@ class AdminService {
       throw new InternalServerError();
     }
   }
+
+  async findAllEvents(query: CommonQuery) {
+    const builder = Event.createQueryBuilder("event");
+
+    const { take, skip } = paginationUtil.skipTakeMaker({
+      page: query.page,
+      pageLimit: query.pageLimit,
+    });
+
+    builder.take(take);
+    builder.skip(skip);
+    if (query.search) {
+      builder.andWhere("event.name ILIKE :name", {
+        name: `%${query.search}%`,
+      });
+    }
+
+    return await builder.getManyAndCount();
+  }
+
+  async getParticularEvent(eventId: UUID) {
+    const event = await Event.findOne({
+      where: {
+        id: eventId,
+      },
+      relations: {
+        images: true,
+        cover: true,
+        category: true,
+        tickets: true,
+      },
+    });
+
+    if (!event) {
+      throw new NotFoundExceptions("event is not found with that id");
+    }
+
+    return event;
+  }
+
+  async getEventTickets(ticketId: UUID) {
+    const events = await Event.findOne({
+      where: {
+        id: ticketId,
+      },
+    });
+
+    if (!events) {
+      throw new NotFoundExceptions("Event is not found with that id");
+    }
+
+    return await Ticket.find({
+      where: {
+        event: {
+          id: ticketId,
+        },
+      },
+    });
+  }
+
   private async findOrganzier(organizerId: UUID): Promise<OrganizerDetails> {
     const organizer = await OrganizerDetails.findOne({
       where: {

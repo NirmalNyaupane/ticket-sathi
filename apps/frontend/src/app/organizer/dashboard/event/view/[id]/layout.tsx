@@ -73,7 +73,7 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <DashboardTopContent
-        text="Test Event"
+        text={data?.getSingleEvent.name}
         section3={
           <div className="flex items-center">
             <Badge
