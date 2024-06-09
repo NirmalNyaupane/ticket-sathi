@@ -679,6 +679,13 @@ export type UpdateTicketMutationVariables = Exact<{
 
 export type UpdateTicketMutation = { __typename?: 'Mutation', updateTicket: { __typename?: 'CommonResponse', message: string } };
 
+export type ChangeOrganizerStatusMutationVariables = Exact<{
+  data: AdminOrganizerValidator;
+}>;
+
+
+export type ChangeOrganizerStatusMutation = { __typename?: 'Mutation', changeOrganizerStatus: { __typename?: 'CommonResponse', message: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1314,6 +1321,39 @@ export function useUpdateTicketMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateTicketMutationHookResult = ReturnType<typeof useUpdateTicketMutation>;
 export type UpdateTicketMutationResult = Apollo.MutationResult<UpdateTicketMutation>;
 export type UpdateTicketMutationOptions = Apollo.BaseMutationOptions<UpdateTicketMutation, UpdateTicketMutationVariables>;
+export const ChangeOrganizerStatusDocument = gql`
+    mutation ChangeOrganizerStatus($data: AdminOrganizerValidator!) {
+  changeOrganizerStatus(data: $data) {
+    message
+  }
+}
+    `;
+export type ChangeOrganizerStatusMutationFn = Apollo.MutationFunction<ChangeOrganizerStatusMutation, ChangeOrganizerStatusMutationVariables>;
+
+/**
+ * __useChangeOrganizerStatusMutation__
+ *
+ * To run a mutation, you first call `useChangeOrganizerStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeOrganizerStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeOrganizerStatusMutation, { data, loading, error }] = useChangeOrganizerStatusMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useChangeOrganizerStatusMutation(baseOptions?: Apollo.MutationHookOptions<ChangeOrganizerStatusMutation, ChangeOrganizerStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeOrganizerStatusMutation, ChangeOrganizerStatusMutationVariables>(ChangeOrganizerStatusDocument, options);
+      }
+export type ChangeOrganizerStatusMutationHookResult = ReturnType<typeof useChangeOrganizerStatusMutation>;
+export type ChangeOrganizerStatusMutationResult = Apollo.MutationResult<ChangeOrganizerStatusMutation>;
+export type ChangeOrganizerStatusMutationOptions = Apollo.BaseMutationOptions<ChangeOrganizerStatusMutation, ChangeOrganizerStatusMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {

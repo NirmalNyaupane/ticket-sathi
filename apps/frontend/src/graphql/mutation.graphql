@@ -114,3 +114,9 @@ mutation UpdateTicket($data: UpdateTicketValidator!) {
     message
   }
 }
+
+mutation ChangeOrganizerStatus($data: AdminOrganizerValidator!) {
+  changeOrganizerStatus(data: $data) {
+    message 
+  }
+}

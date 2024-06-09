@@ -1,5 +1,5 @@
 "use client";
-import { EventStatus } from "@/__generated__/graphql";
+import { EventStatus, OrganizerStatus } from "@/__generated__/graphql";
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -42,24 +42,24 @@ export const columns: ColumnDef<Event>[] = [
     header: "Status",
     enableColumnFilter: false,
     cell({ cell }) {
-      const status = cell.getValue() as EventStatus;
+      const status = cell.getValue() as OrganizerStatus;
 
       switch (status) {
-        case EventStatus.Approved:
+        case OrganizerStatus.Accepted:
           return (
             <p className="w-fit bg-green-700 text-white font-semibold px-2 rounded-full">
               {status}
             </p>
           );
 
-        case EventStatus.Pending:
+        case OrganizerStatus.Pending:
           return (
             <p className="w-fit bg-yellow-500 text-white font-semibold px-2 rounded-full">
               {status}
             </p>
           );
 
-        case EventStatus.Rejected:
+        case OrganizerStatus.Rejected:
           return (
             <p className="w-fit bg-red-500 text-white font-semibold px-2 rounded-full">
               {status}
