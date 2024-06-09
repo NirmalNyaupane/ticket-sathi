@@ -7,6 +7,9 @@ import http from "http";
 import configGraphQLServer from "./config/graphql.config";
 import RedisUtil from "./utils/redis.util";
 import QueueUtil from "./utils/queue.util";
+import { ExpressAdapter } from "@bull-board/express";
+import { createBullBoard } from "@bull-board/api";
+import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 class Server {
   constructor() {
     this.bootstrap();
@@ -25,9 +28,19 @@ class Server {
 
         configMiddleware(app, server);
         new RedisUtil().initiate();
-        new QueueUtil().initiate();
+        const emailQueue = new QueueUtil().initiate();
+
+        const serverAdapter = new ExpressAdapter();
+        serverAdapter.setBasePath("/admin/queues");
+        const { addQueue } = createBullBoard({
+          queues: [new BullMQAdapter(emailQueue!)],
+          serverAdapter,
+        });
+        app.use("/admin/queues", serverAdapter.setQueues);
         httpServer.listen(EnvConfiguration.PORT, () => {
-          console.log(`Server started at http://localhost:${EnvConfiguration.PORT}/graphql 🚀🚀🚀`);
+          console.log(
+            `Server started at http://localhost:${EnvConfiguration.PORT}/graphql 🚀🚀🚀`
+          );
         });
       })
       .catch((err) => {

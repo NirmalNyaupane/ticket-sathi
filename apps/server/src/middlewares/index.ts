@@ -7,6 +7,8 @@ import { expressMiddleware } from "@apollo/server/express4";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 import path from "path";
 import fs from "fs";
+import { ExpressAdapter } from "@bull-board/express";
+import { createBullBoard } from "@bull-board/api";
 
 export const configMiddleware = (
   app: express.Application,
@@ -39,5 +41,6 @@ export const configMiddleware = (
         });
     }
   );
+ 
   app.use(errorHandler);
 };

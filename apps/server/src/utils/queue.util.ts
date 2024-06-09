@@ -3,6 +3,7 @@ import { Worker, Queue, Job } from "bullmq";
 import RedisUtil from "./redis.util";
 import { Redis } from "ioredis";
 import sendMail, { MailType } from "./email.util";
+import emailUtil from "./email.util";
 class QueueUtil {
   static emailQueue: Queue | null = null;
 
@@ -11,6 +12,7 @@ class QueueUtil {
       QueueUtil.emailQueue = new Queue("email-queue", {
         connection: RedisUtil.redis ?? new Redis(),
       });
+      return QueueUtil.emailQueue;
     }
 
     new Worker(

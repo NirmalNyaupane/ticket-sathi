@@ -10,15 +10,18 @@ import { User } from "../../entities/user/user.entity";
 import { CommonResponse } from "../../schemas";
 import { CommonQuery } from "../../schemas/common/common.schema";
 import { UUID } from "../../types/commontype";
+import { MailType } from "../../utils/email.util";
 import paginationUtil from "../../utils/pagination.util";
+import QueueUtil from "../../utils/queue.util";
 import { AdminOrganizerValidator } from "../../validators/admin/adminOrganizer.validator";
 
 class AdminService {
   async findAllOrganizer(query: CommonQuery) {
-    const builder = OrganizerDetails.createQueryBuilder("organizer").leftJoin(
-      "organizer.user",
-      "user"
-    );
+    const builder = OrganizerDetails.createQueryBuilder("organizer")
+      .leftJoin("organizer.user", "user")
+      .where("user.isVerified", {
+        isVerified: true,
+      });
 
     const { take, skip } = paginationUtil.skipTakeMaker({
       page: query.page,
@@ -78,6 +81,37 @@ class AdminService {
 
     const response = await organizer.save();
     if (response) {
+      const user = await User.findOne({
+        where: {
+          organizerDetails: {
+            id: data.organizerId,
+          },
+        },
+      });
+      if (response.status === OrganizerStatus.ACCEPTED) {
+        QueueUtil.addEmailJob({
+          to: user?.email!,
+          mailType: MailType.CHANGE_STATUS,
+          subject: "Your organizer account has been accepted",
+          data: {
+            name: user?.fullName,
+            title:
+              "Your account has been approved by admin. Now you can access full features of organizer dashboard",
+          },
+        });
+      }
+      if (response.status === OrganizerStatus.REJECTED) {
+        QueueUtil.addEmailJob({
+          to: user?.email!,
+          mailType: MailType.CHANGE_STATUS,
+          subject: "Your organizer account has been rejected",
+          data: {
+            name: user?.fullName,
+            title: "Your account has been rejected by admin. ",
+            message: data.reason,
+          },
+        });
+      }
       return {
         message: "Updated sucessfully",
         status: "error",
@@ -86,9 +120,8 @@ class AdminService {
       throw new InternalServerError();
     }
   }
-  private async findOrganzier(organizerId: string): Promise<OrganizerDetails> {
+  private async findOrganzier(organizerId: UUID): Promise<OrganizerDetails> {
     const organizer = await OrganizerDetails.findOne({
-      //@ts-ignore
       where: {
         id: organizerId,
         user: {
@@ -96,7 +129,7 @@ class AdminService {
         },
       },
     });
-
+    console.log(organizer);
     if (!organizer) {
       throw new NotFoundExceptions("organizer is not found");
     }

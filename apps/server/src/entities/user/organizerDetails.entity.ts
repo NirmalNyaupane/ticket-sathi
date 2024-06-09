@@ -35,7 +35,7 @@ export class OrganizerDetails extends CommonEntity {
     enum: OrganizerStatus,
     default: OrganizerStatus.PENDING,
   })
-  status: boolean;
+  status: OrganizerStatus;
 
   @Field(() => Boolean)
   @Column({ nullable: false })
