@@ -18,6 +18,7 @@ import mediamigrateUtil from "../../utils/mediamigrate.util";
 import { MediaOf } from "../../constants/enums/media.enum";
 import { EnvConfiguration } from "../../config/env.config";
 import { Ticket } from "../ticket/ticket.entity";
+import { EventRejectReasons } from "../user/eventRejectedReason.entity";
 
 @ObjectType()
 @Entity()
@@ -67,8 +68,11 @@ export class Event extends CommonEntity {
   @ManyToOne(() => Category, (cateogry) => cateogry.event)
   category: Category;
 
-  @OneToMany(()=>Ticket, (ticket)=>ticket.event)
-  tickets:Ticket[]
+  @OneToMany(() => Ticket, (ticket) => ticket.event)
+  tickets: Ticket[];
+
+  @OneToMany(() => EventRejectReasons, (reason) => reason.event)
+  rejectedReason: EventRejectReasons;
 
   @AfterInsert()
   _() {

@@ -9,12 +9,16 @@ import {
 import { CommonQuery } from "../../schemas/common/common.schema";
 import adminService from "../../service/admin/admin.service";
 import paginationUtil from "../../utils/pagination.util";
-import { AdminOrganizerValidator } from "../../validators/admin/adminOrganizer.validator";
+import {
+  AdminEventValidator,
+  AdminOrganizerValidator,
+} from "../../validators/admin/adminOrganizer.validator";
 import { PaginatedEventObject } from "../../schemas/event/event.schemas";
 import { Event } from "../../entities/event/event.entity";
 import { RequestValidator } from "../../middlewares/requestValidator.middleware";
 import { CreateCommission } from "../../validators/admin/commission.validator";
 import { CommissionEntity } from "../../entities/commission/commission.entity";
+import { InternalServerError } from "../../constants/errors/exceptions.error";
 type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @Resolver()
@@ -58,6 +62,22 @@ export class AdminResolver {
     @Arg("eventId", () => String) eventId: UUID
   ) {
     return await adminService.getParticularEvent(eventId);
+  }
+
+  @Mutation(() => CommonResponse)
+  @UseMiddleware(authentication([UserRole.ADMIN]))
+  async updateEventStatusByAdmin(
+    @Arg("data") data: AdminEventValidator
+  ): Promise<CommonResponse> {
+    const response = await adminService.updateEvent(data);
+
+    if (response) {
+      return {
+        message: "Status updated sucessfully",
+        status: "error",
+      };
+    }
+    throw new InternalServerError();
   }
 
   @Query(() => Event)

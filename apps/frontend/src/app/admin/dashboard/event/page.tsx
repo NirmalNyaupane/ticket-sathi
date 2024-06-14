@@ -3,7 +3,7 @@ import {
     EventStatus,
     EventType,
     useGetAllEventsQuery
-} from "@/__generated__/graphql";
+} from "@/__generated__/graphql"
 import DashboardTopContent from "@/components/organizer/dashboard/DashboardTopContent";
 import { DataTable } from "@/components/table/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -137,7 +137,12 @@ const AdminEventPage = () => {
   });
   return (
     <>
-      <DashboardTopContent text={"Events"} />
+      <DashboardTopContent text={"Events"} section4={
+        <>
+        
+        
+        </>
+      }/>
       <DataTable
         columns={columns}
         data={formatedData!}

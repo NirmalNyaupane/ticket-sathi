@@ -1,4 +1,5 @@
 import { UserRole } from "../../constants/enums/auth.enum";
+import { EventStatus } from "../../constants/enums/event.enum";
 import { OrganizerStatus } from "../../constants/enums/organizer.enum";
 import {
   InternalServerError,
@@ -7,6 +8,7 @@ import {
 import { CommissionEntity } from "../../entities/commission/commission.entity";
 import { Event } from "../../entities/event/event.entity";
 import { Ticket } from "../../entities/ticket/ticket.entity";
+import { EventRejectReasons } from "../../entities/user/eventRejectedReason.entity";
 import { OrganizerDetails } from "../../entities/user/organizerDetails.entity";
 import { OrganizerRejectReasons } from "../../entities/user/organizerRejectReason.entity";
 import { User } from "../../entities/user/user.entity";
@@ -16,7 +18,10 @@ import { UUID } from "../../types/commontype";
 import { MailType } from "../../utils/email.util";
 import paginationUtil from "../../utils/pagination.util";
 import QueueUtil from "../../utils/queue.util";
-import { AdminOrganizerValidator } from "../../validators/admin/adminOrganizer.validator";
+import {
+  AdminEventValidator,
+  AdminOrganizerValidator,
+} from "../../validators/admin/adminOrganizer.validator";
 import { CreateCommission } from "../../validators/admin/commission.validator";
 
 class AdminService {
@@ -162,6 +167,31 @@ class AdminService {
     }
 
     return event;
+  }
+
+  async updateEvent(input: AdminEventValidator) {
+    const event = await this.getParticularEvent(input.eventId);
+    if (input.rejectedReason) {
+      const rejectedReason = await EventRejectReasons.findOne({
+        where: {
+          event: {
+            id: input.eventId,
+          },
+        },
+      });
+
+      if (rejectedReason) {
+        rejectedReason.reasons = input.rejectedReason;
+        await rejectedReason.save();
+      } else {
+        const rejectedReason = new EventRejectReasons();
+        rejectedReason.reasons = input.rejectedReason;
+        rejectedReason.event = event;
+        await rejectedReason.save();
+      }
+    }
+    event.status = input.status;
+    return await event.save();
   }
 
   async getEventTickets(ticketId: UUID) {

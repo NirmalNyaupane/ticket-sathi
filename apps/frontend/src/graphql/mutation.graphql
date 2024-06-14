@@ -126,3 +126,10 @@ mutation CreateUpdateCommission($data: CreateCommission!) {
     message
   }
 }
+
+mutation UpdateEventStatusByAdmin($data: AdminEventValidator!) {
+  updateEventStatusByAdmin(data: $data) {
+    message
+    status
+  }
+}

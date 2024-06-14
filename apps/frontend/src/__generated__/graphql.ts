@@ -24,6 +24,12 @@ export type AccessTokenResponse = {
   accessToken: Scalars['String']['output'];
 };
 
+export type AdminEventValidator = {
+  eventId: Scalars['String']['input'];
+  rejectedReason?: InputMaybe<Scalars['String']['input']>;
+  status: EventStatus;
+};
+
 export type AdminOrganizerObject = {
   __typename?: 'AdminOrganizerObject';
   address?: Maybe<Scalars['String']['output']>;
@@ -237,6 +243,7 @@ export type Mutation = {
   registerUser: RegisterUserResponse;
   resetForgotPassword: CommonResponse;
   updateCategory: CommonResponse;
+  updateEventStatusByAdmin: CommonResponse;
   updateProfilePic: CommonResponse;
   updateTicket: CommonResponse;
   updateUser: CommonResponse;
@@ -323,6 +330,11 @@ export type MutationResetForgotPasswordArgs = {
 export type MutationUpdateCategoryArgs = {
   categoryId: Scalars['String']['input'];
   data: UpdateCategoryValidation;
+};
+
+
+export type MutationUpdateEventStatusByAdminArgs = {
+  data: AdminEventValidator;
 };
 
 
@@ -729,6 +741,13 @@ export type CreateUpdateCommissionMutationVariables = Exact<{
 
 
 export type CreateUpdateCommissionMutation = { __typename?: 'Mutation', createUpdateCommission: { __typename?: 'CommonResponse', message: string } };
+
+export type UpdateEventStatusByAdminMutationVariables = Exact<{
+  data: AdminEventValidator;
+}>;
+
+
+export type UpdateEventStatusByAdminMutation = { __typename?: 'Mutation', updateEventStatusByAdmin: { __typename?: 'CommonResponse', message: string, status: string } };
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1450,6 +1469,40 @@ export function useCreateUpdateCommissionMutation(baseOptions?: Apollo.MutationH
 export type CreateUpdateCommissionMutationHookResult = ReturnType<typeof useCreateUpdateCommissionMutation>;
 export type CreateUpdateCommissionMutationResult = Apollo.MutationResult<CreateUpdateCommissionMutation>;
 export type CreateUpdateCommissionMutationOptions = Apollo.BaseMutationOptions<CreateUpdateCommissionMutation, CreateUpdateCommissionMutationVariables>;
+export const UpdateEventStatusByAdminDocument = gql`
+    mutation UpdateEventStatusByAdmin($data: AdminEventValidator!) {
+  updateEventStatusByAdmin(data: $data) {
+    message
+    status
+  }
+}
+    `;
+export type UpdateEventStatusByAdminMutationFn = Apollo.MutationFunction<UpdateEventStatusByAdminMutation, UpdateEventStatusByAdminMutationVariables>;
+
+/**
+ * __useUpdateEventStatusByAdminMutation__
+ *
+ * To run a mutation, you first call `useUpdateEventStatusByAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEventStatusByAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEventStatusByAdminMutation, { data, loading, error }] = useUpdateEventStatusByAdminMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateEventStatusByAdminMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEventStatusByAdminMutation, UpdateEventStatusByAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEventStatusByAdminMutation, UpdateEventStatusByAdminMutationVariables>(UpdateEventStatusByAdminDocument, options);
+      }
+export type UpdateEventStatusByAdminMutationHookResult = ReturnType<typeof useUpdateEventStatusByAdminMutation>;
+export type UpdateEventStatusByAdminMutationResult = Apollo.MutationResult<UpdateEventStatusByAdminMutation>;
+export type UpdateEventStatusByAdminMutationOptions = Apollo.BaseMutationOptions<UpdateEventStatusByAdminMutation, UpdateEventStatusByAdminMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
