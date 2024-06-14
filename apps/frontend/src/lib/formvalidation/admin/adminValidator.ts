@@ -4,5 +4,16 @@ export const changeOrganzierStatusValidator = z.object({
 });
 
 export const createCommissionValidator = z.object({
-  commission: z.number().max(50),
+  commission: z
+    .string()
+    .transform((value) => Number(value))
+    .refine(
+      (value) => {
+        if (value > 50) {
+          return false;
+        }
+        return true;
+      },
+      { message: "commission cannot be greter than 50 percentage" }
+    )
 });

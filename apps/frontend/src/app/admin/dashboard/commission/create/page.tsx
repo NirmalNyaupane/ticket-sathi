@@ -47,7 +47,7 @@ const CreateCommission = () => {
     return <p>loading...</p>;
   }
   return (
-    <form className="md:w-[50%] lg:w-[30%] space-y-8">
+    <form className="md:w-[50%] lg:w-[30%] space-y-8" onSubmit={handleFormSubmit}>
       <InputField
         min={0}
         placeholder="commission"
@@ -57,14 +57,14 @@ const CreateCommission = () => {
             key.preventDefault();
           }
         }}
+        errorMessage={form.formState.errors.commission?.message}
         {...form.register("commission")}
       />
       <LoadingButton
         type="submit"
-        onSubmit={handleFormSubmit}
         isLoading={createLoading}
       >
-        Loading
+        Submit
       </LoadingButton>
     </form>
   );
