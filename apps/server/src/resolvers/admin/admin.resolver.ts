@@ -13,6 +13,8 @@ import { AdminOrganizerValidator } from "../../validators/admin/adminOrganizer.v
 import { PaginatedEventObject } from "../../schemas/event/event.schemas";
 import { Event } from "../../entities/event/event.entity";
 import { RequestValidator } from "../../middlewares/requestValidator.middleware";
+import { CreateCommission } from "../../validators/admin/commission.validator";
+import { CommissionEntity } from "../../entities/commission/commission.entity";
 type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @Resolver()
@@ -66,4 +68,15 @@ export class AdminResolver {
     return await adminService.getEventTickets(eventId);
   }
 
+  @Mutation(() => CommonResponse)
+  @UseMiddleware(authentication([UserRole.ADMIN]))
+  async createUpdateCommission(@Arg("data") data: CreateCommission) {
+    return await adminService.creatCommission(data);
+  }
+
+  @Query(() => [CommissionEntity])
+  @UseMiddleware(authentication([UserRole.ADMIN]))
+  async getCommission() {
+    return await adminService.getCommission();
+  }
 }

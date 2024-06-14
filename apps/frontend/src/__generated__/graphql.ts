@@ -62,6 +62,14 @@ export type Category = {
   name: Scalars['String']['output'];
 };
 
+export type CommissionEntity = {
+  __typename?: 'CommissionEntity';
+  commission?: Maybe<Scalars['Float']['output']>;
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  id: Scalars['String']['output'];
+};
+
 export type CommonQuery = {
   page?: Scalars['Int']['input'];
   pageLimit?: Scalars['Int']['input'];
@@ -91,6 +99,10 @@ export type CouponValidator = {
 export type CreateCategoryValidation = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
+};
+
+export type CreateCommission = {
+  commission: Scalars['Int']['input'];
 };
 
 export type CreateEventValidator = {
@@ -214,6 +226,7 @@ export type Mutation = {
   createCoupon: CommonResponse;
   createEvent: CommonResponse;
   createTicket: CommonResponse;
+  createUpdateCommission: CommonResponse;
   deleteCategoryPermanent: CommonResponse;
   deleteTicket: CommonResponse;
   forgotPasswordRequest: CommonResponse;
@@ -254,6 +267,11 @@ export type MutationCreateEventArgs = {
 
 export type MutationCreateTicketArgs = {
   data: CreateTicketValidator;
+};
+
+
+export type MutationCreateUpdateCommissionArgs = {
+  data: CreateCommission;
 };
 
 
@@ -399,6 +417,7 @@ export type Query = {
   __typename?: 'Query';
   getAllEvents: PaginatedEventObject;
   getAllOrganizer: PaginatedOrganizer;
+  getCommission: Array<CommissionEntity>;
   getCurrentUser: UserResponse;
   getMyCategory: PaginatedOrganizerCategory;
   getMyEvents: PaginatedEventObject;
@@ -407,6 +426,7 @@ export type Query = {
   /** Open */
   getSingleEvent: Event;
   getSingleOrganizerDetails: AdminOrganizerObject;
+  getTicketForParticularEventForAdmin: Event;
   viewEventsTicket: Array<Ticket>;
 };
 
@@ -448,6 +468,11 @@ export type QueryGetSingleEventArgs = {
 
 export type QueryGetSingleOrganizerDetailsArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetTicketForParticularEventForAdminArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -698,6 +723,13 @@ export type ChangeOrganizerStatusMutationVariables = Exact<{
 
 export type ChangeOrganizerStatusMutation = { __typename?: 'Mutation', changeOrganizerStatus: { __typename?: 'CommonResponse', message: string } };
 
+export type CreateUpdateCommissionMutationVariables = Exact<{
+  data: CreateCommission;
+}>;
+
+
+export type CreateUpdateCommissionMutation = { __typename?: 'Mutation', createUpdateCommission: { __typename?: 'CommonResponse', message: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -765,6 +797,11 @@ export type GetParticularEventForAdminQueryVariables = Exact<{
 
 
 export type GetParticularEventForAdminQuery = { __typename?: 'Query', getParticularEventForAdmin: { __typename?: 'Event', description: string, eventEndDate: any, eventStartDate: any, id: string, name: string, status: EventStatus, rejectionCount: number, type: EventType, venue: string, cover: { __typename?: 'Media', name: string }, images: Array<{ __typename?: 'Media', name: string }> } };
+
+export type GetCommissionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCommissionQuery = { __typename?: 'Query', getCommission: Array<{ __typename?: 'CommissionEntity', commission?: number | null, createdAt: any, deletedAt?: any | null, id: string }> };
 
 
 export const RegisterUserDocument = gql`
@@ -1380,6 +1417,39 @@ export function useChangeOrganizerStatusMutation(baseOptions?: Apollo.MutationHo
 export type ChangeOrganizerStatusMutationHookResult = ReturnType<typeof useChangeOrganizerStatusMutation>;
 export type ChangeOrganizerStatusMutationResult = Apollo.MutationResult<ChangeOrganizerStatusMutation>;
 export type ChangeOrganizerStatusMutationOptions = Apollo.BaseMutationOptions<ChangeOrganizerStatusMutation, ChangeOrganizerStatusMutationVariables>;
+export const CreateUpdateCommissionDocument = gql`
+    mutation CreateUpdateCommission($data: CreateCommission!) {
+  createUpdateCommission(data: $data) {
+    message
+  }
+}
+    `;
+export type CreateUpdateCommissionMutationFn = Apollo.MutationFunction<CreateUpdateCommissionMutation, CreateUpdateCommissionMutationVariables>;
+
+/**
+ * __useCreateUpdateCommissionMutation__
+ *
+ * To run a mutation, you first call `useCreateUpdateCommissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUpdateCommissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUpdateCommissionMutation, { data, loading, error }] = useCreateUpdateCommissionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateUpdateCommissionMutation(baseOptions?: Apollo.MutationHookOptions<CreateUpdateCommissionMutation, CreateUpdateCommissionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUpdateCommissionMutation, CreateUpdateCommissionMutationVariables>(CreateUpdateCommissionDocument, options);
+      }
+export type CreateUpdateCommissionMutationHookResult = ReturnType<typeof useCreateUpdateCommissionMutation>;
+export type CreateUpdateCommissionMutationResult = Apollo.MutationResult<CreateUpdateCommissionMutation>;
+export type CreateUpdateCommissionMutationOptions = Apollo.BaseMutationOptions<CreateUpdateCommissionMutation, CreateUpdateCommissionMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -1970,3 +2040,45 @@ export type GetParticularEventForAdminQueryHookResult = ReturnType<typeof useGet
 export type GetParticularEventForAdminLazyQueryHookResult = ReturnType<typeof useGetParticularEventForAdminLazyQuery>;
 export type GetParticularEventForAdminSuspenseQueryHookResult = ReturnType<typeof useGetParticularEventForAdminSuspenseQuery>;
 export type GetParticularEventForAdminQueryResult = Apollo.QueryResult<GetParticularEventForAdminQuery, GetParticularEventForAdminQueryVariables>;
+export const GetCommissionDocument = gql`
+    query GetCommission {
+  getCommission {
+    commission
+    createdAt
+    deletedAt
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetCommissionQuery__
+ *
+ * To run a query within a React component, call `useGetCommissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommissionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCommissionQuery(baseOptions?: Apollo.QueryHookOptions<GetCommissionQuery, GetCommissionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommissionQuery, GetCommissionQueryVariables>(GetCommissionDocument, options);
+      }
+export function useGetCommissionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommissionQuery, GetCommissionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommissionQuery, GetCommissionQueryVariables>(GetCommissionDocument, options);
+        }
+export function useGetCommissionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCommissionQuery, GetCommissionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCommissionQuery, GetCommissionQueryVariables>(GetCommissionDocument, options);
+        }
+export type GetCommissionQueryHookResult = ReturnType<typeof useGetCommissionQuery>;
+export type GetCommissionLazyQueryHookResult = ReturnType<typeof useGetCommissionLazyQuery>;
+export type GetCommissionSuspenseQueryHookResult = ReturnType<typeof useGetCommissionSuspenseQuery>;
+export type GetCommissionQueryResult = Apollo.QueryResult<GetCommissionQuery, GetCommissionQueryVariables>;

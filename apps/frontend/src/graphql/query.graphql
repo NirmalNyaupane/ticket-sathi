@@ -245,3 +245,12 @@ query GetParticularEventForAdmin($eventId: String!) {
     venue
   }
 }
+
+query GetCommission {
+  getCommission {
+    commission
+    createdAt
+    deletedAt
+    id
+  }
+}

@@ -85,9 +85,9 @@ const EventViewLayout = ({ children }: { children: React.ReactNode }) => {
             >
               {data?.getParticularEventForAdmin.status}
             </Badge>
-            <Button className="bg-white text-red-700 hover:bg-white hover:text-red-500">
+            {/* <Button className="bg-white text-red-700 hover:bg-white hover:text-red-500">
               <FaTrash />
-            </Button>
+            </Button> */}
             {/* <Button
               className="bg-white text-black hover:bg-white"
               onClick={() =>

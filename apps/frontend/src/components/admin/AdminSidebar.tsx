@@ -71,7 +71,7 @@ const AdminSideBar = () => {
         </span>
       ),
       hasChildren: false,
-      links: ["/organizer/dashboard/commission"],
+      links: ["/admin/dashboard/commission/create"],
     },
     {
       name: "Change Password",

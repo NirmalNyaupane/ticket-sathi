@@ -4,6 +4,7 @@ import {
   InternalServerError,
   NotFoundExceptions,
 } from "../../constants/errors/exceptions.error";
+import { CommissionEntity } from "../../entities/commission/commission.entity";
 import { Event } from "../../entities/event/event.entity";
 import { Ticket } from "../../entities/ticket/ticket.entity";
 import { OrganizerDetails } from "../../entities/user/organizerDetails.entity";
@@ -16,6 +17,7 @@ import { MailType } from "../../utils/email.util";
 import paginationUtil from "../../utils/pagination.util";
 import QueueUtil from "../../utils/queue.util";
 import { AdminOrganizerValidator } from "../../validators/admin/adminOrganizer.validator";
+import { CreateCommission } from "../../validators/admin/commission.validator";
 
 class AdminService {
   async findAllOrganizer(query: CommonQuery) {
@@ -197,6 +199,35 @@ class AdminService {
     }
 
     return organizer;
+  }
+
+  async creatCommission(data: CreateCommission): Promise<CommonResponse> {
+    //check commission
+    const commission = await CommissionEntity.find();
+    if (commission && commission.length > 0) {
+      await CommissionEntity.update(
+        {
+          id: commission[0].id,
+        },
+        {
+          commission: data.commission,
+        }
+      );
+      return {
+        message: "Commission updated sucessfully",
+        status: "success",
+      };
+    } else {
+      await CommissionEntity.insert(data);
+      return {
+        message: "Commission insert successfully",
+        status: "success",
+      };
+    }
+  }
+
+  async getCommission(): Promise<CommissionEntity[]> {
+    return await CommissionEntity.find();
   }
 }
 
