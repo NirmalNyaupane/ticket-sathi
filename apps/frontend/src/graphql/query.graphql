@@ -254,3 +254,25 @@ query GetCommission {
     id
   }
 }
+
+query GetAllOpenEvents($data: GlobalEventFilter!) {
+  getAllOpenEvents(data: $data) {
+    data {
+      cover {
+        name
+      }
+      eventStartDate
+      id
+      name
+      type
+      venue
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}

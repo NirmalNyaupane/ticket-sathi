@@ -10,6 +10,7 @@ import mediaService from "../media/media.service";
 import { CommonQuery } from "../../schemas/common/common.schema";
 import paginationUtil from "../../utils/pagination.util";
 import { UUID } from "../../types/commontype";
+import { GlobalEventFilter } from "../../schemas/event/event.schemas";
 class EventService {
   async createEvent(category: Category, data: CreateEventValidator) {
     const event = new Event();
@@ -127,10 +128,10 @@ class EventService {
       where: {
         id,
       },
-      relations:{
-        images:true, 
-        cover:true, 
-      }
+      relations: {
+        images: true,
+        cover: true,
+      },
     });
 
     if (!event) {
@@ -138,6 +139,33 @@ class EventService {
     }
 
     return event;
+  }
+
+  async getAllEventsForEndUser(query: GlobalEventFilter) {
+    const builder = Event.createQueryBuilder("event")
+      .leftJoin("event.category", "category")
+      .leftJoin("category.organizer", "organizer")
+      .leftJoin("organizer.user", "user")
+      .leftJoinAndSelect("event.cover", "cover")
+      .leftJoinAndSelect("event.images", "images")
+
+    const { take, skip } = paginationUtil.skipTakeMaker({
+      page: query.page,
+      pageLimit: query.pageLimit,
+    });
+    builder.take(take);
+    builder.skip(skip);
+    if (query.search) {
+      builder.andWhere("event.name ILIKE :name", {
+        name: `%${query.search}%`,
+      });
+    }
+    if (query.status) {
+      builder.andWhere("event.status=:status", {
+        status: query.status,
+      });
+    }
+    return await builder.getManyAndCount();
   }
 }
 

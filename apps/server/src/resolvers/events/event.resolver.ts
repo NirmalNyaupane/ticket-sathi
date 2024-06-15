@@ -12,13 +12,14 @@ import { Event } from "../../entities/event/event.entity";
 import authentication from "../../middlewares/authentication.middleware";
 import { RequestValidator } from "../../middlewares/requestValidator.middleware";
 import { CommonResponse } from "../../schemas";
-import { CommonQuery } from "../../schemas/common/common.schema";
-import { PaginatedEventObject } from "../../schemas/event/event.schemas";
+import { CommonQuery, Pagination } from "../../schemas/common/common.schema";
+import { GlobalEventFilter, PaginatedEventObject } from "../../schemas/event/event.schemas";
 import categoryService from "../../service/category/category.service";
 import eventService from "../../service/event/event.service";
 import { Context } from "../../types/context.type";
 import paginationUtil from "../../utils/pagination.util";
 import { CreateEventValidator } from "../../validators/event/event.validator";
+import { PaginatedOrganizer } from "../../schemas/admin/admin.schema";
 type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @Resolver()
@@ -58,5 +59,14 @@ export class EventResolver {
   @Query(() => Event, { description: "Open" })
   async getSingleEvent(@Arg("eventId", () => String) eventId: UUID) {
     return await eventService.getSingleEvent(eventId);
+  }
+
+  @Query(()=>PaginatedEventObject)
+  async getAllOpenEvents(@Arg("data") data:GlobalEventFilter){
+    const [event, count] = await eventService.getAllEventsForEndUser(data);
+    return {
+      data: event,
+      meta: paginationUtil.paginatedResponse(count, data),
+    };
   }
 }

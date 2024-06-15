@@ -1,136 +1,21 @@
+import { useGetAllOpenEventsQuery } from "@/__generated__/graphql";
 import HomeCart from "../card/HomeCard";
 import { Button } from "../ui/button";
-const data = [
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/event.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-  {
-    name: "Golden Night",
-    image: "/background.png",
-    type: "CONCERT",
-    venue: "Nepal hall",
-    startDate: "Dec 18, 2023",
-  },
-];
+import { format } from "date-fns";
 
 const UpcomingEvent = () => {
+  const { data, loading } = useGetAllOpenEventsQuery({
+    variables: {
+      data: {
+        page: 1,
+        pageLimit: 10,
+      },
+    },
+  });
+
+  if (loading) {
+    return <p>Loading........</p>;
+  }
   return (
     <div className="bg-secondary">
       <div className="section max-width">
@@ -150,15 +35,19 @@ const UpcomingEvent = () => {
             gap: "3rem",
           }}
         >
-          {data.map((singleData, ind) => {
+          {data?.getAllOpenEvents?.data?.map((singleData, ind) => {
             return (
               <HomeCart
                 key={ind + 1 * 98}
+                id={singleData.id}
                 name={singleData.name}
-                image={singleData.image}
+                image={singleData.cover.name}
                 type={singleData.type}
                 venue={singleData.venue}
-                startDate={singleData.startDate}
+                startDate={format(
+                  new Date(singleData.eventStartDate),
+                  "dd, MMM"
+                )}
               />
             );
           })}

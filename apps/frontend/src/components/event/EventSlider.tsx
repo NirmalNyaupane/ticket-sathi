@@ -8,6 +8,7 @@ import "./swiper.css";
 import Image from "next/image";
 
 const EventSlider = ({ imageUrls }: { imageUrls: string[] }) => {
+  console.log(imageUrls)
   return (
     <Swiper
       slidesPerView={"auto"}

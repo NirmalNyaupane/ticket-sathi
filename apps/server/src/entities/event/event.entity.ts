@@ -68,9 +68,6 @@ export class Event extends CommonEntity {
   @ManyToOne(() => Category, (cateogry) => cateogry.event)
   category: Category;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.event)
-  tickets: Ticket[];
-
   @OneToMany(() => EventRejectReasons, (reason) => reason.event)
   rejectedReason: EventRejectReasons;
 

@@ -176,6 +176,13 @@ export type ForgotPasswordRequestValidator = {
   email: Scalars['String']['input'];
 };
 
+export type GlobalEventFilter = {
+  page?: Scalars['Int']['input'];
+  pageLimit?: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type LoginUserResponse = {
   __typename?: 'LoginUserResponse';
   accessToken: Scalars['String']['output'];
@@ -428,6 +435,7 @@ export type Pagination = {
 export type Query = {
   __typename?: 'Query';
   getAllEvents: PaginatedEventObject;
+  getAllOpenEvents: PaginatedEventObject;
   getAllOrganizer: PaginatedOrganizer;
   getCommission: Array<CommissionEntity>;
   getCurrentUser: UserResponse;
@@ -445,6 +453,11 @@ export type Query = {
 
 export type QueryGetAllEventsArgs = {
   query: CommonQuery;
+};
+
+
+export type QueryGetAllOpenEventsArgs = {
+  data: GlobalEventFilter;
 };
 
 
@@ -821,6 +834,13 @@ export type GetCommissionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCommissionQuery = { __typename?: 'Query', getCommission: Array<{ __typename?: 'CommissionEntity', commission?: number | null, createdAt: any, deletedAt?: any | null, id: string }> };
+
+export type GetAllOpenEventsQueryVariables = Exact<{
+  data: GlobalEventFilter;
+}>;
+
+
+export type GetAllOpenEventsQuery = { __typename?: 'Query', getAllOpenEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventStartDate: any, id: string, name: string, type: EventType, venue: string, cover: { __typename?: 'Media', name: string } }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
 
 
 export const RegisterUserDocument = gql`
@@ -2135,3 +2155,59 @@ export type GetCommissionQueryHookResult = ReturnType<typeof useGetCommissionQue
 export type GetCommissionLazyQueryHookResult = ReturnType<typeof useGetCommissionLazyQuery>;
 export type GetCommissionSuspenseQueryHookResult = ReturnType<typeof useGetCommissionSuspenseQuery>;
 export type GetCommissionQueryResult = Apollo.QueryResult<GetCommissionQuery, GetCommissionQueryVariables>;
+export const GetAllOpenEventsDocument = gql`
+    query GetAllOpenEvents($data: GlobalEventFilter!) {
+  getAllOpenEvents(data: $data) {
+    data {
+      cover {
+        name
+      }
+      eventStartDate
+      id
+      name
+      type
+      venue
+    }
+    meta {
+      currentPage
+      lastPage
+      nextPage
+      prevPage
+      totalCount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllOpenEventsQuery__
+ *
+ * To run a query within a React component, call `useGetAllOpenEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllOpenEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllOpenEventsQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetAllOpenEventsQuery(baseOptions: Apollo.QueryHookOptions<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables> & ({ variables: GetAllOpenEventsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>(GetAllOpenEventsDocument, options);
+      }
+export function useGetAllOpenEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>(GetAllOpenEventsDocument, options);
+        }
+export function useGetAllOpenEventsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>(GetAllOpenEventsDocument, options);
+        }
+export type GetAllOpenEventsQueryHookResult = ReturnType<typeof useGetAllOpenEventsQuery>;
+export type GetAllOpenEventsLazyQueryHookResult = ReturnType<typeof useGetAllOpenEventsLazyQuery>;
+export type GetAllOpenEventsSuspenseQueryHookResult = ReturnType<typeof useGetAllOpenEventsSuspenseQuery>;
+export type GetAllOpenEventsQueryResult = Apollo.QueryResult<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>;

@@ -13,6 +13,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface props {
+  id: string;
   name: string;
   image: string;
   type: string;
@@ -20,7 +21,7 @@ interface props {
   startDate: string;
 }
 
-const HomeCart = ({ name, image, venue, type, startDate }: props) => {
+const HomeCart = ({ id, name, image, venue, type, startDate }: props) => {
   const [isMouseTouch, setMouseTouch] = useState(false);
   return (
     <Card className="w-[300px] p-0 relative overflow-y-hidden">
@@ -49,7 +50,7 @@ const HomeCart = ({ name, image, venue, type, startDate }: props) => {
 
         {isMouseTouch && (
           <Button className="absolute text-white bg-transparent border-2 hover:bg-transparent">
-            <Link href={`/event/${name}`} className="flex items-center ">
+            <Link href={`/event/${id}`} className="flex items-center ">
               View details
               <ArrowRight className=" ml-2" />
             </Link>
