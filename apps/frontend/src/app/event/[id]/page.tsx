@@ -50,8 +50,8 @@ const EventPage = () => {
       />
 
       <div className="flex flex-col lg:flex-row gap-6">
-        <EventAboutUs />
-        <EventDetails />
+        <EventAboutUs events={data?.getSingleEvent!}/>
+        <EventDetails events={data?.getSingleEvent!}/>
       </div>
     </div>
   );

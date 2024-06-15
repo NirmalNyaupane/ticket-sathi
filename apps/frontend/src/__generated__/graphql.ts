@@ -840,7 +840,7 @@ export type GetAllOpenEventsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllOpenEventsQuery = { __typename?: 'Query', getAllOpenEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventStartDate: any, id: string, name: string, type: EventType, venue: string, cover: { __typename?: 'Media', name: string } }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
+export type GetAllOpenEventsQuery = { __typename?: 'Query', getAllOpenEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventStartDate: any, id: string, name: string, type: EventType, venue: string, description: string, cover: { __typename?: 'Media', name: string } }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
 
 
 export const RegisterUserDocument = gql`
@@ -2167,6 +2167,7 @@ export const GetAllOpenEventsDocument = gql`
       name
       type
       venue
+      description
     }
     meta {
       currentPage

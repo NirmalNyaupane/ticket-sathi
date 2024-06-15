@@ -9,9 +9,13 @@ const Footer = () => {
         <div className="text-white space-y-3 w-[30%]">
           <h2 className=" text-xl font-bold">Ticket Sathi</h2>
           <p className=" text-blue-100">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed ut
-            aperiam numquam mollitia quod in beatae unde non ab ipsam aliquam
-            repudiandae ea eum, ipsum nulla iste, esse magni officiis?
+            “Ticket Sathi” is a web-based application that makes it easier and
+            efficient to manage the events. With the help of this application
+            organizers can create, promote, monitor, and sell tickets of an
+            event online. The admin of a system can approve organizer’s
+            identity, events and charge commission against organizers for an
+            event. Users can use the application to view upcoming events, and
+            buy tickets for these events.
           </p>
         </div>
 

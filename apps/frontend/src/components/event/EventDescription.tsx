@@ -3,16 +3,16 @@ import Image from "next/image";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
-const EventAboutUs = () => {
+import { GetSingleEventQuery } from "@/__generated__/graphql";
+
+interface Props {
+  events: GetSingleEventQuery["getSingleEvent"];
+}
+const EventAboutUs = ({ events }: Props) => {
   return (
     <div className="space-y-7">
       <h2 className="text-3xl font-bold">About this event</h2>
-      <p className="text-xl text-gray-600">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
-        itaque et eos praesentium nemo id nulla illo maiores laborum quidem. At
-        pariatur tenetur assumenda libero veniam reprehenderit sequi quibusdam
-        esse.
-      </p>
+      <p className="text-xl text-gray-600">{events.description}</p>
 
       <h2 className="text-3xl font-bold">Artist</h2>
 
