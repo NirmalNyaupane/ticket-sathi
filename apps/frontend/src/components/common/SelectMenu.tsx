@@ -13,6 +13,7 @@ import {
 interface props {
   placeholder?: string;
   selectItems: {
+    id:string,
     label: string;
     value: string;
   }[];

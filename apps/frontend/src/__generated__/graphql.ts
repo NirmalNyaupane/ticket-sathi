@@ -446,6 +446,7 @@ export type Query = {
   /** Open */
   getSingleEvent: Event;
   getSingleOrganizerDetails: AdminOrganizerObject;
+  getTicketByEventId?: Maybe<Array<Ticket>>;
   getTicketForParticularEventForAdmin: Event;
   viewEventsTicket: Array<Ticket>;
 };
@@ -493,6 +494,11 @@ export type QueryGetSingleEventArgs = {
 
 export type QueryGetSingleOrganizerDetailsArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetTicketByEventIdArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 
@@ -841,6 +847,13 @@ export type GetAllOpenEventsQueryVariables = Exact<{
 
 
 export type GetAllOpenEventsQuery = { __typename?: 'Query', getAllOpenEvents: { __typename?: 'PaginatedEventObject', data: Array<{ __typename?: 'Event', eventStartDate: any, id: string, name: string, type: EventType, venue: string, description: string, cover: { __typename?: 'Media', name: string } }>, meta: { __typename?: 'Pagination', currentPage: number, lastPage: number, nextPage?: number | null, prevPage?: number | null, totalCount: number } } };
+
+export type GetTicketByEventIdQueryVariables = Exact<{
+  ticketId: Scalars['String']['input'];
+}>;
+
+
+export type GetTicketByEventIdQuery = { __typename?: 'Query', getTicketByEventId?: Array<{ __typename?: 'Ticket', id: string, createdAt: any, deletedAt?: any | null, name: string, isUnlimited: boolean, totalTicket?: number | null, price: number, earlyBirdOffer: boolean, discountType?: DiscountType | null, discount?: number | null, status: TicketStatus, discountEndDate?: any | null }> | null };
 
 
 export const RegisterUserDocument = gql`
@@ -2212,3 +2225,54 @@ export type GetAllOpenEventsQueryHookResult = ReturnType<typeof useGetAllOpenEve
 export type GetAllOpenEventsLazyQueryHookResult = ReturnType<typeof useGetAllOpenEventsLazyQuery>;
 export type GetAllOpenEventsSuspenseQueryHookResult = ReturnType<typeof useGetAllOpenEventsSuspenseQuery>;
 export type GetAllOpenEventsQueryResult = Apollo.QueryResult<GetAllOpenEventsQuery, GetAllOpenEventsQueryVariables>;
+export const GetTicketByEventIdDocument = gql`
+    query GetTicketByEventId($ticketId: String!) {
+  getTicketByEventId(eventId: $ticketId) {
+    id
+    createdAt
+    deletedAt
+    name
+    isUnlimited
+    totalTicket
+    price
+    earlyBirdOffer
+    discountType
+    discount
+    status
+    discountEndDate
+  }
+}
+    `;
+
+/**
+ * __useGetTicketByEventIdQuery__
+ *
+ * To run a query within a React component, call `useGetTicketByEventIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTicketByEventIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTicketByEventIdQuery({
+ *   variables: {
+ *      ticketId: // value for 'ticketId'
+ *   },
+ * });
+ */
+export function useGetTicketByEventIdQuery(baseOptions: Apollo.QueryHookOptions<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables> & ({ variables: GetTicketByEventIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>(GetTicketByEventIdDocument, options);
+      }
+export function useGetTicketByEventIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>(GetTicketByEventIdDocument, options);
+        }
+export function useGetTicketByEventIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>(GetTicketByEventIdDocument, options);
+        }
+export type GetTicketByEventIdQueryHookResult = ReturnType<typeof useGetTicketByEventIdQuery>;
+export type GetTicketByEventIdLazyQueryHookResult = ReturnType<typeof useGetTicketByEventIdLazyQuery>;
+export type GetTicketByEventIdSuspenseQueryHookResult = ReturnType<typeof useGetTicketByEventIdSuspenseQuery>;
+export type GetTicketByEventIdQueryResult = Apollo.QueryResult<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>;

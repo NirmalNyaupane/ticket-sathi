@@ -1,26 +1,53 @@
+"use client";
+import {
+  GetSingleEventQuery,
+  Ticket,
+  useGetTicketByEventIdQuery,
+} from "@/__generated__/graphql";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@radix-ui/react-separator";
-import { CalendarDays, MapPin } from "lucide-react";
-import SelectMenu from "../common/SelectMenu";
-import { Button } from "../ui/button";
-import { GetSingleEventQuery } from "@/__generated__/graphql";
 import { format } from "date-fns";
-import { calculateRemainingDates } from "@/utils/helper";
+import { CalendarDays, MapPin } from "lucide-react";
+import { useRef, useState } from "react";
 import CalculateUpcomingTime from "../common/CalculateUpcomingTime";
-
+import ConditionallyRender from "../common/ConditionallyRender";
+import { Button } from "../ui/button";
 interface Props {
   events: GetSingleEventQuery["getSingleEvent"];
 }
 const EventDetails = ({ events }: Props) => {
+  const [ticketCount, setTicketCount] = useState(1);
 
+  const { data: tickets, loading: ticketLoading } = useGetTicketByEventIdQuery({
+    variables: {
+      ticketId: events.id,
+    },
+  });
 
-  const upcomingDate = calculateRemainingDates(new Date(events.eventStartDate));
-  
+  const [ticketName, setTicketName] = useState(tickets?.getTicketByEventId![0]?.name);
+  const [ticketPrice, setTicketPrice] = useState(tickets?.getTicketByEventId![0]?.price);
+
+  const handleTicketChange = (value: Ticket) => {
+    setTicketName(value.name);
+    setTicketPrice(value.price);
+  };
+
+  if (ticketLoading) {
+    return <p>Loading....</p>;
+  }
+
   return (
     <div className="bg-gray-100 flex flex-col gap-4 px-7 rounded-lg py-6 max-h-[600px]">
       {/* heading */}
       <h2 className="text-2xl font-bold">Event Details</h2>
       <Separator decorative={true} className="bg-gray-400 h-1" />
-      <CalculateUpcomingTime upcomingTime={new Date(events.eventStartDate)}  />
+      <CalculateUpcomingTime upcomingTime={new Date(events.eventStartDate)} />
 
       <Separator decorative={true} className="bg-gray-400 h-1" />
 
@@ -51,28 +78,102 @@ const EventDetails = ({ events }: Props) => {
 
       <div className=" flex flex-col gap-4">
         <h2 className=" text-xl font-bold">Select Tickets</h2>
-        <SelectMenu
-          placeholder={"select tickets"}
-          selectItems={[
-            { label: "VIP", value: "VIP" },
-            { label: "Common", value: "Common" },
-          ]}
+        <ConditionallyRender
+          condition={
+            tickets?.getTicketByEventId &&
+            tickets?.getTicketByEventId?.length > 0
+              ? true
+              : false
+          }
+          show={
+            <Select
+              defaultValue={ticketName}
+              //@ts-ignore ts-ignore
+              onValueChange={handleTicketChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={ticketName ?? "Select a ticket"} />
+              </SelectTrigger>
+              <SelectContent defaultValue={ticketName}>
+                {tickets?.getTicketByEventId?.map((ticket) => {
+                  return (
+                    <SelectItem
+                      key={ticket.id}
+                      // @ts-ignore
+                      value={ticket}
+                      textValue={ticket.name}
+                    >
+                      {ticket.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          }
+          elseShow={<p>There is no ticket to show</p>}
+        />
+        <ConditionallyRender
+          condition={
+            tickets?.getTicketByEventId &&
+            tickets?.getTicketByEventId?.length > 0
+              ? true
+              : false
+          }
+          show={
+            <div className="flex items-center justify-between">
+              <div>
+                <p>{`${ticketCount} X ${ticketName}(s)`} </p>
+                <p className="text-2xl font-bold">{`NPR ${
+                  ticketPrice!  * ticketCount
+                }`}</p>
+              </div>
+
+              <div className=" flex gap-3">
+                <Button
+                  className="font-bold"
+                  onClick={() => {
+                    setTicketCount((prev) => {
+                      if (prev === 1) {
+                        return prev;
+                      } else {
+                        return prev - 1;
+                      }
+                    });
+                  }}
+                >
+                  -
+                </Button>
+                <span className="font-bold text-3xl">{ticketCount}</span>
+                <Button
+                  className="font-bold"
+                  onClick={() => {
+                    setTicketCount((prev) => {
+                      if (prev === 10) {
+                        return prev;
+                      } else {
+                        return prev + 1;
+                      }
+                    });
+                  }}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+          }
         />
 
-        <div className="flex items-center justify-between">
-          <div>
-            <p>1 X VIP TICKETS(s) </p>
-            <p className="text-2xl font-bold">NPR 1695</p>
-          </div>
-
-          <div className=" flex gap-3">
-            <Button className="font-bold">-</Button>
-            <span className="font-bold text-3xl">2</span>
-            <Button className="font-bold">+</Button>
-          </div>
-        </div>
-
-        <Button className="bg-red-500 hover:bg-red-400">Checkout</Button>
+        <Button
+          className="bg-red-500 hover:bg-red-400"
+          disabled={
+            tickets?.getTicketByEventId &&
+            tickets?.getTicketByEventId?.length > 0
+              ? false
+              : true
+          }
+        >
+          Checkout
+        </Button>
       </div>
     </div>
   );

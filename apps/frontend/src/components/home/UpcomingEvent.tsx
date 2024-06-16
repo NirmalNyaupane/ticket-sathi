@@ -2,7 +2,10 @@ import { useGetAllOpenEventsQuery } from "@/__generated__/graphql";
 import HomeCart from "../card/HomeCard";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
-
+import ConditionallyRender from "../common/ConditionallyRender";
+import EventCartSkeleton from "../skeleton/EventCartSkeleton";
+import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
 const UpcomingEvent = () => {
   const { data, loading } = useGetAllOpenEventsQuery({
     variables: {
@@ -13,9 +16,6 @@ const UpcomingEvent = () => {
     },
   });
 
-  if (loading) {
-    return <p>Loading........</p>;
-  }
   return (
     <div className="bg-secondary">
       <div className="section max-width">
@@ -35,22 +35,45 @@ const UpcomingEvent = () => {
             gap: "3rem",
           }}
         >
-          {data?.getAllOpenEvents?.data?.map((singleData, ind) => {
-            return (
-              <HomeCart
-                key={ind + 1 * 98}
-                id={singleData.id}
-                name={singleData.name}
-                image={singleData.cover.name}
-                type={singleData.type}
-                venue={singleData.venue}
-                startDate={format(
-                  new Date(singleData.eventStartDate),
-                  "dd, MMM"
-                )}
-              />
-            );
-          })}
+          <ConditionallyRender
+            condition={loading}
+            show={
+              <>
+                {Array(8)
+                  .fill(0)
+                  .map((_, index) => {
+                    return (
+                      <>
+                        {/* <Skeleton className="h-4 w-[250px] z-50" /> */}
+                        <EventCartSkeleton
+                          key={`home-page-cart-skeleton-${index + 58}`}
+                        />
+                      </>
+                    );
+                  })}
+              </>
+            }
+            elseShow={
+              <>
+                {data?.getAllOpenEvents?.data?.map((singleData, ind) => {
+                  return (
+                    <HomeCart
+                      key={ind + 1 * 98}
+                      id={singleData.id}
+                      name={singleData.name}
+                      image={singleData.cover.name}
+                      type={singleData.type}
+                      venue={singleData.venue}
+                      startDate={format(
+                        new Date(singleData.eventStartDate),
+                        "dd, MMM"
+                      )}
+                    />
+                  );
+                })}
+              </>
+            }
+          />
         </div>
       </div>
     </div>

@@ -277,3 +277,20 @@ query GetAllOpenEvents($data: GlobalEventFilter!) {
     }
   }
 }
+
+query GetTicketByEventId($ticketId: String!) {
+  getTicketByEventId(eventId: $ticketId) {
+    id
+    createdAt
+    deletedAt
+    name
+    isUnlimited
+    totalTicket
+    price
+    earlyBirdOffer
+    discountType
+    discount
+    status
+    discountEndDate
+  }
+}
