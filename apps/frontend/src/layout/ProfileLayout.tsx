@@ -59,10 +59,9 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="rounded-lg pl-4 pt-4 pr-4 pb-1 bg-white">
         <div className="flex items-center gap-3 ">
           {/* profile picture */}
-          <div className="w-[100px] h-[100px] rounded-[50%] relative border-2 ">
+          <div className="w-[100px] h-[100px] rounded-[50%] relative border-2  overflow-hidden">
             <div
               onMouseEnter={() => {
-                console.log("jello");
                 setDeleteBtn(true);
               }}
               onMouseLeave={() => setDeleteBtn(!delteBtn)}

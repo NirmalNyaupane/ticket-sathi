@@ -1,20 +1,21 @@
-import { Separator } from "@radix-ui/react-separator";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { InputField } from "../common/InputField";
-import { Button } from "../ui/button";
 import {
   DiscountType,
-  GetTicketByEventIdQuery,
-  GetTicketByIdQuery,
-  Ticket,
+  GetTicketByIdQuery
 } from "@/__generated__/graphql";
+import { Separator } from "@radix-ui/react-separator";
 import { useSearchParams } from "next/navigation";
 import { memo } from "react";
+import { InputField } from "../common/InputField";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import LoadingButton from "../common/LoadingButton";
 
 const CheckoutSummary = ({
   ticket,
+  loading
 }: {
   ticket: GetTicketByIdQuery["getTicketById"];
+  loading:boolean;
 }) => {
   const serachParam = useSearchParams();
   const quantity = Number(serachParam.get("quantity") ?? 1);
@@ -72,7 +73,7 @@ const CheckoutSummary = ({
           <Button>Apply</Button>
         </div>
         <div className="col-start-1 col-end-12">
-          <Button className="w-full" type="submit">Confirm & Pay</Button>
+          <LoadingButton className="w-full" type="submit" isLoading={loading}>Confirm & Pay</LoadingButton>
         </div>
       </CardContent>
     </Card>
