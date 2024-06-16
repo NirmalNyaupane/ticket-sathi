@@ -4,6 +4,7 @@ import { DiscountType, TicketStatus } from "../../constants/enums/ticket.enum";
 import { CommonEntity } from "../common/common.entity";
 import { Event } from "../event/event.entity";
 import { Coupon } from "../coupons/coupons.entity";
+import { Booking } from "../booking/booking.entity";
 @ObjectType()
 @Entity()
 export class Ticket extends CommonEntity {
@@ -43,9 +44,12 @@ export class Ticket extends CommonEntity {
   @Column({ type: "timestamp", nullable: true })
   discountEndDate: Date;
 
-  @ManyToOne(() => Event, (event) => event.tickets)
+  @ManyToOne(() => Event, (event) => event)
   event: Event;
 
-  @OneToMany(()=>Coupon, (coupon)=>coupon.ticket)
-  coupons:Ticket[]
+  @OneToMany(() => Coupon, (coupon) => coupon.ticket)
+  coupons: Ticket[];
+
+  @OneToMany(() => Booking, (booking) => booking.ticket)
+  bookings: Booking[];
 }

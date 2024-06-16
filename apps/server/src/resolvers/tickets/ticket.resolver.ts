@@ -30,7 +30,10 @@ export class TicketResolver {
     @Arg("data") data: CreateTicketValidator,
     @Ctx() context: Context
   ): Promise<CommonResponse> {
-    const event = await eventService.getEventByEventOrganizerId(context.user?.id!, data.eventId);
+    const event = await eventService.getEventByEventOrganizerId(
+      context.user?.id!,
+      data.eventId
+    );
     console.log(event);
     const response = await ticketService.createTicket(event, data);
     if (response) {
@@ -91,5 +94,10 @@ export class TicketResolver {
     } else {
       throw new InternalServerError();
     }
+  }
+
+  @Query(() => [Ticket], {nullable:true})
+  async getTicketByEventId(@Arg("eventId", () => String) eventId: UUID) {
+    return await ticketService.getTicketByEventId(eventId);
   }
 }

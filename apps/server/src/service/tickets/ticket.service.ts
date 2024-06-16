@@ -1,5 +1,8 @@
 import { DiscountType } from "../../constants/enums/ticket.enum";
-import { InvalidException } from "../../constants/errors/exceptions.error";
+import {
+  InvalidException,
+  NotFoundExceptions,
+} from "../../constants/errors/exceptions.error";
 import { Event } from "../../entities/event/event.entity";
 import { Ticket } from "../../entities/ticket/ticket.entity";
 import { UUID } from "../../types/commontype";
@@ -7,6 +10,7 @@ import {
   CreateTicketValidator,
   UpdateTicketValidator,
 } from "../../validators/tickets/createticket.validator";
+import eventService from "../event/event.service";
 
 class TicketService {
   async createTicket(event: Event, data: CreateTicketValidator) {
@@ -21,7 +25,7 @@ class TicketService {
     } else {
       ticket.totalTicket = data.totalTicket;
     }
-    
+
     if (data.earlyBirdOffer) {
       if (
         data.discountType === DiscountType.PERCENTAGE &&
@@ -83,6 +87,17 @@ class TicketService {
 
   async deleteTicket(ticket: Ticket) {
     return await ticket.remove();
+  }
+
+  async getTicketByEventId(eventId: UUID) {
+    await eventService.getSingleEvent(eventId);
+    return  await Ticket.find({
+      where: {
+        event: {
+          id: eventId,
+        },
+      },
+    });
   }
 }
 export default new TicketService();

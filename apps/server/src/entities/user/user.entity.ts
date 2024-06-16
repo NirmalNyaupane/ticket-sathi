@@ -1,12 +1,14 @@
 import { Field, ObjectType } from "type-graphql";
 import { CommonEntity } from "../common/common.entity";
 import { AuthType, UserRole } from "../../constants/enums/auth.enum";
-import { AfterLoad, Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { AfterLoad, Column, Entity, JoinColumn, ManyToMany, OneToOne } from "typeorm";
 import { OrganizerDetails } from "./organizerDetails.entity";
 import { OrganizerDocuments } from "./organizerDocuments.entity";
 import { Media } from "../media/media.entity";
 import PathUtil from "../../utils/path.util";
 import { EnvConfiguration } from "../../config/env.config";
+import { CONTAINS } from "class-validator";
+import { Booking } from "../booking/booking.entity";
 
 @ObjectType()
 @Entity()
@@ -68,6 +70,8 @@ export class User extends CommonEntity {
   @Column({ nullable: true, select: false, type: "timestamp" })
   otpExpires?: Date;
 
+  @ManyToMany(()=>Booking, (booking)=>booking.user)
+  booking: Booking[]
   @AfterLoad()
   _() {
     if(this.profile){

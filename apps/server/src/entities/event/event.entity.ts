@@ -71,6 +71,9 @@ export class Event extends CommonEntity {
   @OneToMany(() => EventRejectReasons, (reason) => reason.event)
   rejectedReason: EventRejectReasons;
 
+  @OneToMany(() => Ticket, (ticket) => ticket.event)
+  tickets: Ticket[];
+
   @AfterInsert()
   _() {
     //migrate cover
