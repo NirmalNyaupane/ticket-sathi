@@ -133,3 +133,22 @@ mutation UpdateEventStatusByAdmin($data: AdminEventValidator!) {
     status
   }
 }
+
+mutation CreateBooking($data: CreateBookingValidator!) {
+  createBooking(data: $data) {
+    address
+    city
+    createdAt
+    deletedAt
+    email
+    fullName
+    id
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    state
+    totalAmount
+    totalDiscountAmount
+    zipCode
+  }
+}

@@ -39,6 +39,12 @@ export class CreateBookingValidator {
   state: string;
 
   @Field(() => String)
+  @IsNotEmpty()
+  @IsString()
+  @Length(5)
+  country: string;
+
+  @Field(() => String)
   @Field(() => String)
   @IsNotEmpty()
   @IsEmail()

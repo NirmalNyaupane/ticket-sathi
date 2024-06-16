@@ -11,15 +11,24 @@ export class Booking extends CommonEntity {
   @Field(() => String)
   @Column({ nullable: false })
   fullName: string;
+
   @Field(() => String)
   @Column({ nullable: false })
   address: string;
+
   @Field(() => String)
   @Column({ nullable: false })
   city: string;
+
   @Field(() => String)
   @Column({ nullable: false })
   state: string;
+
+
+  @Field(() => String)
+  @Column({ nullable: false })
+  country: string;
+
   @Field(() => String)
   @Column({ nullable: false })
   email: string;

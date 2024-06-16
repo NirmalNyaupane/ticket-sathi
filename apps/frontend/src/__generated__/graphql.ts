@@ -59,6 +59,25 @@ export enum AuthType {
   Traditional = 'TRADITIONAL'
 }
 
+export type Booking = {
+  __typename?: 'Booking';
+  address: Scalars['String']['output'];
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  invoiceNumber: Scalars['String']['output'];
+  isPaymentComplete: Scalars['Boolean']['output'];
+  paymentMethod: PaymentMethod;
+  state: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+  totalDiscountAmount: Scalars['Float']['output'];
+  zipCode: Scalars['String']['output'];
+};
+
 export type Category = {
   __typename?: 'Category';
   createdAt: Scalars['DateTimeISO']['output'];
@@ -100,6 +119,20 @@ export type CouponValidator = {
   ticketId: Scalars['String']['input'];
   totalCoupons?: InputMaybe<Scalars['Float']['input']>;
   type: CouponType;
+};
+
+export type CreateBookingValidator = {
+  address: Scalars['String']['input'];
+  city: Scalars['String']['input'];
+  country: Scalars['String']['input'];
+  couponId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  fullName: Scalars['String']['input'];
+  paymentMethod: PaymentMethod;
+  state: Scalars['String']['input'];
+  ticketId: Scalars['String']['input'];
+  ticketQuantity: Scalars['Float']['input'];
+  zipCode: Scalars['String']['input'];
 };
 
 export type CreateCategoryValidation = {
@@ -234,6 +267,7 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   changeOrganizerStatus: CommonResponse;
+  createBooking: Booking;
   /** Role: Organizer */
   createCategory: CommonResponse;
   createCoupon: CommonResponse;
@@ -261,6 +295,11 @@ export type Mutation = {
 
 export type MutationChangeOrganizerStatusArgs = {
   data: AdminOrganizerValidator;
+};
+
+
+export type MutationCreateBookingArgs = {
+  data: CreateBookingValidator;
 };
 
 
@@ -432,6 +471,10 @@ export type Pagination = {
   totalCount: Scalars['Int']['output'];
 };
 
+export enum PaymentMethod {
+  Esewa = 'ESEWA'
+}
+
 export type Query = {
   __typename?: 'Query';
   getAllEvents: PaginatedEventObject;
@@ -447,6 +490,7 @@ export type Query = {
   getSingleEvent: Event;
   getSingleOrganizerDetails: AdminOrganizerObject;
   getTicketByEventId?: Maybe<Array<Ticket>>;
+  getTicketById: Ticket;
   getTicketForParticularEventForAdmin: Event;
   viewEventsTicket: Array<Ticket>;
 };
@@ -499,6 +543,11 @@ export type QueryGetSingleOrganizerDetailsArgs = {
 
 export type QueryGetTicketByEventIdArgs = {
   eventId: Scalars['String']['input'];
+};
+
+
+export type QueryGetTicketByIdArgs = {
+  ticketId: Scalars['String']['input'];
 };
 
 
@@ -768,6 +817,13 @@ export type UpdateEventStatusByAdminMutationVariables = Exact<{
 
 export type UpdateEventStatusByAdminMutation = { __typename?: 'Mutation', updateEventStatusByAdmin: { __typename?: 'CommonResponse', message: string, status: string } };
 
+export type CreateBookingMutationVariables = Exact<{
+  data: CreateBookingValidator;
+}>;
+
+
+export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'Booking', address: string, city: string, createdAt: any, deletedAt?: any | null, email: string, fullName: string, id: string, invoiceNumber: string, isPaymentComplete: boolean, paymentMethod: PaymentMethod, state: string, totalAmount: number, totalDiscountAmount: number, zipCode: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -854,6 +910,13 @@ export type GetTicketByEventIdQueryVariables = Exact<{
 
 
 export type GetTicketByEventIdQuery = { __typename?: 'Query', getTicketByEventId?: Array<{ __typename?: 'Ticket', id: string, createdAt: any, deletedAt?: any | null, name: string, isUnlimited: boolean, totalTicket?: number | null, price: number, earlyBirdOffer: boolean, discountType?: DiscountType | null, discount?: number | null, status: TicketStatus, discountEndDate?: any | null }> | null };
+
+export type GetTicketByIdQueryVariables = Exact<{
+  ticketId: Scalars['String']['input'];
+}>;
+
+
+export type GetTicketByIdQuery = { __typename?: 'Query', getTicketById: { __typename?: 'Ticket', discount?: number | null, discountEndDate?: any | null, discountType?: DiscountType | null, earlyBirdOffer: boolean, id: string, isUnlimited: boolean, name: string, price: number, status: TicketStatus, totalTicket?: number | null } };
 
 
 export const RegisterUserDocument = gql`
@@ -1536,6 +1599,52 @@ export function useUpdateEventStatusByAdminMutation(baseOptions?: Apollo.Mutatio
 export type UpdateEventStatusByAdminMutationHookResult = ReturnType<typeof useUpdateEventStatusByAdminMutation>;
 export type UpdateEventStatusByAdminMutationResult = Apollo.MutationResult<UpdateEventStatusByAdminMutation>;
 export type UpdateEventStatusByAdminMutationOptions = Apollo.BaseMutationOptions<UpdateEventStatusByAdminMutation, UpdateEventStatusByAdminMutationVariables>;
+export const CreateBookingDocument = gql`
+    mutation CreateBooking($data: CreateBookingValidator!) {
+  createBooking(data: $data) {
+    address
+    city
+    createdAt
+    deletedAt
+    email
+    fullName
+    id
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    state
+    totalAmount
+    totalDiscountAmount
+    zipCode
+  }
+}
+    `;
+export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;
+
+/**
+ * __useCreateBookingMutation__
+ *
+ * To run a mutation, you first call `useCreateBookingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBookingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBookingMutation, { data, loading, error }] = useCreateBookingMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateBookingMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookingMutation, CreateBookingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBookingMutation, CreateBookingMutationVariables>(CreateBookingDocument, options);
+      }
+export type CreateBookingMutationHookResult = ReturnType<typeof useCreateBookingMutation>;
+export type CreateBookingMutationResult = Apollo.MutationResult<CreateBookingMutation>;
+export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<CreateBookingMutation, CreateBookingMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -2276,3 +2385,52 @@ export type GetTicketByEventIdQueryHookResult = ReturnType<typeof useGetTicketBy
 export type GetTicketByEventIdLazyQueryHookResult = ReturnType<typeof useGetTicketByEventIdLazyQuery>;
 export type GetTicketByEventIdSuspenseQueryHookResult = ReturnType<typeof useGetTicketByEventIdSuspenseQuery>;
 export type GetTicketByEventIdQueryResult = Apollo.QueryResult<GetTicketByEventIdQuery, GetTicketByEventIdQueryVariables>;
+export const GetTicketByIdDocument = gql`
+    query GetTicketById($ticketId: String!) {
+  getTicketById(ticketId: $ticketId) {
+    discount
+    discountEndDate
+    discountType
+    earlyBirdOffer
+    id
+    isUnlimited
+    name
+    price
+    status
+    totalTicket
+  }
+}
+    `;
+
+/**
+ * __useGetTicketByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTicketByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTicketByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTicketByIdQuery({
+ *   variables: {
+ *      ticketId: // value for 'ticketId'
+ *   },
+ * });
+ */
+export function useGetTicketByIdQuery(baseOptions: Apollo.QueryHookOptions<GetTicketByIdQuery, GetTicketByIdQueryVariables> & ({ variables: GetTicketByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTicketByIdQuery, GetTicketByIdQueryVariables>(GetTicketByIdDocument, options);
+      }
+export function useGetTicketByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTicketByIdQuery, GetTicketByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTicketByIdQuery, GetTicketByIdQueryVariables>(GetTicketByIdDocument, options);
+        }
+export function useGetTicketByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTicketByIdQuery, GetTicketByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTicketByIdQuery, GetTicketByIdQueryVariables>(GetTicketByIdDocument, options);
+        }
+export type GetTicketByIdQueryHookResult = ReturnType<typeof useGetTicketByIdQuery>;
+export type GetTicketByIdLazyQueryHookResult = ReturnType<typeof useGetTicketByIdLazyQuery>;
+export type GetTicketByIdSuspenseQueryHookResult = ReturnType<typeof useGetTicketByIdSuspenseQuery>;
+export type GetTicketByIdQueryResult = Apollo.QueryResult<GetTicketByIdQuery, GetTicketByIdQueryVariables>;

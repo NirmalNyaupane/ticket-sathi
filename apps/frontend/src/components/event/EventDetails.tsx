@@ -14,28 +14,42 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { format } from "date-fns";
 import { CalendarDays, MapPin } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CalculateUpcomingTime from "../common/CalculateUpcomingTime";
 import ConditionallyRender from "../common/ConditionallyRender";
 import { Button } from "../ui/button";
+import { useSelector } from "react-redux";
+import { AuthState } from "@/redux/slices/auth.slice";
+import useCustomToast from "@/hooks/useToast";
+import { RootState } from "@/redux/store";
 interface Props {
   events: GetSingleEventQuery["getSingleEvent"];
 }
 const EventDetails = ({ events }: Props) => {
-  const [ticketCount, setTicketCount] = useState(1);
+  const isUserLoggedIn = useSelector((state:RootState) => state.auth.isUserLogin);
 
+  const [ticketCount, setTicketCount] = useState(1);
+  const router = useRouter();
+  const toast = useCustomToast();
   const { data: tickets, loading: ticketLoading } = useGetTicketByEventIdQuery({
     variables: {
       ticketId: events.id,
     },
   });
 
-  const [ticketName, setTicketName] = useState(tickets?.getTicketByEventId![0]?.name);
-  const [ticketPrice, setTicketPrice] = useState(tickets?.getTicketByEventId![0]?.price);
+  const [ticketName, setTicketName] = useState(
+    tickets?.getTicketByEventId![0]?.name
+  );
+  const [ticketPrice, setTicketPrice] = useState(
+    tickets?.getTicketByEventId![0]?.price
+  );
+  const [ticketId, setTicketId] = useState(tickets?.getTicketByEventId![0]?.id)
 
   const handleTicketChange = (value: Ticket) => {
     setTicketName(value.name);
     setTicketPrice(value.price);
+    setTicketId(value.id);
   };
 
   if (ticketLoading) {
@@ -124,7 +138,7 @@ const EventDetails = ({ events }: Props) => {
               <div>
                 <p>{`${ticketCount} X ${ticketName}(s)`} </p>
                 <p className="text-2xl font-bold">{`NPR ${
-                  ticketPrice!  * ticketCount
+                  ticketPrice! * ticketCount
                 }`}</p>
               </div>
 
@@ -171,6 +185,13 @@ const EventDetails = ({ events }: Props) => {
               ? false
               : true
           }
+          onClick={() => {
+            if (!isUserLoggedIn) {
+              toast.error("You need to logged in for checkout");
+              return;
+            }
+            router.push(`/checkout/${ticketId}?quantity=${ticketCount}`);
+          }}
         >
           Checkout
         </Button>

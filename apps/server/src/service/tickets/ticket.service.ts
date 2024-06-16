@@ -1,4 +1,4 @@
-import { DiscountType } from "../../constants/enums/ticket.enum";
+import { DiscountType, TicketStatus } from "../../constants/enums/ticket.enum";
 import {
   InvalidException,
   NotFoundExceptions,
@@ -91,13 +91,28 @@ class TicketService {
 
   async getTicketByEventId(eventId: UUID) {
     await eventService.getSingleEvent(eventId);
-    return  await Ticket.find({
+    return await Ticket.find({
       where: {
+        status: TicketStatus.ACTIVE,
         event: {
           id: eventId,
         },
       },
     });
+  }
+
+  async getTicketById(id: UUID) {
+    const ticket = await Ticket.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!ticket) {
+      throw new InvalidException("ticket is not found");
+    }
+
+    return ticket;
   }
 }
 export default new TicketService();

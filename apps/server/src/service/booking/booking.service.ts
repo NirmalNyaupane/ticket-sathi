@@ -73,7 +73,7 @@ class BookingService {
 
     booking.user = user;
     booking.ticket = ticket;
-
+    booking.country = data.country;
     const savedBooking =  await booking.save();
     console.log(savedBooking);
     return savedBooking;

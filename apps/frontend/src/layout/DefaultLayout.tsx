@@ -59,8 +59,8 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main>
-      <Toaster />
       <NextTopLoader color="rgba(241,0,0,0.5)" />
+      <Toaster />
       {children}
     </main>
   );

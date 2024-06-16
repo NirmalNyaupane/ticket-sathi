@@ -294,3 +294,18 @@ query GetTicketByEventId($ticketId: String!) {
     discountEndDate
   }
 }
+
+query GetTicketById($ticketId: String!) {
+  getTicketById(ticketId: $ticketId) {
+    discount
+    discountEndDate
+    discountType
+    earlyBirdOffer
+    id
+    isUnlimited
+    name
+    price
+    status
+    totalTicket
+  }
+}

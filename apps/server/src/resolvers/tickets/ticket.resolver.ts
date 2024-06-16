@@ -100,4 +100,9 @@ export class TicketResolver {
   async getTicketByEventId(@Arg("eventId", () => String) eventId: UUID) {
     return await ticketService.getTicketByEventId(eventId);
   }
+
+  @Query(()=>Ticket)
+  async getTicketById(@Arg("ticketId", () => String) ticketId: UUID){
+    return await ticketService.getTicketById(ticketId);
+  }
 }
