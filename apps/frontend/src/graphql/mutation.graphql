@@ -136,19 +136,35 @@ mutation UpdateEventStatusByAdmin($data: AdminEventValidator!) {
 
 mutation CreateBooking($data: CreateBookingValidator!) {
   createBooking(data: $data) {
-    address
-    city
-    createdAt
-    deletedAt
-    email
-    fullName
-    id
-    invoiceNumber
-    isPaymentComplete
-    paymentMethod
-    state
-    totalAmount
-    totalDiscountAmount
-    zipCode
+    booking {
+      id
+      createdAt
+      deletedAt
+      fullName
+      address
+      city
+      state
+      country
+      email
+      zipCode
+      invoiceNumber
+      isPaymentComplete
+      paymentMethod
+      totalAmount
+      totalDiscountAmount
+    }
+    esewaPayload {
+      amount
+      failure_url
+      product_delivery_charge
+      product_service_charge
+      product_code
+      signature
+      signed_field_names
+      success_url
+      tax_amount
+      total_amount
+      transaction_uuid
+    }
   }
 }

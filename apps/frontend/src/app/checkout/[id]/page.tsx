@@ -17,6 +17,7 @@ type FormData = z.infer<typeof bookingValidator>;
 import { PaymentMethod as PaymentMethodEnum } from "@/__generated__/graphql";
 import useCustomToast from "@/hooks/useToast";
 import { showError } from "@/utils/helper";
+import { handleEsewaPayment } from "@/payment/esewa.payment";
 const CheckOut = () => {
   const params = useParams();
   const serachParam = useSearchParams();
@@ -25,6 +26,13 @@ const CheckOut = () => {
   const form = useForm<FormData>({
     defaultValues: {
       paymentMethod: PaymentMethodEnum.Esewa,
+      fullName:"Nirmal Neuapne",
+      email:"neuapnenirmal@gmail.com",
+      address:"Bharatpur nepal",
+      city:"Bharatpur",
+      country:"Nepal",
+      state:"Bagmati",
+      zipCode:"243443"
     },
     resolver: zodResolver(bookingValidator),
   });
@@ -38,6 +46,7 @@ const CheckOut = () => {
   const [mutation, { loading: createLoading }] = useCreateBookingMutation({
     onCompleted(data, clientOptions) {
       toast.sucess("Order is booked redirecting to the payment section");
+      handleEsewaPayment(data.createBooking);
     },
   });
 

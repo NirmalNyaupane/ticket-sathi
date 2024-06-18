@@ -78,6 +78,12 @@ export type Booking = {
   zipCode: Scalars['String']['output'];
 };
 
+export type BookingObjectType = {
+  __typename?: 'BookingObjectType';
+  booking: Booking;
+  esewaPayload: EsewaPayload;
+};
+
 export type Category = {
   __typename?: 'Category';
   createdAt: Scalars['DateTimeISO']['output'];
@@ -174,6 +180,21 @@ export enum DiscountType {
   Percentage = 'PERCENTAGE'
 }
 
+export type EsewaPayload = {
+  __typename?: 'EsewaPayload';
+  amount: Scalars['String']['output'];
+  failure_url: Scalars['String']['output'];
+  product_code: Scalars['String']['output'];
+  product_delivery_charge: Scalars['String']['output'];
+  product_service_charge: Scalars['String']['output'];
+  signature: Scalars['String']['output'];
+  signed_field_names: Scalars['String']['output'];
+  success_url: Scalars['String']['output'];
+  tax_amount: Scalars['String']['output'];
+  total_amount: Scalars['String']['output'];
+  transaction_uuid: Scalars['String']['output'];
+};
+
 export type Event = {
   __typename?: 'Event';
   cover: Media;
@@ -267,7 +288,7 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   changeOrganizerStatus: CommonResponse;
-  createBooking: Booking;
+  createBooking: BookingObjectType;
   /** Role: Organizer */
   createCategory: CommonResponse;
   createCoupon: CommonResponse;
@@ -822,7 +843,7 @@ export type CreateBookingMutationVariables = Exact<{
 }>;
 
 
-export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'Booking', address: string, city: string, createdAt: any, deletedAt?: any | null, email: string, fullName: string, id: string, invoiceNumber: string, isPaymentComplete: boolean, paymentMethod: PaymentMethod, state: string, totalAmount: number, totalDiscountAmount: number, zipCode: string } };
+export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'BookingObjectType', booking: { __typename?: 'Booking', id: string, createdAt: any, deletedAt?: any | null, fullName: string, address: string, city: string, state: string, country: string, email: string, zipCode: string, invoiceNumber: string, isPaymentComplete: boolean, paymentMethod: PaymentMethod, totalAmount: number, totalDiscountAmount: number }, esewaPayload: { __typename?: 'EsewaPayload', amount: string, failure_url: string, product_delivery_charge: string, product_service_charge: string, product_code: string, signature: string, signed_field_names: string, success_url: string, tax_amount: string, total_amount: string, transaction_uuid: string } } };
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1602,20 +1623,36 @@ export type UpdateEventStatusByAdminMutationOptions = Apollo.BaseMutationOptions
 export const CreateBookingDocument = gql`
     mutation CreateBooking($data: CreateBookingValidator!) {
   createBooking(data: $data) {
-    address
-    city
-    createdAt
-    deletedAt
-    email
-    fullName
-    id
-    invoiceNumber
-    isPaymentComplete
-    paymentMethod
-    state
-    totalAmount
-    totalDiscountAmount
-    zipCode
+    booking {
+      id
+      createdAt
+      deletedAt
+      fullName
+      address
+      city
+      state
+      country
+      email
+      zipCode
+      invoiceNumber
+      isPaymentComplete
+      paymentMethod
+      totalAmount
+      totalDiscountAmount
+    }
+    esewaPayload {
+      amount
+      failure_url
+      product_delivery_charge
+      product_service_charge
+      product_code
+      signature
+      signed_field_names
+      success_url
+      tax_amount
+      total_amount
+      transaction_uuid
+    }
   }
 }
     `;

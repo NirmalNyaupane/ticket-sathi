@@ -89,6 +89,9 @@ importers:
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.45)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -159,6 +162,9 @@ importers:
       '@types/apollo-upload-client':
         specifier: ^18.0.0
         version: 18.0.0(@types/react@18.2.45)(graphql-ws@5.15.0(graphql@16.8.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@types/node':
         specifier: ^20.10.5
         version: 20.10.5
@@ -1536,6 +1542,9 @@ packages:
   '@types/apollo-upload-client@18.0.0':
     resolution: {integrity: sha512-cMgITNemktxasqvp6jiPj15dv84n3FTMvMoYBP1+xonDS+0l6JygIJrj2LJh85rShRzTOOkrElrAsCXXARa3KA==}
 
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+
   '@types/extract-files@13.0.1':
     resolution: {integrity: sha512-/fRbzc2lAd7jDJSSnxWiUyXWjdUZZ4HbISLJzVgt1AvrdOa7U49YRPcvuCUywkmURZ7uwJOheDjx19itbQ5KvA==}
 
@@ -1994,6 +2003,9 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -5665,6 +5677,8 @@ snapshots:
       - react-dom
       - subscriptions-transport-ws
 
+  '@types/crypto-js@4.2.2': {}
+
   '@types/extract-files@13.0.1': {}
 
   '@types/js-yaml@4.0.9': {}
@@ -6234,6 +6248,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   cssesc@3.0.0: {}
 

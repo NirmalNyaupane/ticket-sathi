@@ -6,10 +6,11 @@ import { RequestValidator } from "../../middlewares/requestValidator.middleware"
 import { CreateBookingValidator } from "../../validators/booking/booking.validator";
 import { Context } from "../../types/context.type";
 import bookingService from "../../service/booking/booking.service";
+import { BookingObjectType } from "../../schemas/booking/booking.schema";
 
 @Resolver()
 export class BookingResolver {
-  @Mutation(() => Booking)
+  @Mutation(() => BookingObjectType)
   @UseMiddleware(authentication([UserRole.USER]))
   @UseMiddleware(RequestValidator.validate(CreateBookingValidator))
   async createBooking(

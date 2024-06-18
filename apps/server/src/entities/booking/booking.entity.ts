@@ -24,7 +24,6 @@ export class Booking extends CommonEntity {
   @Column({ nullable: false })
   state: string;
 
-
   @Field(() => String)
   @Column({ nullable: false })
   country: string;
@@ -50,9 +49,11 @@ export class Booking extends CommonEntity {
     default: PaymentMethod.ESEWA,
   })
   paymentMethod: PaymentMethod;
+
   @Field(() => Number)
   @Column({ nullable: false })
   totalAmount: number;
+
   @Field(() => Number)
   @Column({ nullable: false })
   totalDiscountAmount: number;
