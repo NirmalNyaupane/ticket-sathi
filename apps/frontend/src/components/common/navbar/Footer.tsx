@@ -22,7 +22,7 @@ const Footer = () => {
         {/* second */}
 
         <div className="text-white space-y-3">
-          <h2 className=" text-xl font-bold">Company</h2>
+          {/* <h2 className=" text-xl font-bold">Company</h2> */}
           <ul className="space-y-3">
             {fistFooterData.map((singleFooterData) => {
               return (
@@ -55,7 +55,7 @@ const Footer = () => {
 
         {/* forth */}
 
-        <div className="text-white space-y-3">
+        {/* <div className="text-white space-y-3">
           <h2 className=" text-xl font-bold">Company</h2>
           <ul className="space-y-3">
             {fistFooterData.map((singleFooterData) => {
@@ -68,7 +68,7 @@ const Footer = () => {
               );
             })}
           </ul>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

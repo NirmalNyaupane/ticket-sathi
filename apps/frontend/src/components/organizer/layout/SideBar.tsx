@@ -16,7 +16,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
-
+import { FaSalesforce } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { logoutReducer } from "@/redux/slices/auth.slice";
 type ChildrenItems = {
   name: string;
   links: string[];
@@ -38,6 +40,7 @@ type SideBarItems = {
 );
 
 const SideBar = () => {
+  const dispatch = useDispatch();
   const sidebarItems: SideBarItems[] = [
     {
       name: "Dashboard",
@@ -86,35 +89,41 @@ const SideBar = () => {
       ],
     },
     {
-      name: "Employees",
-      icon: (
-        <span className="text-[1.75rem]">
-          <BsPeopleFill />
-        </span>
-      ),
+      name: "Sales",
+      icon: <FaSalesforce />,
+      links: ["/organizer/dashboard/sales"],
       hasChildren: false,
-      links: ["/organizer/dashboard/employees"],
     },
-    {
-      name: "Coupons",
-      icon: (
-        <span className="text-[1.75rem]">
-          <BiSolidCoupon />
-        </span>
-      ),
-      hasChildren: false,
-      links: ["/organizer/employees"],
-    },
-    {
-      name: "Chat",
-      icon: (
-        <span className="text-[1.75rem]">
-          <BiChat />
-        </span>
-      ),
-      hasChildren: false,
-      links: ["/organizer/employees"],
-    },
+    // {
+    //   name: "Employees",
+    //   icon: (
+    //     <span className="text-[1.75rem]">
+    //       <BsPeopleFill />
+    //     </span>
+    //   ),
+    //   hasChildren: false,
+    //   links: ["/organizer/dashboard/employees"],
+    // },
+    // {
+    //   name: "Coupons",
+    //   icon: (
+    //     <span className="text-[1.75rem]">
+    //       <BiSolidCoupon />
+    //     </span>
+    //   ),
+    //   hasChildren: false,
+    //   links: ["/organizer/employees"],
+    // },
+    // {
+    //   name: "Chat",
+    //   icon: (
+    //     <span className="text-[1.75rem]">
+    //       <BiChat />
+    //     </span>
+    //   ),
+    //   hasChildren: false,
+    //   links: ["/organizer/employees"],
+    // },
   ];
 
   return (
@@ -174,6 +183,10 @@ const SideBar = () => {
         className={
           "flex items-center gap-3 px-2 rounded-md hover:bg-gray-200  py-2 mr-3 transition-all cursor-pointer mt-auto text-red-500 font-medium w-full"
         }
+        onClick={() => {
+          console.log("Call logout");
+          dispatch(logoutReducer());
+        }}
       >
         <div className="text-[1.75rem]">
           <CiLogout />

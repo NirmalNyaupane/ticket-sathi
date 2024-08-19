@@ -75,7 +75,7 @@ const Login = ({ user }: { user: UserRole }) => {
       },
     }).catch((e) => {
       toast.error(showError(e));
-      if (e.networkError.statusCode === 401) {
+      if (e?.networkError?.statusCode === 401) {
         router.push(
           `/otp/?email=${getValues("email")}&action=${OtpType.NewRegister}`
         );
@@ -133,7 +133,7 @@ const Login = ({ user }: { user: UserRole }) => {
         Login
       </LoadingButton>
 
-      <ConditionallyRender
+      {/* <ConditionallyRender
         condition={user === UserRole.User}
         show={
           <>
@@ -150,7 +150,7 @@ const Login = ({ user }: { user: UserRole }) => {
             </div>
           </>
         }
-      />
+      /> */}
     </form>
   );
 };

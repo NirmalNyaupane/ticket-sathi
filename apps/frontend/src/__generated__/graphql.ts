@@ -24,6 +24,19 @@ export type AccessTokenResponse = {
   accessToken: Scalars['String']['output'];
 };
 
+export type AdminAnalytics = {
+  __typename?: 'AdminAnalytics';
+  acceptedOrganziers: Scalars['Float']['output'];
+  pendingOrganizers: Scalars['Float']['output'];
+  rejectedOrganizers: Scalars['Float']['output'];
+  totalActiveEvents: Scalars['Float']['output'];
+  totalEvents: Scalars['Float']['output'];
+  totalOrganizers: Scalars['Float']['output'];
+  totalPendingEvents: Scalars['Float']['output'];
+  totalRejectedEvents: Scalars['Float']['output'];
+  totalSales: Scalars['Float']['output'];
+};
+
 export type AdminEventValidator = {
   eventId: Scalars['String']['input'];
   rejectedReason?: InputMaybe<Scalars['String']['input']>;
@@ -59,6 +72,23 @@ export enum AuthType {
   Traditional = 'TRADITIONAL'
 }
 
+export type BookedUser = {
+  __typename?: 'BookedUser';
+  address?: Maybe<Scalars['String']['output']>;
+  authType: AuthType;
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  organizerDetails?: Maybe<OrganizerDetails>;
+  organizerDocuments?: Maybe<OrganizerDocuments>;
+  phone: Scalars['String']['output'];
+  profile?: Maybe<Media>;
+  role: UserRole;
+};
+
 export type Booking = {
   __typename?: 'Booking';
   address: Scalars['String']['output'];
@@ -72,6 +102,7 @@ export type Booking = {
   invoiceNumber: Scalars['String']['output'];
   isPaymentComplete: Scalars['Boolean']['output'];
   paymentMethod: PaymentMethod;
+  quantity: Scalars['String']['output'];
   state: Scalars['String']['output'];
   totalAmount: Scalars['Float']['output'];
   totalDiscountAmount: Scalars['Float']['output'];
@@ -460,6 +491,16 @@ export enum OrganizerStatus {
   Rejected = 'REJECTED'
 }
 
+export type OrganzierAnalytics = {
+  __typename?: 'OrganzierAnalytics';
+  salesTicket: Scalars['Float']['output'];
+  totalActiveEvents: Scalars['Float']['output'];
+  totalCategory: Scalars['Float']['output'];
+  totalEvents: Scalars['Float']['output'];
+  totalRejectedEvents: Scalars['Float']['output'];
+  totalSales: Scalars['Float']['output'];
+};
+
 export type OtpVerifyValidator = {
   email: Scalars['String']['input'];
   otp: Scalars['String']['input'];
@@ -498,14 +539,18 @@ export enum PaymentMethod {
 
 export type Query = {
   __typename?: 'Query';
+  getAdminAnalytics: AdminAnalytics;
   getAllEvents: PaginatedEventObject;
   getAllOpenEvents: PaginatedEventObject;
   getAllOrganizer: PaginatedOrganizer;
+  getBookedTicket: Array<UserTicket>;
   getCommission: Array<CommissionEntity>;
   getCurrentUser: UserResponse;
   getMyCategory: PaginatedOrganizerCategory;
   getMyEvents: PaginatedEventObject;
+  getMySales: Array<UserTicket>;
   getMyTrashedCategory: PaginatedOrganizerCategory;
+  getOrganizerAnalytics: OrganzierAnalytics;
   getParticularEventForAdmin: Event;
   /** Open */
   getSingleEvent: Event;
@@ -630,6 +675,23 @@ export type Ticket = {
   totalTicket?: Maybe<Scalars['Int']['output']>;
 };
 
+export type TicketBookedObject = {
+  __typename?: 'TicketBookedObject';
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  discount?: Maybe<Scalars['Int']['output']>;
+  discountEndDate?: Maybe<Scalars['DateTimeISO']['output']>;
+  discountType?: Maybe<DiscountType>;
+  earlyBirdOffer: Scalars['Boolean']['output'];
+  event?: Maybe<Event>;
+  id: Scalars['String']['output'];
+  isUnlimited: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['Float']['output'];
+  status: TicketStatus;
+  totalTicket?: Maybe<Scalars['Int']['output']>;
+};
+
 /** This is an enum that defines ticket status */
 export enum TicketStatus {
   Active = 'ACTIVE',
@@ -695,6 +757,28 @@ export enum UserRole {
   Organizer = 'ORGANIZER',
   User = 'USER'
 }
+
+export type UserTicket = {
+  __typename?: 'UserTicket';
+  address: Scalars['String']['output'];
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  invoiceNumber: Scalars['String']['output'];
+  isPaymentComplete: Scalars['Boolean']['output'];
+  paymentMethod: PaymentMethod;
+  quantity: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+  ticket?: Maybe<TicketBookedObject>;
+  totalAmount: Scalars['Float']['output'];
+  totalDiscountAmount: Scalars['Float']['output'];
+  user?: Maybe<BookedUser>;
+  zipCode: Scalars['String']['output'];
+};
 
 export type RegisterUserMutationVariables = Exact<{
   data: RegisterUserSchema;
@@ -938,6 +1022,26 @@ export type GetTicketByIdQueryVariables = Exact<{
 
 
 export type GetTicketByIdQuery = { __typename?: 'Query', getTicketById: { __typename?: 'Ticket', discount?: number | null, discountEndDate?: any | null, discountType?: DiscountType | null, earlyBirdOffer: boolean, id: string, isUnlimited: boolean, name: string, price: number, status: TicketStatus, totalTicket?: number | null } };
+
+export type GetBookedTicketQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBookedTicketQuery = { __typename?: 'Query', getBookedTicket: Array<{ __typename?: 'UserTicket', id: string, createdAt: any, deletedAt?: any | null, fullName: string, address: string, city: string, quantity: string, state: string, country: string, email: string, zipCode: string, invoiceNumber: string, isPaymentComplete: boolean, paymentMethod: PaymentMethod, totalAmount: number, totalDiscountAmount: number, user?: { __typename?: 'BookedUser', email: string } | null, ticket?: { __typename?: 'TicketBookedObject', id: string, createdAt: any, deletedAt?: any | null, name: string, isUnlimited: boolean, totalTicket?: number | null, price: number, earlyBirdOffer: boolean, discountType?: DiscountType | null, discount?: number | null, status: TicketStatus, discountEndDate?: any | null, event?: { __typename?: 'Event', id: string, name: string } | null } | null }> };
+
+export type GetMySalesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMySalesQuery = { __typename?: 'Query', getMySales: Array<{ __typename?: 'UserTicket', id: string, createdAt: any, deletedAt?: any | null, fullName: string, address: string, city: string, quantity: string, state: string, country: string, email: string, zipCode: string, invoiceNumber: string, isPaymentComplete: boolean, paymentMethod: PaymentMethod, totalAmount: number, totalDiscountAmount: number, user?: { __typename?: 'BookedUser', fullName: string, email: string } | null, ticket?: { __typename?: 'TicketBookedObject', name: string, event?: { __typename?: 'Event', name: string } | null } | null }> };
+
+export type GetOrganizerAnalyticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrganizerAnalyticsQuery = { __typename?: 'Query', getOrganizerAnalytics: { __typename?: 'OrganzierAnalytics', totalActiveEvents: number, totalCategory: number, totalEvents: number, totalRejectedEvents: number, totalSales: number, salesTicket: number } };
+
+export type GetAdminAnalyticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAdminAnalyticsQuery = { __typename?: 'Query', getAdminAnalytics: { __typename?: 'AdminAnalytics', totalActiveEvents: number, totalEvents: number, totalRejectedEvents: number, totalSales: number, totalPendingEvents: number, totalOrganizers: number, rejectedOrganizers: number, acceptedOrganziers: number, pendingOrganizers: number } };
 
 
 export const RegisterUserDocument = gql`
@@ -2471,3 +2575,233 @@ export type GetTicketByIdQueryHookResult = ReturnType<typeof useGetTicketByIdQue
 export type GetTicketByIdLazyQueryHookResult = ReturnType<typeof useGetTicketByIdLazyQuery>;
 export type GetTicketByIdSuspenseQueryHookResult = ReturnType<typeof useGetTicketByIdSuspenseQuery>;
 export type GetTicketByIdQueryResult = Apollo.QueryResult<GetTicketByIdQuery, GetTicketByIdQueryVariables>;
+export const GetBookedTicketDocument = gql`
+    query GetBookedTicket {
+  getBookedTicket {
+    id
+    createdAt
+    deletedAt
+    fullName
+    address
+    city
+    quantity
+    state
+    country
+    email
+    zipCode
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    totalAmount
+    totalDiscountAmount
+    user {
+      email
+    }
+    ticket {
+      id
+      createdAt
+      deletedAt
+      name
+      isUnlimited
+      totalTicket
+      price
+      earlyBirdOffer
+      discountType
+      discount
+      status
+      discountEndDate
+      event {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBookedTicketQuery__
+ *
+ * To run a query within a React component, call `useGetBookedTicketQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBookedTicketQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBookedTicketQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBookedTicketQuery(baseOptions?: Apollo.QueryHookOptions<GetBookedTicketQuery, GetBookedTicketQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBookedTicketQuery, GetBookedTicketQueryVariables>(GetBookedTicketDocument, options);
+      }
+export function useGetBookedTicketLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBookedTicketQuery, GetBookedTicketQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBookedTicketQuery, GetBookedTicketQueryVariables>(GetBookedTicketDocument, options);
+        }
+export function useGetBookedTicketSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBookedTicketQuery, GetBookedTicketQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBookedTicketQuery, GetBookedTicketQueryVariables>(GetBookedTicketDocument, options);
+        }
+export type GetBookedTicketQueryHookResult = ReturnType<typeof useGetBookedTicketQuery>;
+export type GetBookedTicketLazyQueryHookResult = ReturnType<typeof useGetBookedTicketLazyQuery>;
+export type GetBookedTicketSuspenseQueryHookResult = ReturnType<typeof useGetBookedTicketSuspenseQuery>;
+export type GetBookedTicketQueryResult = Apollo.QueryResult<GetBookedTicketQuery, GetBookedTicketQueryVariables>;
+export const GetMySalesDocument = gql`
+    query GetMySales {
+  getMySales {
+    id
+    createdAt
+    deletedAt
+    fullName
+    address
+    city
+    quantity
+    state
+    country
+    email
+    zipCode
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    totalAmount
+    totalDiscountAmount
+    user {
+      fullName
+      email
+    }
+    ticket {
+      name
+      event {
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMySalesQuery__
+ *
+ * To run a query within a React component, call `useGetMySalesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMySalesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMySalesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMySalesQuery(baseOptions?: Apollo.QueryHookOptions<GetMySalesQuery, GetMySalesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMySalesQuery, GetMySalesQueryVariables>(GetMySalesDocument, options);
+      }
+export function useGetMySalesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMySalesQuery, GetMySalesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMySalesQuery, GetMySalesQueryVariables>(GetMySalesDocument, options);
+        }
+export function useGetMySalesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMySalesQuery, GetMySalesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMySalesQuery, GetMySalesQueryVariables>(GetMySalesDocument, options);
+        }
+export type GetMySalesQueryHookResult = ReturnType<typeof useGetMySalesQuery>;
+export type GetMySalesLazyQueryHookResult = ReturnType<typeof useGetMySalesLazyQuery>;
+export type GetMySalesSuspenseQueryHookResult = ReturnType<typeof useGetMySalesSuspenseQuery>;
+export type GetMySalesQueryResult = Apollo.QueryResult<GetMySalesQuery, GetMySalesQueryVariables>;
+export const GetOrganizerAnalyticsDocument = gql`
+    query GetOrganizerAnalytics {
+  getOrganizerAnalytics {
+    totalActiveEvents
+    totalCategory
+    totalEvents
+    totalRejectedEvents
+    totalSales
+    salesTicket
+  }
+}
+    `;
+
+/**
+ * __useGetOrganizerAnalyticsQuery__
+ *
+ * To run a query within a React component, call `useGetOrganizerAnalyticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrganizerAnalyticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrganizerAnalyticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOrganizerAnalyticsQuery(baseOptions?: Apollo.QueryHookOptions<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>(GetOrganizerAnalyticsDocument, options);
+      }
+export function useGetOrganizerAnalyticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>(GetOrganizerAnalyticsDocument, options);
+        }
+export function useGetOrganizerAnalyticsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>(GetOrganizerAnalyticsDocument, options);
+        }
+export type GetOrganizerAnalyticsQueryHookResult = ReturnType<typeof useGetOrganizerAnalyticsQuery>;
+export type GetOrganizerAnalyticsLazyQueryHookResult = ReturnType<typeof useGetOrganizerAnalyticsLazyQuery>;
+export type GetOrganizerAnalyticsSuspenseQueryHookResult = ReturnType<typeof useGetOrganizerAnalyticsSuspenseQuery>;
+export type GetOrganizerAnalyticsQueryResult = Apollo.QueryResult<GetOrganizerAnalyticsQuery, GetOrganizerAnalyticsQueryVariables>;
+export const GetAdminAnalyticsDocument = gql`
+    query GetAdminAnalytics {
+  getAdminAnalytics {
+    totalActiveEvents
+    totalEvents
+    totalRejectedEvents
+    totalSales
+    totalPendingEvents
+    totalOrganizers
+    rejectedOrganizers
+    acceptedOrganziers
+    pendingOrganizers
+  }
+}
+    `;
+
+/**
+ * __useGetAdminAnalyticsQuery__
+ *
+ * To run a query within a React component, call `useGetAdminAnalyticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminAnalyticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminAnalyticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAdminAnalyticsQuery(baseOptions?: Apollo.QueryHookOptions<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>(GetAdminAnalyticsDocument, options);
+      }
+export function useGetAdminAnalyticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>(GetAdminAnalyticsDocument, options);
+        }
+export function useGetAdminAnalyticsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>(GetAdminAnalyticsDocument, options);
+        }
+export type GetAdminAnalyticsQueryHookResult = ReturnType<typeof useGetAdminAnalyticsQuery>;
+export type GetAdminAnalyticsLazyQueryHookResult = ReturnType<typeof useGetAdminAnalyticsLazyQuery>;
+export type GetAdminAnalyticsSuspenseQueryHookResult = ReturnType<typeof useGetAdminAnalyticsSuspenseQuery>;
+export type GetAdminAnalyticsQueryResult = Apollo.QueryResult<GetAdminAnalyticsQuery, GetAdminAnalyticsQueryVariables>;

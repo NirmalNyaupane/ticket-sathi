@@ -22,12 +22,12 @@ const OrganizerLogin = () => {
           <h2 className="font-bold text-2xl my-2">Login</h2>
           <hr />
           <Login user={UserRole.Organizer} />
-          <div className="text-bold font-medium text-center">
+          {/* <div className="text-bold font-medium text-center">
             Don&apos;t have an account?{" "}
             <Link href={`/organizer/auth/register`} className="text-red-500">
               Register
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

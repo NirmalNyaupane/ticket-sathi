@@ -22,6 +22,10 @@ export class Booking extends CommonEntity {
 
   @Field(() => String)
   @Column({ nullable: false })
+  quantity: string;
+
+  @Field(() => String)
+  @Column({ nullable: false })
   state: string;
 
   @Field(() => String)
@@ -34,9 +38,11 @@ export class Booking extends CommonEntity {
   @Field(() => String)
   @Column({ nullable: false })
   zipCode: string;
+
   @Field(() => String)
   @Column({ nullable: false })
   invoiceNumber: string;
+
   @Field(() => Boolean)
   @Column({ nullable: false, type: "boolean", default: false })
   isPaymentComplete: boolean;

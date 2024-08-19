@@ -7,7 +7,7 @@ import {
 } from "../../constants/errors/exceptions.error";
 import { DiscountType, TicketStatus } from "../../constants/enums/ticket.enum";
 import { Booking } from "../../entities/booking/booking.entity";
-import { createEsewaSignature, OtpGenerator } from "../../utils/helper";
+import { OtpGenerator } from "../../utils/helper";
 import { User } from "../../entities/user/user.entity";
 import {
   BookingObjectType,
@@ -80,26 +80,26 @@ class BookingService {
     booking.user = user;
     booking.ticket = ticket;
     booking.country = data.country;
-
+    booking.quantity = data.ticketQuantity.toString();
     const savedBooking = await booking.save();
 
     const amount = totalAmount + discountAmount || 0;
     const tax = amount * 0.1;
     const totalReceivableAmount = amount + tax - discountAmount;
 
-    const signature = createEsewaSignature(
+    const signature = this.createSignature(
       `total_amount=${totalReceivableAmount},transaction_uuid=${booking.id},product_code=EPAYTEST`
     );
 
     const formData: EsewaPayload = {
       amount: amount.toString(),
-      failure_url: `${EnvConfiguration.FRONTEND_URL}/checkout/failure`,
+      failure_url: `${EnvConfiguration.FRONTEND_URL}/payment/failure`,
       product_delivery_charge: "0",
       product_service_charge: "0",
       product_code: "EPAYTEST",
       signature: signature,
       signed_field_names: "total_amount,transaction_uuid,product_code",
-      success_url: `${EnvConfiguration.BACKEND_URL}/change-order-status`,
+      success_url: `${EnvConfiguration.FRONTEND_URL}/payment/success`,
       tax_amount: tax.toString(),
       total_amount: totalReceivableAmount.toString(),
       transaction_uuid: booking.id,
@@ -110,7 +110,16 @@ class BookingService {
     };
   }
 
+  createSignature(message: string) {
+    console.log(message);
+    const secret = "8gBm/:&EnhH.1/q";
 
+    const hmac = crypto.createHmac("sha256", secret);
+    hmac.update(message);
+
+    const hashInBase64 = hmac.digest("base64");
+    return hashInBase64;
+  }
 }
 
 export default new BookingService();

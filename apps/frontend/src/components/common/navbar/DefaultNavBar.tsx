@@ -53,7 +53,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
               className="block rounded-md"
             ></Image>
           </Link>
-
+{/* 
           {path === "/" && (
             <div
               className={cn(
@@ -74,10 +74,10 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
                 onBlur={() => setFocus((prev) => !prev)}
               />
             </div>
-          )}
+          )} */}
         </div>
 
-        {linkItems && (
+        {/* {linkItems && (
           <div className="hidden md:flex h-5 items-center space-x-4 text-white text-sm font-bold" key={"fuck"}>
             {linkItems.map((singleLink, ind) => {
               return ind === 0 ? (
@@ -98,7 +98,7 @@ const DefaultNavBar = ({ linkItems, className, style }: props) => {
               );
             })}
           </div>
-        )}
+        )} */}
 
         {/* login logout section */}
         <div className="flex items-center gap-2">

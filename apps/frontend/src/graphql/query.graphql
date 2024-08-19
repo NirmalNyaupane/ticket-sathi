@@ -309,3 +309,101 @@ query GetTicketById($ticketId: String!) {
     totalTicket
   }
 }
+
+query GetBookedTicket {
+  getBookedTicket {
+    id
+    createdAt
+    deletedAt
+    fullName
+    address
+    city
+    quantity
+    state
+    country
+    email
+    zipCode
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    totalAmount
+    totalDiscountAmount
+    user {
+      email
+    }
+    ticket {
+      id
+      createdAt
+      deletedAt
+      name
+      isUnlimited
+      totalTicket
+      price
+      earlyBirdOffer
+      discountType
+      discount
+      status
+      discountEndDate
+      event {
+        id
+        name
+      }
+    }
+  }
+}
+
+query GetMySales {
+  getMySales {
+    id
+    createdAt
+    deletedAt
+    fullName
+    address
+    city
+    quantity
+    state
+    country
+    email
+    zipCode
+    invoiceNumber
+    isPaymentComplete
+    paymentMethod
+    totalAmount
+    totalDiscountAmount
+    user {
+      fullName
+       email
+    }
+     ticket {
+      name
+      event {
+        name
+      }
+    }
+  }
+}
+
+query GetOrganizerAnalytics {
+  getOrganizerAnalytics {
+    totalActiveEvents
+    totalCategory
+    totalEvents
+    totalRejectedEvents
+    totalSales
+    salesTicket
+  }
+}
+
+query GetAdminAnalytics {
+  getAdminAnalytics {
+    totalActiveEvents
+    totalEvents
+    totalRejectedEvents
+    totalSales
+    totalPendingEvents
+    totalOrganizers
+    rejectedOrganizers
+    acceptedOrganziers
+    pendingOrganizers
+  }
+}

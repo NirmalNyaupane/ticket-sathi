@@ -1,14 +1,12 @@
-import express, { NextFunction, Request, Response } from "express";
-import errorHandler from "../middlewares/errorhandler.middleware";
-import cors from "cors";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
+import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
+import errorHandler from "../middlewares/errorhandler.middleware";
+import fs from "fs";
 // @ts-ignore
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 import path from "path";
-import fs from "fs";
-import { ExpressAdapter } from "@bull-board/express";
-import { createBullBoard } from "@bull-board/api";
 import paymentsuccessController from "../controllers/paymentsuccess.controller";
 
 export const configMiddleware = (
@@ -42,7 +40,11 @@ export const configMiddleware = (
         });
     }
   );
-
+  app.use(
+    cors({
+      origin: "*",
+    })
+  );
   app.use("/change-order-status", paymentsuccessController.changePaymentStatus);
 
   app.use(errorHandler);

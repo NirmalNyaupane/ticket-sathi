@@ -4,21 +4,21 @@ const fistFooterData = [
     url: "/",
   },
   {
-    label: "Help and Support",
-    url: "/",
+    label: "Become a organizer",
+    url: "/organizer/auth/register",
   },
   {
-    label: "Blogs",
-    url: "/",
+    label: "Login as an organizer",
+    url: "/organizer/auth/login",
   },
-  {
-    label: "FAQs",
-    url: "/",
-  },
-  {
-    label: "Contact Us",
-    url: "/",
-  },
+  // {
+  //   label: "FAQs",
+  //   url: "/",
+  // },
+  // {
+  //   label: "Contact Us",
+  //   url: "/",
+  // },
 ];
 
 export default fistFooterData;

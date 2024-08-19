@@ -45,19 +45,19 @@ const OrganizerAdminNavbar = () => {
                 {/* Right button */}
                 <div className='flex items-center gap-5'>
                     {/* notification */}
-                    <div className="border p-2 rounded-full relative">
+                    {/* <div className="border p-2 rounded-full relative">
                         <Bell />
                         <span className="w-fit block bg-red-500 text-white absolute
                      -top-2 -right-2 font-bold text-sm py-[0.1rem] px-[0.5rem] rounded-[50%]">1</span>
-                    </div>
+                    </div> */}
 
                     {/* login logout section */}
                     <div className="flex items-center gap-2">
                         <GlobalDropDown
                             display={
                                 <Avatar className="cursor-pointer">
-                                    <AvatarImage src={user.avatar} />
-                                    <AvatarFallback>{firstCharacterOfFullName(user.full_name)}</AvatarFallback>
+                                    <AvatarImage src={user.profile?.name} />
+                                    <AvatarFallback>{firstCharacterOfFullName(user.profile?.name??"")}</AvatarFallback>
                                 </Avatar>
                             }
                             isBlack={false}

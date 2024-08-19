@@ -11,6 +11,7 @@ import { CommonQuery } from "../../schemas/common/common.schema";
 import paginationUtil from "../../utils/pagination.util";
 import { UUID } from "../../types/commontype";
 import { GlobalEventFilter } from "../../schemas/event/event.schemas";
+import { EventStatus } from "../../constants/enums/event.enum";
 class EventService {
   async createEvent(category: Category, data: CreateEventValidator) {
     const event = new Event();
@@ -148,7 +149,9 @@ class EventService {
       .leftJoin("organizer.user", "user")
       .leftJoinAndSelect("event.cover", "cover")
       .leftJoinAndSelect("event.images", "images")
-
+      .where("event.status=:status", {
+        status: EventStatus.APPROVED,
+      });
     const { take, skip } = paginationUtil.skipTakeMaker({
       page: query.page,
       pageLimit: query.pageLimit,

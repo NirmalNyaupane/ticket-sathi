@@ -19,6 +19,12 @@ import {
   CreateTicketValidator,
   UpdateTicketValidator,
 } from "../../validators/tickets/createticket.validator";
+import { Booking } from "../../entities/booking/booking.entity";
+import {
+  AdminAnalytics,
+  OrganzierAnalytics,
+  UserTicket,
+} from "../../schemas/booking/booking.schema";
 type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 @Resolver()
@@ -96,13 +102,37 @@ export class TicketResolver {
     }
   }
 
-  @Query(() => [Ticket], {nullable:true})
+  @Query(() => [Ticket], { nullable: true })
   async getTicketByEventId(@Arg("eventId", () => String) eventId: UUID) {
     return await ticketService.getTicketByEventId(eventId);
   }
 
-  @Query(()=>Ticket)
-  async getTicketById(@Arg("ticketId", () => String) ticketId: UUID){
+  @Query(() => Ticket)
+  async getTicketById(@Arg("ticketId", () => String) ticketId: UUID) {
     return await ticketService.getTicketById(ticketId);
+  }
+
+  @Query(() => [UserTicket])
+  @UseMiddleware(authentication([UserRole.USER]))
+  async getBookedTicket(@Ctx() context: Context) {
+    return await ticketService.getBookedTicket(context.user?.id!);
+  }
+
+  @Query(() => [UserTicket])
+  @UseMiddleware(authentication([UserRole.ORGANIZER]))
+  async getMySales(@Ctx() context: Context) {
+    return await ticketService.getOrganizerSales(context.user?.id!);
+  }
+
+  @Query(() => OrganzierAnalytics)
+  @UseMiddleware(authentication([UserRole.ORGANIZER]))
+  async getOrganizerAnalytics(@Ctx() context: Context) {
+    return await ticketService.getOrganizerAnalytics(context.user?.id!);
+  }
+
+  @Query(() => AdminAnalytics)
+  @UseMiddleware(authentication([UserRole.ADMIN]))
+  async getAdminAnalytics(@Ctx() context: Context) {
+    return await ticketService.getAdminAnalytics(context.user?.id!);
   }
 }

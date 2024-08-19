@@ -23,7 +23,7 @@ import {
   AdminOrganizerValidator,
 } from "../../validators/admin/adminOrganizer.validator";
 import { CreateCommission } from "../../validators/admin/commission.validator";
-
+import sendMail from "../../utils/email.util";
 class AdminService {
   async findAllOrganizer(query: CommonQuery) {
     const builder = OrganizerDetails.createQueryBuilder("organizer")
@@ -98,21 +98,40 @@ class AdminService {
         },
       });
       if (response.status === OrganizerStatus.ACCEPTED) {
-        QueueUtil.addEmailJob({
+        // QueueUtil.addEmailJob({
+        //   to: user?.email!,
+        //   mailType: MailType.CHANGE_STATUS,
+        //   subject: "Your organizer account has been accepted",
+        //   data: {
+        //     name: user?.fullName,
+        //     title:
+        //       "Your account has been approved by admin. Now you can access full features of organizer dashboard",
+        //   },
+        // });
+        sendMail.sendMail(MailType.CHANGE_STATUS, {
           to: user?.email!,
-          mailType: MailType.CHANGE_STATUS,
-          subject: "Your organizer account has been accepted",
+          subject: "Verify your email",
           data: {
-            name: user?.fullName,
+            name: "Your organizer account has been accepted",
             title:
               "Your account has been approved by admin. Now you can access full features of organizer dashboard",
           },
         });
       }
+
       if (response.status === OrganizerStatus.REJECTED) {
-        QueueUtil.addEmailJob({
+        // QueueUtil.addEmailJob({
+        //   to: user?.email!,
+        //   mailType: MailType.CHANGE_STATUS,
+        //   subject: "Your organizer account has been rejected",
+        //   data: {
+        //     name: user?.fullName,
+        //     title: "Your account has been rejected by admin. ",
+        //     message: data.reason,
+        //   },
+        // });
+        sendMail.sendMail(MailType.CHANGE_STATUS, {
           to: user?.email!,
-          mailType: MailType.CHANGE_STATUS,
           subject: "Your organizer account has been rejected",
           data: {
             name: user?.fullName,

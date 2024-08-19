@@ -26,13 +26,7 @@ const CheckOut = () => {
   const form = useForm<FormData>({
     defaultValues: {
       paymentMethod: PaymentMethodEnum.Esewa,
-      fullName:"Nirmal Neuapne",
-      email:"neuapnenirmal@gmail.com",
-      address:"Bharatpur nepal",
-      city:"Bharatpur",
-      country:"Nepal",
-      state:"Bagmati",
-      zipCode:"243443"
+      country: "Nepal",
     },
     resolver: zodResolver(bookingValidator),
   });

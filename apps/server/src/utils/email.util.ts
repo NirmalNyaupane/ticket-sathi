@@ -93,21 +93,21 @@ class SendMail {
         return body;
       }
 
-      case MailType.CHANGE_STATUS: {
-        const source = fs.readFileSync(
-          path.join(`${__dirname}`, "utils", "templates", "changestatus.html"),
-          "utf-8"
-        );
-        const template = Handlebars.compile(source);
-        const data = {
-          subject: mailOption.subject,
-          name: mailOption.data.name,
-          title: mailOption.data.title,
-          message: mailOption.data.message,
-        };
-        const body = template(data);
-        return body;
-      }
+      // case MailType.CHANGE_STATUS: {
+      //   const source = fs.readFileSync(
+      //     path.join(`${__dirname}`, "templates", "changestatus.html"),
+      //     "utf-8"
+      //   );
+      //   const template = Handlebars.compile(source);
+      //   const data = {
+      //     subject: mailOption.subject,
+      //     name: mailOption.data.name,
+      //     title: mailOption.data.title,
+      //     message: mailOption.data.message,
+      //   };
+      //   const body = template(data);
+      //   return body;
+      // }
     }
   }
 }

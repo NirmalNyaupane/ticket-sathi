@@ -10,13 +10,61 @@ interface Props {
 }
 const EventAboutUs = ({ events }: Props) => {
   return (
-    <div className="space-y-7">
+    <div className="space-y-7 w-[60%]">
       <h2 className="text-3xl font-bold">About this event</h2>
       <p className="text-xl text-gray-600">{events.description}</p>
 
       <h2 className="text-3xl font-bold">Artist</h2>
 
       <div className="space-y-4">
+        {/* <div className="flex gap-3 items-center bg-red-100 px-7 rounded-lg py-4">
+          <Image src={"/dong.png"} alt="dong" height={80} width={80} />
+          <div className="flex flex-col gap-0">
+            <p className="font-bold text-xl">Dong</p>
+            <p className="text-lg text-gray-600">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
+              officiis?
+            </p>
+            <div className="flex gap-3 mt-1">
+              <Link href={"facebook.com"}>
+                <Facebook className="border-black border-2 rounded-md" />
+              </Link>
+
+              <Link href={"instragram.com"}>
+                <Instagram />
+              </Link>
+
+              <Link href={"twiter.com"}>
+                <Twitter />
+              </Link>
+            </div>
+          </div>
+        </div> */}
+
+        {/* <div className="flex gap-3 items-center bg-red-100 px-7 rounded-lg py-4">
+          <Image src={"/dong.png"} alt="dong" height={80} width={80} />
+          <div className="flex flex-col gap-0">
+            <p className="font-bold text-xl">Dong</p>
+            <p className="text-lg text-gray-600">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
+              officiis?
+            </p>
+            <div className="flex gap-3 mt-1">
+              <Link href={"facebook.com"}>
+                <Facebook className="border-black border-2 rounded-md" />
+              </Link>
+
+              <Link href={"instragram.com"}>
+                <Instagram />
+              </Link>
+
+              <Link href={"twiter.com"}>
+                <Twitter />
+              </Link>
+            </div>
+          </div>
+        </div> */}
+{/* 
         <div className="flex gap-3 items-center bg-red-100 px-7 rounded-lg py-4">
           <Image src={"/dong.png"} alt="dong" height={80} width={80} />
           <div className="flex flex-col gap-0">
@@ -39,55 +87,7 @@ const EventAboutUs = ({ events }: Props) => {
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="flex gap-3 items-center bg-red-100 px-7 rounded-lg py-4">
-          <Image src={"/dong.png"} alt="dong" height={80} width={80} />
-          <div className="flex flex-col gap-0">
-            <p className="font-bold text-xl">Dong</p>
-            <p className="text-lg text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
-              officiis?
-            </p>
-            <div className="flex gap-3 mt-1">
-              <Link href={"facebook.com"}>
-                <Facebook className="border-black border-2 rounded-md" />
-              </Link>
-
-              <Link href={"instragram.com"}>
-                <Instagram />
-              </Link>
-
-              <Link href={"twiter.com"}>
-                <Twitter />
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-3 items-center bg-red-100 px-7 rounded-lg py-4">
-          <Image src={"/dong.png"} alt="dong" height={80} width={80} />
-          <div className="flex flex-col gap-0">
-            <p className="font-bold text-xl">Dong</p>
-            <p className="text-lg text-gray-600">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
-              officiis?
-            </p>
-            <div className="flex gap-3 mt-1">
-              <Link href={"facebook.com"}>
-                <Facebook className="border-black border-2 rounded-md" />
-              </Link>
-
-              <Link href={"instragram.com"}>
-                <Instagram />
-              </Link>
-
-              <Link href={"twiter.com"}>
-                <Twitter />
-              </Link>
-            </div>
-          </div>
-        </div>
+        </div> */}
       </div>
 
       <h2 className="text-3xl font-bold">About Organizer</h2>

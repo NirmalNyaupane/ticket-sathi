@@ -24,6 +24,10 @@ const links = [
     name: "Change Password",
     url: "/user/change-password",
   },
+  {
+    name: "Booked Tickets",
+    url: "/user/booked-ticket",
+  },
 ];
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

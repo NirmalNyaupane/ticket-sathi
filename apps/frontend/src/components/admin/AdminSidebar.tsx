@@ -1,13 +1,4 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { FolderInputIcon, Home, Shield } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
-import { BiCalendarEvent, BiChat, BiSolidCoupon } from "react-icons/bi";
-import { BsPeopleFill } from "react-icons/bs";
-import { CiLogout } from "react-icons/ci";90
-import "./scrollbar.css";
 import ConditionallyRender from "@/components/common/ConditionallyRender";
 import {
   Accordion,
@@ -15,7 +6,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { logoutReducer } from "@/redux/slices/auth.slice";
+import { FolderInputIcon, Home, Shield } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import { BiCalendarEvent } from "react-icons/bi";
+import { BsPeopleFill } from "react-icons/bs";
+import { CiLogout } from "react-icons/ci";
+import "./scrollbar.css";
+import { useDispatch } from "react-redux";
 
 type ChildrenItems = {
   name: string;
@@ -38,6 +39,7 @@ type SideBarItems = {
 );
 
 const AdminSideBar = () => {
+  const dispatch = useDispatch();
   const sidebarItems: SideBarItems[] = [
     {
       name: "Dashboard",
@@ -142,6 +144,10 @@ const AdminSideBar = () => {
         className={
           "flex items-center gap-3 px-2 rounded-md hover:bg-gray-200  py-2 mr-3 transition-all cursor-pointer mt-auto text-red-500 font-medium w-full"
         }
+        onClick={() => {
+          console.log("Call logout");
+          dispatch(logoutReducer());
+        }}
       >
         <div className="text-[1.75rem]">
           <CiLogout />

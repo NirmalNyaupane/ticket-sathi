@@ -162,7 +162,7 @@ const Register: FC<props> = ({ role, className }: props) => {
         
         <LoadingButton isLoading={loading}>Register</LoadingButton>
 
-        {role === UserRole.User && (
+        {/* {role === UserRole.User && (
           <>
             <p className="leading-7 [&:not(:first-child)]:mt-6 text-center">
               OR SIGN UP USING
@@ -173,7 +173,7 @@ const Register: FC<props> = ({ role, className }: props) => {
               </Button>
             </div>
           </>
-        )}
+        )} */}
       </form>
     </>
   );
